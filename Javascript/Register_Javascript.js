@@ -1,6 +1,6 @@
 let redis = require('redis');
 let express = require('express');
-
+let bodyParser  = require('body-parser')
 
 
 
@@ -13,13 +13,14 @@ client.on('connect', ()=>{
 });
 
 
-app.post('/signUp',(request,response)=>{
-    // client.set('h','i', redis.print);
-    let firstName = document.getElementsByClassName("First name").value;
-    let lastName = document.getElementsByClassName("Last name").value;
-    client.set(firstName, lastName, redis.print);
-    console.log(request);
+app.use(bodyParser.urlencoded({extended: true}));
 
+app.post('/signUp',(request,response)=>{
+    let body = request.body;
+    let firstName = body.FirstName;
+    let lastName = body.LastName;
+    client.set(firstName, lastName, redis.print);
+    console.log(body);
 });
 
 const port = 6379;
