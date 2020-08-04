@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../Javascript/Register_Javascript.js"></script>
+    <title>RegisterPage</title>
+</head>
+<body>
+
+
+<h2>Sign up</h2>
+
+
+<!--TODO: decide action  -->
+
+<form action="http://localhost:6379/signUp" method="post">
+    <div class="container">
+        <label class="First name">First name</label>
+        <input type="text" placeholder="name"  name="FirstName" required/><br>
+
+        <label class="Last name">Last name</label>
+        <input type="text" placeholder="Last name" name="LastName" required/><br>
+
+        <label class="email">Email</label>
+        <input type="email" placeholder="email" name="email" required/><br>
+
+        <label class="pass">Password</label>
+        <input type="password" placeholder="Password" name="password" required/><br>
+
+        <button type="submit">Sign up</button><br>
+
+        <label><input type="checkbox" checked="checked" name="remember">Remember me</label>
+
+        <!--TODO : add password confirmation-->
+        <!-- check that there is no such email in the database        -->
+    </div>
+</form>
+
+
+</body>
+</html>
