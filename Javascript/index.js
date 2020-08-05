@@ -4,6 +4,7 @@ const bodyParser  = require('body-parser')
 //const bcrypt = require('bcrypt');
 const register = require('./register');
 const login = require('./login');
+const cross = require('cross');
 
 
 const app = express();
@@ -81,3 +82,24 @@ app.post('/signIn', (request,response)=> {
 
 });
 
+
+
+// admin
+app.get('/admin', cross(), (request,response)=> {
+    client.hvals("users", function (err, reply) {
+        if (err) throw err;
+        console.log("express")
+        response.send(reply);
+    });
+});
+
+
+// function foo(){
+//     let ans = null;
+//     client.hget("users", email,function (err, reply) {
+//         if (err)  throw err;
+//         ans =  JSON.parse(reply);
+//     });
+//     return ans;
+//
+// }
