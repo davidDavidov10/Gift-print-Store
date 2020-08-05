@@ -2,19 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <script src="../Javascript/index.js"></script>
+    <title>LoginPage</title>
+    <link rel = "icon" href ="GiftPrintSmall.png" type = "image/x-icon">
 </head>
 <body>
 
 
 
-<h2>Login</h2>
-
-<form action="/" method="post">
-    
+<h2>Sign in</h2>
 
 
-</form>>
+<!--TODO: decide action  -->
+<!--Todo: check that post is the right method-->
+
+<form action="http://localhost:6379/signIn" method="post">
+    <div class="container">
+        <label class="email">Email</label>
+        <input type="email" placeholder="email" name="email" required/><br>
+
+        <label class="pass">Password</label>
+        <input type="password" placeholder="Password" name="password" required/><br>
+
+        <label><input type="checkbox" checked="checked" name="remember">Remember me</label><br>
+
+        <button type="submit">Sign In</button>
+        <!--TODO : add password confirmation-->
+        <!-- check that there is no such email in the database        -->
+    </div>
+</form>
+
 
 </body>
 </html>
