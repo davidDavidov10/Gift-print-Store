@@ -4,7 +4,7 @@ const bodyParser  = require('body-parser')
 //const bcrypt = require('bcrypt');
 const register = require('./register');
 const login = require('./login');
-const cross = require('cross');
+const cors = require('cors');
 
 
 const app = express();
@@ -19,6 +19,7 @@ client.on('error', (error)=>{
 });
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cors());
 
 
 const port = 6379;
@@ -34,7 +35,7 @@ app.post('/signUp', (request,response)=> {
     let email = String(body.email);
     let password = body.password;
     //Todo: password encryption
-    let userDetails = `{"firstName": "${firstName}", "LastName": "${lastName}", "email": "${email}", "password": "${password}"}`;
+    let userDetails = `{"firstName": "${firstName}", "lastName": "${lastName}", "email": "${email}", "password": "${password}"}`;
     client.hset('users',email ,userDetails);
     //Todo: choose redirect
     response.redirect('back');
@@ -85,11 +86,16 @@ app.post('/signIn', (request,response)=> {
 
 
 // admin
-app.get('/admin', cross(), (request,response)=> {
+app.get('/admin', (request,response)=> {
     client.hvals("users", function (err, reply) {
         if (err) throw err;
-        console.log("express")
-        response.send(reply);
+       // let data = {"data": reply};
+        let data = {"data": reply };
+        console.log(data)
+        // console.log(JSON.parse(""+ reply + ""));
+        // console.log(typeof  reply);
+         console.log( reply[0]);
+        response.json(data);
     });
 });
 
