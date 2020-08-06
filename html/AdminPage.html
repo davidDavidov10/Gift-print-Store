@@ -2,22 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../CSS/HomePageStyle.css">
     <script src="../Javascript/admin.js"> </script>
+    <link rel = "icon" href ="../images/GiftPrintSmall.png" type = "image/x-icon">
 
     <title>Admin</title>
-    <div>
-            <input id="adminSearchBar" type="text" placeholder="Search.." onkeyup="searchAdminTable()">
-            <select id="searchTypes">
-                <option value="0">First name</option>
-                <option value="1">Last name</option>
-                <option value="2">Email</option>
-            </select>
-        </form>
-    </div>
-
-
+    <!--navbar-->
+    <ul>
+        <li><a href="HomePage.html">Home</a></li>
+        <li><a href="RegisterPage.html">Sign Up</a></li>
+        <li><a href="LoginPage.html">Sign In</a></li>
+        <li><a href="AdminPage.html">Admin</a></li>
+        <li><a href="ShoppingCartPage.html">Cart</a></li>
+        <li style="float:right"><a class="active" href="RegisterPage.html">sign up</a></li>
+    </ul>
 </head>
 <body>
+
+<div>
+    <input id="adminSearchBar" type="text" placeholder="Search.." onkeyup="searchAdminTable()">
+    <select id="searchTypes">
+        <option value="0">First name</option>
+        <option value="1">Last name</option>
+        <option value="2">Email</option>
+    </select>
+    </form>
+</div>
+
  <table id="adminTable">
      <thead>
      <tr>
