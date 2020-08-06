@@ -1,3 +1,4 @@
+
 let canvas = new fabric.Canvas('tshirt-canvas');
 
 function updateTshirtImage(imageURL){

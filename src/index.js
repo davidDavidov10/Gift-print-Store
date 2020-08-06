@@ -2,9 +2,24 @@ const redis = require('redis');
 const express = require('express');
 const bodyParser  = require('body-parser')
 //const bcrypt = require('bcrypt');
-const register = require('./register');
-const login = require('./login');
+const fs = require('fs');
 const cors = require('cors');
+const uuid = require('uuid');
+const multer  = require('multer')
+var path = require('path')
+
+// How to save images
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../static/productImg')
+    },
+    filename: function (req, file, cb) {
+        console.log(file.mimeType)
+        cb(null, file.fieldname + path.extname(file.originalname))
+    }
+})
+
+const upload = multer({ storage: storage })
 
 
 const app = express();
@@ -20,6 +35,7 @@ client.on('error', (error)=>{
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
+// Todo: put limit on file size?
 
 
 const port = 6379;
@@ -27,7 +43,7 @@ app.listen(port,()=>{
     console.log("server started on port: " + port);
 });
 
-// sign up
+// Sign up
 app.post('/api/signUp', (request,response)=> {
     let body =  request.body;
     let firstName = body.FirstName;
@@ -41,19 +57,8 @@ app.post('/api/signUp', (request,response)=> {
     response.redirect('back');
 });
 
-/*
-app.post('/signUp', (request,response)=> {
-    register.signUp(request, response, client).catch(console.log);
-});
-*/
 
-
-/*app.post('/signIn', (request,response)=> {
-    login.signIn(request, response, client).catch(console.log);
-});*/
-
-
-// sign in
+// Sign in
 app.post('/api/signIn', (request,response)=> {
     let body =  request.body;
     let email = String(body.email);
@@ -85,7 +90,7 @@ app.post('/api/signIn', (request,response)=> {
 
 
 
-// admin
+// Admin
 app.get('/api/admin', (request,response)=> {
     client.hvals("users", function (err, reply) {
         if (err) throw err;
@@ -102,12 +107,31 @@ app.get('/api/admin', (request,response)=> {
 
 
 
-// function foo(){
-//     let ans = null;
-//     client.hget("users", email,function (err, reply) {
-//         if (err)  throw err;
-//         ans =  JSON.parse(reply);
-//     });
-//     return ans;
-//
-// }
+// Shirt design
+app.post('/api/design/save', upload.single('uploadedImg'), function (request,response) {
+    // email = get user email from cookie
+    let email = "1@2";
+    //fs.writeFileSync('./test/test.png', request.file);
+    let body =  request.body;
+    console.log(request.file);
+    let imgID = uuid.v4();
+    fs.renameSync( request.file.path, `${request.file.destination}/${imgID}.${path.extname(request.file.path)}`);
+
+    // Check if user is in db key img
+ /*   client.hget("cart", email,function (err, reply) {
+        if (err)  throw err;
+        let value =  reply; // check if needs parsing
+        if (value === null) {
+            console.log("user is not in db" );
+          //  client.hset('cart',email ,imgID);
+        }//show unknown  email address
+        else{
+            //client.hset('cart',email ,reply + "," +imgID);
+        }
+    });*/
+    // Save image as imdIDe
+  // fs.writeFileSync(`../static/productImg/${imgID}.png`,request.files.uploadedImg);
+
+   // response.download("../static/productImg/${imgID}.png");
+
+});
