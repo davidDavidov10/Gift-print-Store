@@ -28,7 +28,7 @@ app.listen(port,()=>{
 });
 
 // sign up
-app.post('/signUp', (request,response)=> {
+app.post('/api/signUp', (request,response)=> {
     let body =  request.body;
     let firstName = body.FirstName;
     let lastName = body.LastName;
@@ -54,7 +54,7 @@ app.post('/signUp', (request,response)=> {
 
 
 // sign in
-app.post('/signIn', (request,response)=> {
+app.post('/api/signIn', (request,response)=> {
     let body =  request.body;
     let email = String(body.email);
     let password = body.password;
@@ -86,7 +86,7 @@ app.post('/signIn', (request,response)=> {
 
 
 // admin
-app.get('/admin', (request,response)=> {
+app.get('/api/admin', (request,response)=> {
     client.hvals("users", function (err, reply) {
         if (err) throw err;
        // let data = {"data": reply};
@@ -98,6 +98,8 @@ app.get('/admin', (request,response)=> {
         response.json(data);
     });
 });
+
+
 
 
 // function foo(){

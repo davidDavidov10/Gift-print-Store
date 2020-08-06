@@ -5,9 +5,20 @@
     <script src="../Javascript/admin.js"> </script>
 
     <title>Admin</title>
+    <div>
+            <input id="adminSearchBar" type="text" placeholder="Search.." onkeyup="searchAdminTable()">
+            <select id="searchTypes">
+                <option value="0">First name</option>
+                <option value="1">Last name</option>
+                <option value="2">Email</option>
+            </select>
+        </form>
+    </div>
+
+
 </head>
 <body>
- <table>
+ <table id="adminTable">
      <thead>
      <tr>
          <th>first name</th>
