@@ -5,8 +5,8 @@ const bodyParser  = require('body-parser')
 const fs = require('fs');
 const cors = require('cors');
 const uuid = require('uuid');
-const multer  = require('multer')
-var path = require('path')
+const multer  = require('multer');
+const path = require('path');
 
 // How to save images
 const storage = multer.diskStorage({
@@ -14,12 +14,12 @@ const storage = multer.diskStorage({
         cb(null, '../static/productImg')
     },
     filename: function (req, file, cb) {
-        console.log(file.mimeType)
+        //Todo: check the file type? check file size? and name
         cb(null, file.fieldname + path.extname(file.originalname))
     }
 })
 
-const upload = multer({ storage: storage })
+const upload = multer({ storage: storage });
 
 
 const app = express();
@@ -35,7 +35,6 @@ client.on('error', (error)=>{
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
-// Todo: put limit on file size?
 
 
 const port = 6379;
@@ -108,14 +107,16 @@ app.get('/api/admin', (request,response)=> {
 
 
 // Shirt design
-app.post('/api/design/save', upload.single('uploadedImg'), function (request,response) {
-    // email = get user email from cookie
+//app.post('/api/design/save', upload.single('uploadedImg'), function (request,response) {
+
+app.post('/api/design/save', upload.single('shirtWithImage'), function (request,response) {
+    // Todo: email = get user email from cookie
     let email = "1@2";
-    //fs.writeFileSync('./test/test.png', request.file);
     let body =  request.body;
-    console.log(request.file);
     let imgID = uuid.v4();
-    fs.renameSync( request.file.path, `${request.file.destination}/${imgID}.${path.extname(request.file.path)}`);
+    // Rename file to be a unique id
+    let file =  request.file;
+    fs.renameSync( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`);
 
     // Check if user is in db key img
  /*   client.hget("cart", email,function (err, reply) {
@@ -133,5 +134,7 @@ app.post('/api/design/save', upload.single('uploadedImg'), function (request,res
   // fs.writeFileSync(`../static/productImg/${imgID}.png`,request.files.uploadedImg);
 
    // response.download("../static/productImg/${imgID}.png");
+    console.log("in index /api/design/save")
+    response.redirect('back');
 
 });
