@@ -114,8 +114,10 @@ app.post('/api/design/save', upload.single('uploadedImg'), function (request,res
     let email = "1@2";
     let body =  request.body;
     let imgID = uuid.v4();
-    let data = new Buffer.from(request.body.shirtWithImage, 'base64');
-    //fs.writeFile(data, 'my-file.png',()=>{});
+    console.log("data = " +request.body.shirtWithImage.slice(22))
+   // console.log("data = " +request.body.shirtWithImage.slice(22))
+    let data = new Buffer.from(request.body.shirtWithImage.slice(22), 'base64');
+    fs.writeFile("../static/productImg/myfile.png", data,()=>{});
     // Rename file to be a unique id
     let file =  request.file;
     fs.renameSync( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`);
