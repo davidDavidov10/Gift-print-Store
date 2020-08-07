@@ -107,38 +107,43 @@ app.get('/api/admin', (request,response)=> {
 
 
 // Shirt design
-app.post('/api/design/save', upload.single('uploadedImg'), function (request,response) {
-
-//app.post('/api/design/save', upload.single('shirtWithImage'), function (request,response) {
+app.post('/api/design/save', upload.single('uploadedImg'),  function (request,response) {
     // Todo: email = get user email from cookie
     let email = "1@2";
     let body =  request.body;
     let imgID = uuid.v4();
-    console.log("data = " +request.body.shirtWithImage.slice(22))
-   // console.log("data = " +request.body.shirtWithImage.slice(22))
+    let prodImgID = uuid.v4();
     let data = new Buffer.from(request.body.shirtWithImage.slice(22), 'base64');
-    fs.writeFile("../static/productImg/myfile.png", data,()=>{});
+    fs.writeFile(`../static/productImg/${prodImgID}.png`, data,()=>{});
     // Rename file to be a unique id
     let file =  request.file;
     fs.renameSync( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`);
 
     // Check if user is in db key img
- /*   client.hget("cart", email,function (err, reply) {
+    client.hget("cart", email,function (err, reply) {
         if (err)  throw err;
+
         let value =  reply; // check if needs parsing
         if (value === null) {
             console.log("user is not in db" );
-          //  client.hset('cart',email ,imgID);
+            //Todo: add amount
+            let cart = JSON.stringify({0:{imgToPrint:imgID , prodImg:prodImgID, amount:1}});
+            client.hset('cart',email ,cart);
+            console.log(cart)
         }//show unknown  email address
         else{
-            //client.hset('cart',email ,reply + "," +imgID);
+            console.log("user is  in db" );
+            let cart = JSON.parse(reply);
+            let prodNum = Object.keys(cart).length;
+            cart[prodNum] = {imgToPrint:imgID , prodImg:prodImgID, amount:1};
+            client.hset('cart',email ,JSON.stringify(cart));
+            console.log(cart)
         }
-    });*/
+    });
     // Save image as imdIDe
   // fs.writeFileSync(`../static/productImg/${imgID}.png`,request.files.uploadedImg);
 
    // response.download("../static/productImg/${imgID}.png");
-    console.log("in index /api/design/save")
     response.redirect('back');
 
 });
