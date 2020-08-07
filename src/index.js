@@ -128,20 +128,20 @@ app.post('/api/design/save', upload.single('uploadedImg'),  function (request,re
     // Check if user is in db key img
     client.hget("cart", email,function (err, reply) {
         if (err)  throw err;
-
+        let item = {imgToPrint:imgID , prodImg:prodImgID, amount:2, type:"shirt", price:3, color:"blue"}
         let value =  reply; // check if needs parsing
         if (value === null) {
-            console.log("user is not in db" );
+           // User is not in db
             //Todo: add amount and type
-            let cart = JSON.stringify({0:{imgToPrint:imgID , prodImg:prodImgID, amount:1, type:"shirt"}});
+            let cart = JSON.stringify({0: item});
             client.hset('cart',email ,cart);
             console.log(cart)
         }//show unknown  email address
         else{
-            console.log("user is  in db" );
+            // User is  in db
             let cart = JSON.parse(reply);
             let prodNum = Object.keys(cart).length;
-            cart[prodNum] = {imgToPrint:imgID , prodImg:prodImgID, amount:1, type:"shirt"};
+            cart[prodNum] = item;
             client.hset('cart',email ,JSON.stringify(cart));
             console.log(cart)
         }
