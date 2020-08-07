@@ -93,17 +93,23 @@ app.post('/api/signIn', (request,response)=> {
 app.get('/api/admin', (request,response)=> {
     client.hvals("users", function (err, reply) {
         if (err) throw err;
-       // let data = {"data": reply};
         let data = {"data": reply };
-        console.log(data)
-        // console.log(JSON.parse(""+ reply + ""));
-        // console.log(typeof  reply);
-         console.log( reply[0]);
         response.json(data);
     });
 });
 
 
+
+// Cart get items
+app.get('/api/cart/items', (request,response)=> {
+    //Todo: get email from cookies\
+    let email = "1@2"
+    client.hget("cart",email, function (err, reply) {
+        if (err) throw err;
+        let data = {"data": reply };
+        response.json(data);
+    });
+});
 
 
 // Shirt design
@@ -126,8 +132,8 @@ app.post('/api/design/save', upload.single('uploadedImg'),  function (request,re
         let value =  reply; // check if needs parsing
         if (value === null) {
             console.log("user is not in db" );
-            //Todo: add amount
-            let cart = JSON.stringify({0:{imgToPrint:imgID , prodImg:prodImgID, amount:1}});
+            //Todo: add amount and type
+            let cart = JSON.stringify({0:{imgToPrint:imgID , prodImg:prodImgID, amount:1, type:"shirt"}});
             client.hset('cart',email ,cart);
             console.log(cart)
         }//show unknown  email address
@@ -135,15 +141,11 @@ app.post('/api/design/save', upload.single('uploadedImg'),  function (request,re
             console.log("user is  in db" );
             let cart = JSON.parse(reply);
             let prodNum = Object.keys(cart).length;
-            cart[prodNum] = {imgToPrint:imgID , prodImg:prodImgID, amount:1};
+            cart[prodNum] = {imgToPrint:imgID , prodImg:prodImgID, amount:1, type:"shirt"};
             client.hset('cart',email ,JSON.stringify(cart));
             console.log(cart)
         }
     });
-    // Save image as imdIDe
-  // fs.writeFileSync(`../static/productImg/${imgID}.png`,request.files.uploadedImg);
-
-   // response.download("../static/productImg/${imgID}.png");
     response.redirect('back');
 
 });
