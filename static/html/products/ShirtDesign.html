@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dynamic and Resizable Tee Designer</title>
-    <link rel="stylesheet" type="text/css" href="../../CSS/products/shirtDesign.css">
+    <link rel="stylesheet" type="text/css" href="../../css/products/shirtDesign.css">
 </head>
 <body>
 <!-- Create the container of the tool -->
@@ -14,7 +14,7 @@
         Initially, the image will have the background tshirt that has transparency
         So we can simply update the color with CSS or JavaScript dinamically
     -->
-    <img id="tshirt-backgroundpicture" src="../../images/background_tshirt.png"/>
+    <img id="tshirt-backgroundpicture" src="../../img/background_tshirt.png"/>
 
     <div id="drawingArea" class="drawing-area">
         <div class="canvas-container">
@@ -36,7 +36,7 @@
 <br><br>
 <label for="tshirt-color">T-Shirt Color:</label>
 <select id="tshirt-color">
-    <!-- You can add any color with a new option and definings its hex code -->
+    <!-- You can add any color with a new option and defining its hex code -->
     <option value="#fff">White</option>
     <option value="#000">Black</option>
     <option value="#f00">Red</option>
@@ -45,12 +45,22 @@
 </select>
 
 <br><br>
-<label for="tshirt-custompicture">Upload your own design:</label>
-<!--the image-->
-<input type="file" id="tshirt-custompicture" />
 
-<script src="../../Javascript/fabric.min.js"></script>
-<script src="../../Javascript/shirtDesign.js"></script>
+<form action="http://localhost:6379/api/design/save" method="post" enctype="multipart/form-data">
+    <label for="tshirt-custompicture">Upload your own design:</label>
+    <!--the image-->
+    <input type="file" id="tshirt-custompicture" name="uploadedImg" />
+    <button type="submit" >Add to cart</button>
+    <input type="hidden" name="shirtWithImage" id="shirtWithImage" value="">
+
+</form>
+<button onclick="drawImg()">Draw Img</button>
+
+
+
+<script src="../../js/fabric.min.js"></script>
+<script src="../../js/shirtDesign.js"></script>
+<script src="../../js/dom-to-image.min.js"></script>
 
 </body>
 </html>

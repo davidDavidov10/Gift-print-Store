@@ -115,7 +115,7 @@ app.post('/api/design/save', upload.single('uploadedImg'), function (request,res
     let body =  request.body;
     let imgID = uuid.v4();
     let data = new Buffer.from(request.body.shirtWithImage, 'base64');
-    fs.writeFile(data, 'my-file.png',()=>{});
+    //fs.writeFile(data, 'my-file.png',()=>{});
     // Rename file to be a unique id
     let file =  request.file;
     fs.renameSync( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`);
