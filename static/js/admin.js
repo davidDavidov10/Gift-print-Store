@@ -15,8 +15,8 @@ function loadTableData(userData) {
     const tableBody = document.getElementById('tableData');
     let dataHtml = '';
 
-    for(let user of userData)
-    { dataHtml += `<tr><td>${user.firstName}</td><td>${user.lastName}</td><td>${user.email}</td></tr>`;
+    for(let user of userData) {
+        dataHtml += `<tr><td>${user.firstName}</td><td>${user.lastName}</td><td>${user.email}</td></tr>`;
     }
     tableBody.innerHTML = dataHtml;
 }

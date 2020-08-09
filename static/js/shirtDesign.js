@@ -1,4 +1,3 @@
-import { saveAs } from 'file-saver';
 let canvas = new fabric.Canvas('tshirt-canvas');
 
 function updateTshirtImage(imageURL){
@@ -62,27 +61,20 @@ document.addEventListener("keydown", function(e) {
 }, false);
 
 
-
+//Todo: make the add to cart open only after done editing and make done editing replace the shirt editor with a photo
 function drawImg(){
     // Define as node the T-Shirt Div
     let node = document.getElementById('tshirt-div');
-
+   /* domtoimage.toJpeg(document.getElementById('tshirt-div'), { quality: 0.95 })
+        .then(function (dataUrl) {
+            let link = document.createElement('a');
+            link.download = 'my-image-name.jpeg';
+            link.href = dataUrl;
+            link.click();
+        });*/
     domtoimage.toPng(node).then(function (dataUrl) {
         // Print the data URL of the picture in the Console
-
-        // You can for example to test, add the image at the end of the document
-        let img = new Image();
-        img.src = dataUrl;
-        document.body.appendChild(img);
-       // document.getElementById('shirtWithImage').value = dataUrl;
-
-        domtoimage.toJpeg(document.getElementById('tshirt-div'), { quality: 0.95 })
-            .then(function (dataUrl) {
-                let link = document.createElement('a');
-                link.download = 'my-image-name.jpeg';
-                link.href = dataUrl;
-                link.click();
-            });
+        document.getElementById('shirtWithImage').value = dataUrl;
 
         //console.log("value = :" + document.getElementById('shirtWithImage').value)
     }).catch(function (error) {
