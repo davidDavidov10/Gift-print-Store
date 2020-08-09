@@ -114,12 +114,13 @@ app.get('/api/cart/items', (request,response)=> {
 
 // Shirt design
 app.post('/api/design/save', upload.single('uploadedImg'),  function (request,response) {
-    // Todo: email = get user email from cookie
+    // Todo: email = get user email from cookis
     let email = "1@2";
     let body =  request.body;
     let imgID = uuid.v4();
     let prodImgID = uuid.v4();
     let data = new Buffer.from(request.body.shirtWithImage.slice(22), 'base64');
+
     fs.writeFile(`../static/productImg/${prodImgID}.png`, data,()=>{});
     // Rename file to be a unique id
     let file =  request.file;
@@ -135,7 +136,6 @@ app.post('/api/design/save', upload.single('uploadedImg'),  function (request,re
             //Todo: add amount and type
             let cart = JSON.stringify({0: item});
             client.hset('cart',email ,cart);
-            console.log(cart)
         }
         else{
             // User is  in db
@@ -143,7 +143,6 @@ app.post('/api/design/save', upload.single('uploadedImg'),  function (request,re
             let prodNum = Object.keys(cart).length;
             cart[prodNum] = item;
             client.hset('cart',email ,JSON.stringify(cart));
-            console.log(cart)
         }
     });
     response.redirect('back');

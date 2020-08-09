@@ -65,16 +65,10 @@ document.addEventListener("keydown", function(e) {
 function drawImg(){
     // Define as node the T-Shirt Div
     let node = document.getElementById('tshirt-div');
-   /* domtoimage.toJpeg(document.getElementById('tshirt-div'), { quality: 0.95 })
-        .then(function (dataUrl) {
-            let link = document.createElement('a');
-            link.download = 'my-image-name.jpeg';
-            link.href = dataUrl;
-            link.click();
-        });*/
     domtoimage.toPng(node).then(function (dataUrl) {
         // Print the data URL of the picture in the Console
-        document.getElementById('shirtWithImage').value = dataUrl;
+        document.getElementById('shirtWithImage').value = dataUrl
+        document.getElementById('addToCart').disabled = false;
 
         //console.log("value = :" + document.getElementById('shirtWithImage').value)
     }).catch(function (error) {
