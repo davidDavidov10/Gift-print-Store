@@ -2,24 +2,24 @@ var numOfItems =0;
 window.onload = () => {
     fetch(`http://localhost:6379/api/cart/items`, {method:'GET'})
         .then((res)=> res.json()).then((body)=> {
-        let itemsData = []
-        let data = JSON.parse( body.data);
-        console.log("data :" + data)
-        numOfItems = Object.keys(data).length;
-        for(let i = 0; i< numOfItems; i++){
-            itemsData.push(data[i]);
-            console.log("data[i] :" + data[i])
+        let userProductInfo = [];
+        let products = JSON.parse(body.data);
+        let productKeys = Object.keys(products); // Array of prodImg number
+        numOfItems = productKeys.length;
+        for(let i = 0; i < numOfItems; i++){
+            let key = productKeys[i];
+           // console.log("key = " + key)
+            let product = products[key];
+           // console.log("product = " + JSON.stringify(product))
+            userProductInfo.push(product);
         }
-        /*for(let key in  Object.keys(data)){
-            itemsData.push(data.key);
-        }*/
-        loadItemsData(itemsData);
+        loadItemsData(userProductInfo);
     });
 }
 
 window.addEventListener("unload", ()=>{
     let data = [];
-    for(let i = 0; i < numOfItems; i++){
+    for(let i = 0; i < numOfItems; i++){ //todo: !!
         data[i] = document.getElementById(i).value;
     }
     //alert(data);
@@ -37,7 +37,7 @@ function loadItemsData(itemList) {
     let dataHtml = '';
 
 
-    for(let [index,item] of itemList.entries()) {
+    for(let [index,item] of itemList.entries()) { //todo: !!
         dataHtml += `<div class="basket-product">
         <div class="item">
         <div class="product-image">
