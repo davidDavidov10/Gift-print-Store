@@ -67,7 +67,7 @@ app.post('/api/signIn', (request,response)=> {
     let body =  request.body;
     let email = body.email;
     let password = body.password;
-    let  sid = uuid.v4();;
+    let  sid = uuid.v4();
     //Todo: password encryption
     //TODO: handle each case
     client.hget("users", email,function (err, reply) {
@@ -88,9 +88,9 @@ app.post('/api/signIn', (request,response)=> {
                 // goto homepage while logged in
                 // hset "sessions" sid {id: email}
                 client.hset('sessions', sid, JSON.stringify({id: email}));
-                response.cookie('sid', sid, {maxAge: 3000});
+                response.cookie('sid', sid ); //30 min time out {maxAge: 1800000}
+                console.log(sid)
                 response.json('{}');
-
             }
         }
     });
@@ -102,13 +102,12 @@ app.post('/api/signIn', (request,response)=> {
 
 });
 
-/*app.post('/api/signIn', (request,response)=> {
+app.post('/api/test', (request,response)=> {
     let sid = uuid.v4();
     response.cookie('sid', sid);
-    console.log("dent cookie")
+    console.log("in test api")
     response.send('{}');
-
-});*/
+});
 
 
 
@@ -126,6 +125,7 @@ app.get('/api/admin', (request,response)=> {
 // Cart get items
 app.get('/api/cart/items', (request,response)=> {
     //Todo: get email from cookies\
+    console.log("cookie=: "+ request.cookie);
     let email = "1@2"
     client.hget("cart",email, function (err, reply) {
         if (err) throw err;
@@ -191,3 +191,9 @@ app.post('/api/design/save', upload.single('uploadedImg'),  function (request,re
     response.redirect('back');
 
 });
+
+
+
+function getUserEmailBySid(sid){
+
+}

@@ -27,7 +27,7 @@
 <!--Todo: check that post is the right method-->
 
 <!--<form action="http://localhost:6379/api/signIn" method="post">-->
-<form>
+<form >
     <div class="container">
         <label class="email">Email</label>
         <input id="email" type="email" placeholder="email" name="email" required/><br>
@@ -37,13 +37,22 @@
 
         <label><input type="checkbox" checked="checked" name="remember">Remember me</label><br>
 
-        <button type="button"  onclick="checkLogin()" >Sign In</button>
+        <button type="button"  id="submit"   onclick="checkLogin()" >Sign In</button>
         <!--TODO : add password confirmation-->
         <!-- check that there is no such email in the database        -->
     </div>
 </form>
-<p id="err"></p>
+<p id="err" style="color:red"></p>
 
+    <button onclick="myFunction()">Click me</button>
 
+<p id="demo"></p>
+
+<script>
+    function myFunction() {
+        console.log( "Hello World");
+        fetch(`http://localhost:6379/api/test`, {method:'POST' });
+    }
+</script>
 </body>
 </html>
