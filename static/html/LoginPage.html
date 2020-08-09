@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/HomePageStyle.css">
-    <script src="../../src/index.js"></script>
+    <script src="../js/login.js"></script>
     <title>LoginPage</title>
     <link rel = "icon" href ="../img/GiftPrintSmall.png" type = "image/x-icon">
 
@@ -26,21 +26,23 @@
 <!--TODO: decide action  -->
 <!--Todo: check that post is the right method-->
 
-<form action="http://localhost:6379/api/signIn" method="post">
+<!--<form action="http://localhost:6379/api/signIn" method="post">-->
+<form>
     <div class="container">
         <label class="email">Email</label>
-        <input type="email" placeholder="email" name="email" required/><br>
+        <input id="email" type="email" placeholder="email" name="email" required/><br>
 
         <label class="pass">Password</label>
-        <input type="password" placeholder="Password" name="password" required/><br>
+        <input id="password" type="password" placeholder="Password" name="password" required/><br>
 
         <label><input type="checkbox" checked="checked" name="remember">Remember me</label><br>
 
-        <button type="submit">Sign In</button>
+        <button type="button"  onclick="checkLogin()" >Sign In</button>
         <!--TODO : add password confirmation-->
         <!-- check that there is no such email in the database        -->
     </div>
 </form>
+<p id="err"></p>
 
 
 </body>

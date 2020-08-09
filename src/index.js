@@ -7,6 +7,8 @@ const cors = require('cors');
 const uuid = require('uuid');
 const multer  = require('multer');
 const path = require('path');
+const cookieParser = require('cookie-parser');
+
 
 // How to save images
 const storage = multer.diskStorage({
@@ -36,6 +38,7 @@ client.on('error', (error)=>{
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
+app.use(cookieParser());
 
 
 
@@ -62,32 +65,50 @@ app.post('/api/signUp', (request,response)=> {
 // Sign in
 app.post('/api/signIn', (request,response)=> {
     let body =  request.body;
-    let email = String(body.email);
+    let email = body.email;
     let password = body.password;
-    console.log("entered password = " + password);
+    let  sid = uuid.v4();;
     //Todo: password encryption
-
-
     //TODO: handle each case
     client.hget("users", email,function (err, reply) {
         if (err)  throw err;
         let user =  JSON.parse(reply);
-        if (user === null) console.log("unknown  email address" )//show unknown  email address
+        if (user === null) {
+            console.log("unknown  email address" )
+            response.json('{"err": "Incorrect Email"}');
+        }//show unknown  email address
         else{
             if(password !== user.password){
                 // show incorrect password
                 console.log("incorrect password")
+                response.json('{"err": "Incorrect Password"}');
             } else{
                 //login
               console.log("logged in ");
                 // goto homepage while logged in
+                // hset "sessions" sid {id: email}
+                client.hset('sessions', sid, JSON.stringify({id: email}));
+                response.cookie('sid', sid, {maxAge: 3000});
+                response.json('{}');
+
             }
         }
     });
     //Todo: choose redirect
-    response.redirect('back');
+  // response.redirect('back');
+    /*response.cookie('sid', sid, {maxAge: 3000});
+    response.send('{}');*/
+
 
 });
+
+/*app.post('/api/signIn', (request,response)=> {
+    let sid = uuid.v4();
+    response.cookie('sid', sid);
+    console.log("dent cookie")
+    response.send('{}');
+
+});*/
 
 
 
