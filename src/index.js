@@ -34,7 +34,9 @@ client.on('error', (error)=>{
 });
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.use(cors());
+
 
 
 const port = 6379;
@@ -112,11 +114,36 @@ app.get('/api/cart/items', (request,response)=> {
 });
 
 
+// Cart get items
+app.put('/api/cart/items/update', (request,response)=> {
+    //Todo: get email from cookies\
+    //Todo: update according to last change by user and not on last closed window
+    console.log("in items update in index");
+    let email = "1@2";
+    let productsAmounts = request.body;
+    Object.keys(productsAmounts).forEach(function(key) {
+        console.table('Key : ' + key + ', Value : ' + productsAmounts[key])
+        let amount = productsAmounts[key];
+        client.hget("cart", email, function (err, reply) {
+            if (err) throw err;
+            let cart = JSON.parse(reply); //todo: if cart == null
+            if(amount !== "0"){
+                cart[key].amount = amount;
+            } else{ // Delete item
+                delete cart[key]
+            }
+            client.hset('cart', email, JSON.stringify(cart));
+        });
+    });
+    response.redirect('back');
+});
+
+
 // Shirt design
 app.post('/api/design/save', upload.single('uploadedImg'),  function (request,response) {
-    // Todo: email = get user email from cookis
+    // Todo: email = get user email from cookies
     let email = "1@2";
-    let body =  request.body;
+   // let body =  request.body;
     let imgID = uuid.v4();
     let prodImgID = uuid.v4();
     let data = new Buffer.from(request.body.shirtWithImage.slice(22), 'base64');
