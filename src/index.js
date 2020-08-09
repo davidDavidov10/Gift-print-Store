@@ -136,7 +136,7 @@ app.post('/api/design/save', upload.single('uploadedImg'),  function (request,re
             let cart = JSON.stringify({0: item});
             client.hset('cart',email ,cart);
             console.log(cart)
-        }//show unknown  email address
+        }
         else{
             // User is  in db
             let cart = JSON.parse(reply);
