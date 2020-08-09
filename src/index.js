@@ -118,6 +118,7 @@ app.get('/api/cart/items', (request,response)=> {
 app.put('/api/cart/items/update', (request,response)=> {
     //Todo: get email from cookies\
     //Todo: update according to last change by user and not on last closed window
+    //Todo: when removing from db erase from server the imgs
     console.log("in items update in index");
     let email = "1@2";
     let productsAmounts = request.body;
