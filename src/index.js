@@ -49,17 +49,29 @@ app.listen(port,()=>{
 });
 
 // Sign up
-app.post('/api/signUp', (request,response)=> {
+app.post('/api/signUp', async (request,response)=> {
     let body =  request.body;
-    let firstName = body.FirstName;
-    let lastName = body.LastName;
+    let firstName = body.firstName;
+    let lastName = body.lastName;
     let email = String(body.email);
     let password = body.password;
+    // Check user doesn't already exist for given email
+    let exists  = await new Promise( (resolve, reject) =>{
+        client.hexists('users', email, (err, reply)=>{
+            resolve(reply)
+
+        });
+    });
     //Todo: password encryption
-    let userDetails = `{"firstName": "${firstName}", "lastName": "${lastName}", "email": "${email}", "password": "${password}"}`;
-    client.hset('users',email ,userDetails);
+    if(!exists){
+        let userDetails = `{"firstName": "${firstName}", "lastName": "${lastName}", "email": "${email}", "password": "${password}"}`;
+        client.hset('users',email ,userDetails);
+    }else{
+        response.json({"err" : "User exists for this email please log in"})
+    }
+
     //Todo: choose redirect
-    response.redirect('back');
+  //  response.redirect('back');
 });
 
 
@@ -98,30 +110,10 @@ app.post('/api/signIn', (request,response)=> {
             }
         }
     });
-/*
+
     //Todo: choose redirect
-  // response.redirect('back');
-    /!*response.cookie('sid', sid, {maxAge: 3000});
-    response.send('{}');*!/
-*/
-
 
 });
-
-//delete later
-app.post('/api/test', (request,response)=> {
-    let sid = uuid.v4();
-    console.log("in index /test")
-
-    //response.setHeader('Set-Cookie', ['type=ninja', 'language=javascript']);
-
-    console.log("body = " + JSON.stringify(request.body))
-
-    response.cookie('test sid', sid);
-    response.json('{}');
-
-});
-
 
 
 // Admin
@@ -138,7 +130,6 @@ app.get('/api/admin', (request,response)=> {
 // Cart get items from db to show in cart
 app.get('/api/cart/items',  async (request,response)=> {
    await getUserFromSession(request).then((email) =>{
-       console.log("email = "+ email)
        client.hget("cart", email, function (err, reply) {
            if (err) throw err;
            let data = {"data": reply };
@@ -162,7 +153,6 @@ app.put('/api/cart/items/update', async (request,response)=> {
                 if (err) throw err;
                 let cart = JSON.parse(reply);
                 resolve(cart)//todo: if cart == null
-                console.log("cart (index)= " + JSON.stringify(cart))
             });
         });
         Object.keys(productsAmounts).forEach(function (key) {
@@ -217,9 +207,27 @@ function getUserFromSession(request){
             // Todo: check if there is a better way to parse the sid from cookie
             let sid = request.header('Cookie').split(";")[1].slice(5);
             client.hget("sessions", sid,  (err, reply)=>{
-                console.log("in getUsesFromSession")
                 resolve(JSON.parse(reply).id)
             });
         }
     );
 }
+
+// Todo: cleanup redis sessions once every ? 10? hours except for remember me set interval
+// Todo: remember me, else session  expiration in 30 min
+// Todo: create homepage with products
+// Todo: admin vs. user
+// Todo: admin add login activity, purchases, cart
+// Todo: css - design design design
+// Todo: can only enter pages if logged in
+// Todo: home page : search, items.
+// Todo: checkout screen
+// Todo: cart screen activate search
+// Todo: navbar can we reuse the code here?
+// Todo: defend against Dos attacks
+// Todo: make sure there are at least 2-4 additional pages as required
+
+
+// Todo: if there's time
+// send confirmation email or reset password
+// previous purchases

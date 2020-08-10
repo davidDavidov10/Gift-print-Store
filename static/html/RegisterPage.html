@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/HomePageStyle.css">
-    <script src="../../src/index.js"></script>
+    <script src="../js/register.js"></script>
     <title>RegisterPage</title>
     <link rel = "icon" href ="../img/GiftPrintSmall.png" type = "image/x-icon">
 
@@ -26,27 +26,26 @@
 
 <!--TODO: decide action  -->
 
-<form action="http://localhost:6379/api/signUp" method="post">
+
     <div class="container">
         <label class="First name">First name</label>
-        <input type="text" placeholder="name"  name="FirstName" required/><br>
+        <input type="text" placeholder="name"  name="FirstName" id="first_name" required/><br>
 
         <label class="Last name">Last name</label>
-        <input type="text" placeholder="Last name" name="LastName" required/><br>
+        <input type="text" placeholder="Last name" name="LastName" id="last_name" required/><br>
 
         <label class="email">Email</label>
-        <input type="email" placeholder="email" name="email" required/><br>
-
+        <input type="email" placeholder="email" name="email" id="email"required/><br>
         <label class="pass">Password</label>
-        <input type="password" placeholder="Password" name="password" required/><br>
+        <input type="password" placeholder="Password" name="password" id="password" required/><br>
 
-        <button type="submit">Sign up</button><br>
-
-        <!--TODO : add password confirmation-->
-        <!-- check that there is no such email in the database        -->
+        <button onclick="checkRegister()">Sign up</button><br>
+        <!--TODO : add email check-->
+        <p id="err" style="color:red"></p>
     </div>
-</form>
 
+<!--todo: email validate-->
+<!--todo: after user created redirect to sign in-->
 
 </body>
 </html>

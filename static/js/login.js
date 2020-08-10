@@ -16,7 +16,7 @@
       let response = await fetch("http://localhost:6379/api/signIn", requestOptions)
 
      response = await response.json();
-     document.getElementById('err').innerHTML = await JSON.parse(response).err;
+     document.getElementById('err').innerHTML = await response.err;
 
 }
 
