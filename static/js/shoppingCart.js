@@ -28,7 +28,12 @@ window.onbeforeunload = function(e){
            productsAmount[key] = document.getElementById(`amount${index}`).value;
        }
    // console.log(JSON.stringify(productsAmount))
-    fetch(`http://localhost:6379/api/cart/items/update`, {method:'PUT', body:JSON.stringify(productsAmount), headers: {'Content-Type': 'application/json'}});
+    fetch(`http://localhost:6379/api/cart/items/update`, {
+        credentials: "include",
+        method:'PUT',
+        body:JSON.stringify(productsAmount),
+        headers: {'Content-Type': 'application/json'}
+    }).then((a)=> console.log("here " +a));
 }
 
 function removeProduct(index){

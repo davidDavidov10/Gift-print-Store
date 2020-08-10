@@ -135,89 +135,56 @@ app.get('/api/admin', (request,response)=> {
 
 
 
-// Cart get items
-app.get('/api/cart/items',  (request,response)=> {
-/*
-    //Todo: get email from cookies\
-    let sid =  request.header('Cookie').split(";")[1];
-    console.log(sid)
-    sid = sid.slice(5)
-    // Todo: check if there is a better way to parse the sid from cookie
-    console.log(sid)
-    client.hget("sessions",sid,  function (err, reply) {
-        if (err) throw err;
-        let email = JSON.parse(reply).id;
-        console.log("email = "+ email)
-        client.hget("cart", email, function (err, reply) {
-            if (err) throw err;
-            let data = {"data": reply };
-            response.json(data);
-        });
-    });
-*/
-   getUserFromSession(request).then((email) =>{
+// Cart get items from db to show in cart
+app.get('/api/cart/items',  async (request,response)=> {
+   await getUserFromSession(request).then((email) =>{
        console.log("email = "+ email)
        client.hget("cart", email, function (err, reply) {
            if (err) throw err;
            let data = {"data": reply };
+
            response.json(data);
        });
    });
-
 });
 
 
-async function getUserFromSession( request) {
-    let sid = request.header('Cookie').split(";")[1].slice(5);
-    console.log("in function  sid= " + sid)
-    let email = null;
-    let a = await client.hget("sessions", sid, async function (err, reply) {
-        if (err) throw err;
-        email = JSON.parse(reply).id;
-        console.log("in function 1 email = " + email)
-        return email;
-    });
-    await console.log("in function 2  email = " + email)
-    if(a){
-        console.log( " 4" + email )
-        return email;
-    }
-    return a;
-}
-async function foo(){
 
-}
-
-// Cart get items
-app.put('/api/cart/items/update', (request,response)=> {
-    //Todo: get email from cookies\
+// Cart update db product amount and del from cart
+app.put('/api/cart/items/update', async (request,response)=> {
     //Todo: update according to last change by user and not on last closed window
+    //Todo: save and get the amount to change from local storage
     //Todo: when removing from db erase from server the imgs
     console.log("in items update in index");
-    let email = "1@2";
-    let productsAmounts = request.body;
-    Object.keys(productsAmounts).forEach(function(key) {
-        console.table('Key : ' + key + ', Value : ' + productsAmounts[key])
-        let amount = productsAmounts[key];
-        client.hget("cart", email, function (err, reply) {
-            if (err) throw err;
-            let cart = JSON.parse(reply); //todo: if cart == null
-            if(amount !== "0"){
+
+    await getUserFromSession(request).then(async (email) => {
+        let productsAmounts = request.body;
+        let cart = await new Promise((resolve, reject) => {
+            client.hget("cart", email, function (err, reply) {
+                if (err) throw err;
+                let cart = JSON.parse(reply);
+                resolve(cart)//todo: if cart == null
+                console.log("cart (index)= " + JSON.stringify(cart))
+            });
+        });
+        Object.keys(productsAmounts).forEach(function (key) {
+            let amount = productsAmounts[key];
+            if (amount !== "0") {
                 cart[key].amount = amount;
-            } else{ // Delete item
+            } else { // Delete item
                 delete cart[key]
             }
-            client.hset('cart', email, JSON.stringify(cart));
         });
+        client.hset('cart', email, JSON.stringify(cart));
+
     });
-    response.redirect('back');
 });
 
 
 // Shirt design
 app.post('/api/design/save', upload.single('uploadedImg'),  function (request,response) {
     // Todo: email = get user email from cookies
-    let email = "1@2";
+    let email = "a@b";
    // let body =  request.body;
     let imgID = uuid.v4();
     let prodImgID = uuid.v4();
@@ -245,3 +212,15 @@ app.post('/api/design/save', upload.single('uploadedImg'),  function (request,re
 
 });
 
+// Get user email from session id  in cookie
+function getUserFromSession(request){
+    return new Promise((resolve, reject) =>{
+            // Todo: check if there is a better way to parse the sid from cookie
+            let sid = request.header('Cookie').split(";")[1].slice(5);
+            client.hget("sessions", sid,  (err, reply)=>{
+                console.log("in getUsesFromSession")
+                resolve(JSON.parse(reply).id)
+            });
+        }
+    );
+}
