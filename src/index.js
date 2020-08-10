@@ -155,8 +155,6 @@ app.put('/api/cart/items/update', async (request,response)=> {
     //Todo: update according to last change by user and not on last closed window
     //Todo: save and get the amount to change from local storage
     //Todo: when removing from db erase from server the imgs
-    console.log("in items update in index");
-
     await getUserFromSession(request).then(async (email) => {
         let productsAmounts = request.body;
         let cart = await new Promise((resolve, reject) => {
@@ -181,35 +179,36 @@ app.put('/api/cart/items/update', async (request,response)=> {
 });
 
 
-// Shirt design
-app.post('/api/design/save', upload.single('uploadedImg'),  function (request,response) {
+// Shirt design and save in user cart, save imgs in server
+app.post('/api/design/save', upload.single('uploadedImg'),  async(request,response) => {
     // Todo: email = get user email from cookies
-    let email = "a@b";
-   // let body =  request.body;
-    let imgID = uuid.v4();
-    let prodImgID = uuid.v4();
-    let data = new Buffer.from(request.body.shirtWithImage.slice(22), 'base64');
+    await getUserFromSession(request).then((email) =>{
+       // let body =  request.body;
+        let imgID = uuid.v4();
+        let prodImgID = uuid.v4();
+        let data = new Buffer.from(request.body.shirtWithImage.slice(22), 'base64');
 
-    fs.writeFile(`../static/productImg/${prodImgID}.png`, data,()=>{});
-    // Rename file to be a unique id
-    let file =  request.file;
-    fs.renameSync( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`);
+        fs.writeFile(`../static/productImg/${prodImgID}.png`, data,()=>{});
+        // Rename file to be a unique id
+        let file =  request.file;
+        fs.renameSync( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`);
 
-    // Check if user is in db key img
-    client.hget("cart", email,function (err, reply) {
-        if (err)  throw err;
-        let item = { prodImg:prodImgID, imgToPrint:imgID , amount:2, type:"shirt", price:3, color:"blue"}
-        let cart = {};
-        if (reply !== null) {
-            // User is  in db, get existing cart
-            cart = JSON.parse(reply);
-        }
-        // Add item to cart
-        cart[prodImgID] = item;
-        client.hset('cart',email ,JSON.stringify(cart));
+        // Check if user is in db key img
+        client.hget("cart", email,function (err, reply) {
+            if (err)  throw err;
+            let item = { prodImg:prodImgID, imgToPrint:imgID , amount:2, type:"shirt", price:3, color:"blue"}
+            let cart = {};
+            if (reply !== null) {
+                // User is  in db, get existing cart
+                cart = JSON.parse(reply);
+            }
+            // Add item to cart
+            cart[prodImgID] = item;
+            client.hset('cart',email ,JSON.stringify(cart));
+        });
+        response.redirect('back');
+
     });
-    response.redirect('back');
-
 });
 
 // Get user email from session id  in cookie
