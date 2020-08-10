@@ -136,15 +136,26 @@ app.get('/api/admin', (request,response)=> {
 
 
 // Cart get items
-app.get('/api/cart/items', (request,response)=> {
+app.get('/api/cart/items', async (request,response)=> {
     //Todo: get email from cookies\
-    console.log("cookie=: "+ request.cookie);
-    let email = "1@2"
-    client.hget("cart",email, function (err, reply) {
+    let sid =  request.header('Cookie').split(";")[1];
+    console.log(sid)
+    sid = sid.slice(5)
+    // Todo: check if there is a better way to parse the sid from cookie
+    console.log(sid)
+    client.hget("sessions",sid,  function (err, reply) {
         if (err) throw err;
-        let data = {"data": reply };
-        response.json(data);
+        let email = JSON.parse(reply).id;
+        console.log("email = "+ email)
+        client.hget("cart", email, function (err, reply) {
+            if (err) throw err;
+            let data = {"data": reply };
+            response.json(data);
+        });
     });
+
+
+
 });
 
 

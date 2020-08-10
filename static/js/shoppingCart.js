@@ -1,6 +1,9 @@
 var numOfItems =0;
 window.onload = () => {
-    fetch(`http://localhost:6379/api/cart/items`, {method:'GET'})
+    fetch(`http://localhost:6379/api/cart/items`, {
+        credentials: "include",
+        method:'GET'
+    })
         .then((res)=> res.json()).then((body)=> {
         let userProductInfo = [];
         let products = JSON.parse(body.data);
@@ -24,7 +27,7 @@ window.onbeforeunload = function(e){
            let key = document.getElementById(index).getAttribute('data-value');
            productsAmount[key] = document.getElementById(`amount${index}`).value;
        }
-    console.log(JSON.stringify(productsAmount))
+   // console.log(JSON.stringify(productsAmount))
     fetch(`http://localhost:6379/api/cart/items/update`, {method:'PUT', body:JSON.stringify(productsAmount), headers: {'Content-Type': 'application/json'}});
 }
 
