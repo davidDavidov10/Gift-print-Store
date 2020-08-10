@@ -136,7 +136,8 @@ app.get('/api/admin', (request,response)=> {
 
 
 // Cart get items
-app.get('/api/cart/items', async (request,response)=> {
+app.get('/api/cart/items',  (request,response)=> {
+/*
     //Todo: get email from cookies\
     let sid =  request.header('Cookie').split(";")[1];
     console.log(sid)
@@ -153,11 +154,39 @@ app.get('/api/cart/items', async (request,response)=> {
             response.json(data);
         });
     });
-
-
+*/
+   getUserFromSession(request).then((email) =>{
+       console.log("email = "+ email)
+       client.hget("cart", email, function (err, reply) {
+           if (err) throw err;
+           let data = {"data": reply };
+           response.json(data);
+       });
+   });
 
 });
 
+
+async function getUserFromSession( request) {
+    let sid = request.header('Cookie').split(";")[1].slice(5);
+    console.log("in function  sid= " + sid)
+    let email = null;
+    let a = await client.hget("sessions", sid, async function (err, reply) {
+        if (err) throw err;
+        email = JSON.parse(reply).id;
+        console.log("in function 1 email = " + email)
+        return email;
+    });
+    await console.log("in function 2  email = " + email)
+    if(a){
+        console.log( " 4" + email )
+        return email;
+    }
+    return a;
+}
+async function foo(){
+
+}
 
 // Cart get items
 app.put('/api/cart/items/update', (request,response)=> {
@@ -216,8 +245,3 @@ app.post('/api/design/save', upload.single('uploadedImg'),  function (request,re
 
 });
 
-
-
-function getUserEmailBySid(sid){
-
-}
