@@ -37,7 +37,8 @@ client.on('error', (error)=>{
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use(cors());
+//app.use(cors());
+app.use(cors({ origin: 'http://localhost:63342' , credentials :  true}));
 app.use(cookieParser());
 
 
@@ -64,12 +65,14 @@ app.post('/api/signUp', (request,response)=> {
 
 // Sign in
 app.post('/api/signIn', (request,response)=> {
+//app.post('/api/test', (request,response)=> {
     let body =  request.body;
     let email = body.email;
     let password = body.password;
     let  sid = uuid.v4();
     //Todo: password encryption
     //TODO: handle each case
+    response.cookie('sid', sid ); //30 min time out {maxAge: 1800000}
     client.hget("users", email,function (err, reply) {
         if (err)  throw err;
         let user =  JSON.parse(reply);
@@ -88,25 +91,35 @@ app.post('/api/signIn', (request,response)=> {
                 // goto homepage while logged in
                 // hset "sessions" sid {id: email}
                 client.hset('sessions', sid, JSON.stringify({id: email}));
-                response.cookie('sid', sid ); //30 min time out {maxAge: 1800000}
+
                 console.log(sid)
+
                 response.json('{}');
             }
         }
     });
+/*
     //Todo: choose redirect
   // response.redirect('back');
-    /*response.cookie('sid', sid, {maxAge: 3000});
-    response.send('{}');*/
+    /!*response.cookie('sid', sid, {maxAge: 3000});
+    response.send('{}');*!/
+*/
 
 
 });
 
+//delete later
 app.post('/api/test', (request,response)=> {
     let sid = uuid.v4();
-    response.cookie('sid', sid);
-    console.log("in test api")
-    response.send('{}');
+    console.log("in index /test")
+
+    //response.setHeader('Set-Cookie', ['type=ninja', 'language=javascript']);
+
+    console.log("body = " + JSON.stringify(request.body))
+
+    response.cookie('test sid', sid);
+    response.json('{}');
+
 });
 
 

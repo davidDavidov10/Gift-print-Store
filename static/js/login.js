@@ -5,12 +5,18 @@
      // Todo: make submit possible only on valid email and non empty password
      let email = document.getElementById('email').value;
      let pass = document.getElementById('password').value;
-     let response =  await fetch(`http://localhost:6379/api/signIn`, {method:'POST' ,
-        body:JSON.stringify({"email":email, "password":pass}), headers: {'Content-Type': 'application/json'}});
+
+      let requestOptions = {
+           method: 'POST',
+           credentials: "include",
+           headers: {'Content-Type': 'application/json'},
+           body:JSON.stringify({"email":email, "password":pass})
+      };
+
+      let response = await fetch("http://localhost:6379/api/signIn", requestOptions)
+
      response = await response.json();
      document.getElementById('err').innerHTML = await JSON.parse(response).err;
-     console.log(JSON.parse(response))
-     console.log(response.headers.get('Set-Cookie'));
 
 }
 
