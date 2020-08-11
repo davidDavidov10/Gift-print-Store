@@ -28,6 +28,7 @@ document.getElementById('product-custompicture').addEventListener("change", func
     var reader = new FileReader();
 
     reader.onload = function (event){
+        canvas.remove(canvas.item(0));
         var imgObj = new Image();
         imgObj.src = event.target.result;
 
@@ -37,7 +38,7 @@ document.getElementById('product-custompicture').addEventListener("change", func
 
             img.scaleToHeight(100);
             img.scaleToWidth(100);
-            canvas.centerObject(img);
+            canvas.centerObject(img)
             canvas.add(img);
             canvas.renderAll();
 
@@ -64,19 +65,20 @@ document.addEventListener("keydown", function(e) {
 
 //Todo: make the add to cart open only after done editing and make done editing replace the shirt editor with a photo
 function doneEdit(){
-
     new Promise((resolve,reject)=>{
-        canvas.item(0).lockScalingX = canvas.item(0).lockScalingY = true;// Can't resize item
-        canvas.item(0).lockMovementX = canvas.item(0).lockMovementY = true;// Can't resize item
-        canvas.item(0).selectable = false; // Can't reselect item
-        canvas.discardActiveObject(); // Remove item selection
-        canvas.requestRenderAll();
-        console.log("rendered")
+        if(canvas.item(0) !== undefined ){
+            console.log("exists")
+            canvas.item(0).lockScalingX = canvas.item(0).lockScalingY = true;// Can't resize item
+            canvas.item(0).lockMovementX = canvas.item(0).lockMovementY = true;// Can't resize item
+            canvas.item(0).selectable = false; // Can't reselect item
+            canvas.item(0)['hasControls'] = false;
+            canvas.item(0)['hasBorders'] = false;
+            canvas.renderAll();
+        }
         resolve(document.getElementById('product-div'));
-    }).then(domtoimage.toPng) //domtoimage.toPng()
+    }).then(domtoimage.toPng) //domtoimage.toPng() // todo: find better way to send img this takes a lot of time for large imgs
     .then(function (dataUrl) {
             // Print the data URL of the picture in the Console
-        console.log("url " + dataUrl)
             document.getElementById('productWithImage').value = dataUrl
             document.getElementById('addToCart').disabled = false;
             document.getElementById('continueEdit').disabled = false;
@@ -88,17 +90,15 @@ function doneEdit(){
 }
 
 function continueEdit(){
-    // Define as node the T-Shirt Div
-    let node = document.getElementById('product-div');
-    domtoimage.toPng(node).then(function (dataUrl) {
-        // Print the data URL of the picture in the Console
-        document.getElementById('productWithImage').value = dataUrl
-        document.getElementById('addToCart').disabled = false;
-        document.getElementById('continueEdit').disabled = false;
-        document.getElementById('doneEdit').disabled = true;
-
-        //console.log("value = :" + document.getElementById('shirtWithImage').value)
-    }).catch(function (error) {
-        console.error('oops, something went wrong!', error);
-    });
+    if(canvas.item(0) !== undefined ) {
+        canvas.item(0).lockScalingX = canvas.item(0).lockScalingY = false;// Can resize item
+        canvas.item(0).lockMovementX = canvas.item(0).lockMovementY = false;// Can resize item
+        canvas.item(0).selectable = true; // Can't reselect item
+        canvas.item(0)['hasControls'] = true;
+        canvas.item(0)['hasBorders'] = true;
+        canvas.renderAll();
+    }
+    document.getElementById('addToCart').disabled = true;
+    document.getElementById('continueEdit').disabled = true;
+    document.getElementById('doneEdit').disabled = false;
 }

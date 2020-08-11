@@ -181,19 +181,26 @@ app.put('/api/cart/items/update', async (request,response)=> {
 
 // Shirt design and save in user cart, save imgs in server
 app.post('/api/design/save', upload.single('uploadedImg'),  async(request,response) => {
-    // Todo: email = get user email from cookies
     await getUserFromSession(request).then((email) =>{
        // let body =  request.body;
-        let imgID = uuid.v4();
+        let imgID = "No selected img"
         let prodImgID = uuid.v4();
         let data = new Buffer.from(request.body.productWithImage.slice(22), 'base64');
         let productType = request.body.productType;
         let color = request.body.productColor;
 
-        fs.writeFile(`../static/productImg/${prodImgID}.png`, data,()=>{});
+
         // Rename file to be a unique id
         let file =  request.file;
-        fs.renameSync( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`);
+        if(file !== undefined){
+             imgID = uuid.v4();
+            fs.rename( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`,()=>{});
+        }
+
+
+        console.log("before write")
+        fs.writeFile(`../static/productImg/${prodImgID}.png`, data,()=>{});
+        console.log("after write")
 
         // Check if user is in db key img
         client.hget("cart", email,function (err, reply) {
