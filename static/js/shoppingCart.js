@@ -59,7 +59,7 @@ function loadItemsData(itemList) {
                 <div class="product-details">
                
             <p><strong>${item.type}</strong></p>
-            <p><strong>Color: ${item.type}</strong></p>
+            <p><strong>Color: ${item.color}</strong></p>
             </div>
             </div>
             <div class="price">Price: ${item.price}$</div>

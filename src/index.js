@@ -81,10 +81,20 @@ app.post('/api/signIn', (request,response)=> {
     let body =  request.body;
     let email = body.email;
     let password = body.password;
+    let rememberMe = body.rememberMe;
     let  sid = uuid.v4();
+    console.log("remember me = " + rememberMe)
+    var d = new Date();
+    console.log( d.getHours() +":" + d.getMinutes())
+    if(rememberMe){
+        response.cookie('sid', sid ); // todo: check how log this should be connected
+    }else{
+        response.cookie('sid', sid ,{maxAge: 1800000}); // 30 min until cookie expires
+
+    }
     //Todo: password encryption
     //TODO: handle each case
-    response.cookie('sid', sid ); //30 min time out {maxAge: 1800000}
+
     client.hget("users", email,function (err, reply) {
         if (err)  throw err;
         let user =  JSON.parse(reply);
@@ -176,7 +186,9 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
        // let body =  request.body;
         let imgID = uuid.v4();
         let prodImgID = uuid.v4();
-        let data = new Buffer.from(request.body.shirtWithImage.slice(22), 'base64');
+        let data = new Buffer.from(request.body.productWithImage.slice(22), 'base64');
+        let productType = request.body.productType;
+        let color = request.body.productColor;
 
         fs.writeFile(`../static/productImg/${prodImgID}.png`, data,()=>{});
         // Rename file to be a unique id
@@ -186,7 +198,7 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
         // Check if user is in db key img
         client.hget("cart", email,function (err, reply) {
             if (err)  throw err;
-            let item = { prodImg:prodImgID, imgToPrint:imgID , amount:2, type:"shirt", price:3, color:"blue"}
+            let item = { prodImg:prodImgID, imgToPrint:imgID , amount:2, type:productType, price:3, color:color}
             let cart = {};
             if (reply !== null) {
                 // User is  in db, get existing cart
@@ -213,19 +225,20 @@ function getUserFromSession(request){
     );
 }
 
-// Todo: cleanup redis sessions once every ? 10? hours except for remember me set interval
-// Todo: remember me, else session  expiration in 30 min
-// Todo: create homepage with products
-// Todo: admin vs. user
-// Todo: admin add login activity, purchases, cart
-// Todo: css - design design design
-// Todo: can only enter pages if logged in
-// Todo: home page : search, items.
-// Todo: checkout screen
-// Todo: cart screen activate search
-// Todo: navbar can we reuse the code here?
-// Todo: defend against Dos attacks
-// Todo: make sure there are at least 2-4 additional pages as required
+// Todo:   cleanup redis sessions once every ? 10? hours except for remember me set interval
+// Todo: V remember me, else session  expiration in 30 min
+// Todo:   create homepage with products
+// Todo:   admin vs. user
+// Todo:   admin add login activity, purchases, cart
+// Todo:   css - design design design
+// Todo:   can only enter pages if logged in
+// Todo:   home page : search, items.
+// Todo:   checkout screen
+// Todo:   cart screen activate search
+// Todo:   navbar can we reuse the code here?
+// Todo:   defend against Dos attacks
+// Todo:   make sure there are at least 2-4 additional pages as required
+// Todo:   encrypt  password
 
 
 // Todo: if there's time

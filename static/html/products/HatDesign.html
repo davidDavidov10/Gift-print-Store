@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dynamic and Resizable Tee Designer</title>
-    <link rel="stylesheet" type="text/css" href="../../css/products/shirtDesign.css">
+    <link rel="stylesheet" type="text/css" href="../../css/products/hatDesign.css">
     <link rel = "icon" href ="../img/GiftPrintSmall.png" type = "image/x-icon">
+
 
     <!--navbar-->
     <link rel="stylesheet" type="text/css" href="../../css/HomePageStyle.css">
@@ -25,7 +26,7 @@
         Initially, the image will have the background tshirt that has transparency
         So we can simply update the color with CSS or JavaScript dinamically
     -->
-    <img id="product-backgroundpicture" src="../../img/background_tshirt.png"/>
+    <img id="product-backgroundpicture" src="../../img/background_hat.png" width="500" height="500"/>
 
     <div id="drawingArea" class="drawing-area">
         <div class="canvas-container">
@@ -43,7 +44,6 @@
     <option value="./batman_small.png">Batman</option>
 </select>
 
-<!-- The Select that allows the user to change the color of the T-Shirt -->
 <br><br>
 <label for="product-color">Product Color:</label>
 <select id="product-color" name="productColor" form="form" >
@@ -57,14 +57,17 @@
 
 <br><br>
 
+
 <form id="form" action="http://localhost:6379/api/design/save" method="post" enctype="multipart/form-data">
+    <!-- The Select that allows the user to change the color of the T-Shirt -->
+
     <label for="product-custompicture">Upload your own design:</label>
     <!--the image-->
     <input type="file" id="product-custompicture" name="uploadedImg" />
 
     <button type="submit" id="addToCart" disabled >Add to cart</button>
     <input type="hidden" name="productWithImage" id="productWithImage" value="">
-    <input type="hidden"  name="productType" id="productType" value="Shirt">
+    <input type="hidden"  name="productType" id="productType" value="Hat">
 
 </form>
 <button  onclick="drawImg()">Done editing</button>
