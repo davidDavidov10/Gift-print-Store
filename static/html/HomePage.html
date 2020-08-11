@@ -18,31 +18,32 @@
     </ul>
 </head>
 <body>
+<input id="homeSearchBar" type="text" placeholder="Search.." onkeyup="searchHomeProducts()">
 <div class="displaybox">
 
-    <div class="roll">
+    <div class="roll" id="shirt">
         <div class="dis dis1">
             <div class="distopwrap">
                 <div class="dislogo dislogo1">
                 </div>
                 <div class="disdis">
-                    <strong>DC Shoes</strong> Men's Street x Grand
+                    <strong>Shirt</strong>
                 </div>
             </div>
             <div class="disprice">
-                $129.95
+                $15.00
             </div>
             <a href="products/ShirtDesign.html" class="disbut" onclick="" ><i class="fa fa-shopping-cart faspace"></i> Design your own </a>
         </div>
     </div>
 
-    <div class="roll">
+    <div class="roll" id="cup">
         <div class="dis dis2">
             <div class="distopwrap">
                 <div class="dislogo dislogo1">
                 </div>
                 <div class="disdis">
-                    <strong>DC Shoes</strong> Men's Street x Grand
+                    <strong>Cup</strong>
                 </div>
             </div>
             <div class="disprice">
@@ -52,13 +53,13 @@
         </div>
     </div>
 
-    <div class="roll">
+    <div class="roll" id="hat">
         <div class="dis dis3">
             <div class="distopwrap">
                 <div class="dislogo dislogo1">
                 </div>
                 <div class="disdis">
-                    <strong>DC Shoes</strong> Men's Street x Grand
+                    <strong>Hat</strong>
                 </div>
             </div>
             <div class="disprice">
@@ -68,13 +69,13 @@
         </div>
     </div>
 
-    <div class="roll">
+    <div class="roll" id="keychain">
         <div class="dis dis4">
             <div class="distopwrap">
                 <div class="dislogo dislogo1">
                 </div>
                 <div class="disdis">
-                    <strong>DC Shoes</strong> Men's Street x Grand
+                    <strong>Key Chain</strong>
                 </div>
             </div>
             <div class="disprice">
@@ -85,13 +86,13 @@
         </div>
     </div>
 
-    <div class="roll">
+    <div class="roll" id="calendar">
         <div class="dis dis5">
             <div class="distopwrap">
                 <div class="dislogo dislogo1">
                 </div>
                 <div class="disdis">
-                    <strong>DC Shoes</strong> Men's Street x Grand
+                    <strong>Calendar</strong>
                 </div>
             </div>
             <div class="disprice">
@@ -101,13 +102,13 @@
         </div>
     </div>
 
-    <div class="roll">
+    <div class="roll" id="teddy bear">
         <div class="dis dis6">
             <div class="distopwrap">
                 <div class="dislogo dislogo1">
                 </div>
                 <div class="disdis">
-                    <strong>DC Shoes</strong> Men's Street x Grand
+                    <strong>Teddy Bear</strong>
                 </div>
             </div>
             <div class="disprice">
@@ -120,4 +121,23 @@
 </div>
 
 </body>
+<script>
+
+    function searchHomeProducts() {
+        let input, filter, list, i, txtValue;
+        list = document.getElementsByClassName("roll");
+        let numberOfItems = list.length;
+        input = document.getElementById("homeSearchBar");
+        filter = input.value.toLowerCase();
+        for (i = 0; i < numberOfItems; i++) {
+            txtValue = list[i].id;
+            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                list[i].style.display = ""; // keep showing
+            } else {
+                list[i].style.display = "none"; // remove
+            }
+        }
+    }
+</script>
 </html>
+

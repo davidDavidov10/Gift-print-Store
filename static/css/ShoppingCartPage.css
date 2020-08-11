@@ -80,7 +80,7 @@ button,
 .subtotal-value:before,
 .total-value:before,
 .promo-value:before {
-    content: '£';
+    content: '$';
 }
 
 .hide {
@@ -120,7 +120,6 @@ label {
 .promo-code-field {
     border: 1px solid #ccc;
     padding: 0.5rem;
-    text-transform: uppercase;
     transition: all 0.2s linear;
     width: 48%;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);

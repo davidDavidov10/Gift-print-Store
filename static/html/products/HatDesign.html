@@ -8,7 +8,6 @@
     <link rel="stylesheet" type="text/css" href="../../css/products/hatDesign.css">
     <link rel = "icon" href ="../img/GiftPrintSmall.png" type = "image/x-icon">
 
-
     <!--navbar-->
     <link rel="stylesheet" type="text/css" href="../../css/HomePageStyle.css">
     <ul>
@@ -26,7 +25,7 @@
         Initially, the image will have the background tshirt that has transparency
         So we can simply update the color with CSS or JavaScript dinamically
     -->
-    <img id="product-backgroundpicture" src="../../img/background_hat.png" width="500" height="500"/>
+    <img id="product-backgroundpicture" src="../../img/background_hat.png"/>
 
     <div id="drawingArea" class="drawing-area">
         <div class="canvas-container">
@@ -38,12 +37,13 @@
 <p>To remove a loaded picture on the T-Shirt select it and press the <kbd>DEL</kbd> key.</p>
 <!-- The select that will allow the user to pick one of the static designs -->
 <br>
-<label for="product-design">T-Shirt Design:</label>
+<label for="product-design">Product Design:</label>
 <select id="product-design">
-    <option value="">Select one of our designs ...</option>
-    <option value="./batman_small.png">Batman</option>
+    <option value="">Design your own ...</option>
+    <option value="../../img/GiftPrint.png">example</option>
 </select>
 
+<!-- The Select that allows the user to change the color of the T-Shirt -->
 <br><br>
 <label for="product-color">Product Color:</label>
 <select id="product-color" name="productColor" form="form" >
@@ -57,10 +57,7 @@
 
 <br><br>
 
-
 <form id="form" action="http://localhost:6379/api/design/save" method="post" enctype="multipart/form-data">
-    <!-- The Select that allows the user to change the color of the T-Shirt -->
-
     <label for="product-custompicture">Upload your own design:</label>
     <!--the image-->
     <input type="file" id="product-custompicture" name="uploadedImg" />
@@ -70,7 +67,8 @@
     <input type="hidden"  name="productType" id="productType" value="Hat">
 
 </form>
-<button  onclick="drawImg()">Done editing</button>
+<button  id="doneEdit" onclick="doneEdit()">Done editing</button>
+<button  id="continueEdit" onclick="continueEdit()">Continue editing</button>
 
 
 

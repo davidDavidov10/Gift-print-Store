@@ -46,19 +46,19 @@ function removeProduct(index){
 }
 
 function loadItemsData(itemList) {
-    const cart = document.getElementById('basket');
+    const cart = document.getElementById('products');
     let dataHtml = '';
 
     for(let [index,item] of itemList.entries()) { //todo: !!
         dataHtml +=
-            `<div class="basket-product" id=${index} data-value ="${item.prodImg}">
-                <div class="item">
+            `<div class="basket-product" id=${index} data-value ="${item.prodImg}" data-id="${item.type}">
+                <div class="item" >
                 <div class="product-image">
                 <img src="../productImg/${item.prodImg}.png" alt="../img/GiftPrint.png" class="product-frame">
                 </div>
                 <div class="product-details">
                
-            <p><strong>${item.type}</strong></p>
+            <p id ="type"><strong>${item.type}</strong></p>
             <p><strong>Color: ${item.color}</strong></p>
             </div>
             </div>
@@ -70,10 +70,27 @@ function loadItemsData(itemList) {
                 <div class="remove">
                 <button id ="remove${index}" onclick="removeProduct(${index})">Remove</button>
                 </div>
-                </div>`
+             </div>`
     }
     // Todo: add prices
     cart.innerHTML = dataHtml;
+}
+
+function searchCartItems() {
+    let input, filter, list, i, txtValue;
+    list = document.getElementsByClassName("basket-product");
+    let numberOfItems = list.length;
+    input = document.getElementById("promo-code");
+    filter = input.value.toLowerCase();
+    for (i = 0; i < numberOfItems; i++) {
+        txtValue = list[i].getAttribute('data-id');
+        console.log(txtValue)
+        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+            list[i].style.display = ""; // keep showing
+        } else {
+            list[i].style.display = "none"; // remove
+        }
+    }
 }
 
 

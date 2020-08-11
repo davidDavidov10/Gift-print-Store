@@ -26,14 +26,14 @@
 </head>
 
 <body>
+
 <main>
     <div class="basket" id="basket">
         <div class="basket-module">
-            <label for="promo-code">Enter a promotional code</label>
-            <input id="promo-code" type="text" name="promo-code" maxlength="5" class="promo-code-field">
-            <button class="promo-code-cta">Apply</button>
+            <input id="promo-code" type="text" name="promo-code"  placeholder="Search..." class="promo-code-field"  onkeyup="searchCartItems()" >
         </div>
     </div>
+    <div id="products" ></div>
     <aside>
         <div class="summary">
             <div class="summary-total-items"><span class="total-items"></span> Items in your Bag</div>
@@ -64,6 +64,7 @@
         </div>
     </aside>
 </main>
+
 </body>
 
 </html>

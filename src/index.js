@@ -186,7 +186,7 @@ app.put('/api/cart/items/update', async (request,response)=> {
 });
 
 
-// Shirt design and save in user cart, save imgs in server
+// Product design and save in user cart, save imgs in server
 app.post('/api/design/save', upload.single('uploadedImg'),  async(request,response) => {
     await getUserFromSession(request).then((email) =>{
        // let body =  request.body;
@@ -234,21 +234,21 @@ function getUserFromSession(request){
         }
     );
 }
-
 // Todo:   cleanup redis sessions once every ? 10? hours except for remember me set interval
 // Todo: V remember me, else session  expiration in 30 min
 // Todo:   create homepage with products
+// Todo: V home page : search, items.
 // Todo:   admin vs. user
 // Todo:   admin add login activity, purchases, cart
 // Todo:   css - design design design
 // Todo:   can only enter pages if logged in
-// Todo:   home page : search, items.
 // Todo:   checkout screen
-// Todo:   cart screen activate search
+// Todo: V cart screen activate search
 // Todo:   navbar can we reuse the code here?
 // Todo:   defend against Dos attacks
 // Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   encrypt  password
+
 
 
 // Todo: if there's time
