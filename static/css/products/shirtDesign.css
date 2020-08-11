@@ -30,3 +30,7 @@
     user-select: none;
     cursor: default;
 }
+.disable{
+    pointer-events:none;
+    background:grey;
+}

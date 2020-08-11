@@ -20,6 +20,7 @@ document.getElementById("product-design").addEventListener("change", function(){
 
     // Call the updateProductImage method providing as first argument the URL
     // of the image provided by the select
+    canvas.remove(canvas.item(0));
     updateProductImage(this.value);
 }, false);
 
@@ -35,7 +36,7 @@ document.getElementById('product-custompicture').addEventListener("change", func
         // When the picture loads, create the image in Fabric.js
         imgObj.onload = function () {
             var img = new fabric.Image(imgObj);
-
+            document.getElementById('product-design').value = ""
             img.scaleToHeight(100);
             img.scaleToWidth(100);
             canvas.centerObject(img)
@@ -77,14 +78,19 @@ function doneEdit(){
         }
         resolve(document.getElementById('product-div'));
     }).then(domtoimage.toPng) //domtoimage.toPng() // todo: find better way to send img this takes a lot of time for large imgs
-    .then(function (dataUrl) {
+        .then(function (dataUrl) {
             // Print the data URL of the picture in the Console
             document.getElementById('productWithImage').value = dataUrl
             document.getElementById('addToCart').disabled = false;
             document.getElementById('continueEdit').disabled = false;
             document.getElementById('doneEdit').disabled = true;
+         //   document.getElementById('product-color').disabled = true;
+            document.getElementById('product-color').className = "disable";
+            document.getElementById('product-custompicture').className = "disable";
+            document.getElementById('product-design').disabled = true;
         }).
-    catch(function (error) {
+
+catch(function (error) {
         console.error('oops, something went wrong!', error);
     });
 }
@@ -101,4 +107,8 @@ function continueEdit(){
     document.getElementById('addToCart').disabled = true;
     document.getElementById('continueEdit').disabled = true;
     document.getElementById('doneEdit').disabled = false;
+    document.getElementById('product-color').className = "";
+    document.getElementById('product-custompicture').className = "";
+    document.getElementById('product-design').disabled = false;
+
 }

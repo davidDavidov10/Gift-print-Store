@@ -167,9 +167,16 @@ app.put('/api/cart/items/update', async (request,response)=> {
         });
         Object.keys(productsAmounts).forEach(function (key) {
             let amount = productsAmounts[key];
+            console.log("amount = "+ amount)
             if (amount !== "0") {
                 cart[key].amount = amount;
+
             } else { // Delete item
+                console.log("key = " +key)
+                console.log("imgToPrint = " +cart[key].imgToPrint)
+                fs.unlink(`../static/productImg/${key}.png`,()=>console.log("deleted1"))
+                //todo: check not null
+                fs.unlink(`../static/productImg/${cart[key].imgToPrint}.png`,()=>console.log("deleted2"))
                 delete cart[key]
             }
         });
@@ -188,19 +195,15 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
         let data = new Buffer.from(request.body.productWithImage.slice(22), 'base64');
         let productType = request.body.productType;
         let color = request.body.productColor;
-
-
         // Rename file to be a unique id
         let file =  request.file;
+        console.log(file + " "+(file !== undefined) )
         if(file !== undefined){
-             imgID = uuid.v4();
-            fs.rename( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`,()=>{});
+            imgID = uuid.v4();
+            fs.rename( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`,  ()=>{});
         }
 
-
-        console.log("before write")
         fs.writeFile(`../static/productImg/${prodImgID}.png`, data,()=>{});
-        console.log("after write")
 
         // Check if user is in db key img
         client.hget("cart", email,function (err, reply) {
