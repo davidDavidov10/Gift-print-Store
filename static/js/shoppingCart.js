@@ -17,6 +17,8 @@ window.onload = () => {
             userProductInfo.push(product);
         }
         loadItemsData(userProductInfo);
+    }).catch(()=>{
+        window.location = "../html/LoginPage.html";
     });
 }
 
@@ -33,7 +35,7 @@ window.onbeforeunload = function(e){
         method:'PUT',
         body:JSON.stringify(productsAmount),
         headers: {'Content-Type': 'application/json'}
-    }).then((a)=> console.log("here " +a));
+    }).catch();
 }
 
 function removeProduct(index){

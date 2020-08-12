@@ -79,25 +79,25 @@ html, body{
 }
 
 .dis3{
-    background: url("https://i.imgur.com/67HoMxe.jpg") no-repeat center center;
+    background: url("../img/background_hat.png") no-repeat center center;
     background-size: 92%;
     background-color: white;
 }
 
 .dis4{
-    background: url("https://i.imgur.com/zND1WED.jpg") no-repeat center center;
+    background: url("../img/background_keychain.png") no-repeat center center;
     background-size: 94%;
     background-color: white;
 }
 
 .dis5{
-    background: url("https://i.imgur.com/IgIsXz4.jpg") no-repeat center center;
+    background: url("../img/background_calendar.png") no-repeat center center;
     background-size: 88%;
     background-color: white;
 }
 
 .dis6{
-    background: url("https://i.imgur.com/CEK1Rrf.jpg") no-repeat center center;
+    background: url("../img/background_teddybear.png") no-repeat center center;
     background-size: 80%;
     background-color: white;
 }
@@ -117,7 +117,7 @@ html, body{
 }
 
 .dislogo1{
-    background: url("https://i.imgur.com/F8VK9q2.jpg") no-repeat center center;
+    background: url("../img/GiftPrintBG.png") no-repeat center center;
     background-size: 100%;
     background-color: black;
 }

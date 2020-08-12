@@ -1,12 +1,14 @@
 
 window.onload = () => {
-     fetch(`http://localhost:6379/api/admin`, {method:'GET'})
-         .then((res)=> res.json()).then((body)=> {
+     fetch(`http://localhost:6379/api/admin`, {method:'GET', credentials: "include"})
+        .then((res)=> res.json()).then((body)=> {
          let usersData = []
          for(let i = 0; i< body.data.length; i++){
              usersData.push(JSON.parse( body.data[i]));
          }
          loadTableData(usersData)
+     }).catch((err) =>{
+         window.location = "../html/LoginPage.html";
      });
 }
 

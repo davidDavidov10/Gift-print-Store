@@ -3,6 +3,7 @@
     // document.getElementById('email').checkValidity();
     // document.getElementById('password').checkValidity();
      // Todo: make submit possible only on valid email and non empty password
+
      let email = document.getElementById('email').value;
      let pass = document.getElementById('password').value;
      let rememberMe  = document.getElementById('rememberMe').checked;
@@ -17,7 +18,15 @@
       let response = await fetch("http://localhost:6379/api/signIn", requestOptions)
 
      response = await response.json();
-     document.getElementById('err').innerHTML = await response.err;
+      let error = await  response.err ;
+      if(error !== undefined){
+          document.getElementById('err').innerHTML = error;
+      }else{
+          window.location = "../html/HomePage.html";
+          // Todo: do we do the same for admin and guest user?
+      }
+
+
 
 }
 
