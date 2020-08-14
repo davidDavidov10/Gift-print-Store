@@ -255,7 +255,7 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
         let color = request.body.productColor;
         let size = request.body.productSize !== undefined ? request.body.productSize : "--";
         let amount = request.body.productAmount;
-        console.log(amount)
+        let price = request.body.price;
         // Rename file to be a unique id
         let file =  request.file;
         if(file !== undefined){
@@ -268,7 +268,7 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
         // Check if user is in db key img
         client.hget("cart", email,function (err, reply) {
             if (err)  throw err;
-            let item = { prodImg:prodImgID, imgToPrint:imgID , amount:amount, type:productType, price:3, color:color, size:size}
+            let item = { prodImg:prodImgID, imgToPrint:imgID , amount:amount, type:productType, price:price, color:color, size:size, }
             let cart = {};
             if (reply !== null) {
                 // User is  in db, get existing cart
@@ -316,6 +316,7 @@ function getUserFromSession(request){
 // Todo:   can a user see the homepage without log in ??
 // todo:   is there a better way to redirect when access is denied ??
 // Todo:   navbar can we reuse the code here?  use script to inject code for navbar? (remember admin vs user)   ??
+// Todo:   what do we need to do with the information from the checkout page like credit card   ??
 
 
 // Todo: if there's time

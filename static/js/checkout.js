@@ -1,5 +1,4 @@
-var numOfItems =0;
-window.onload = () => {
+window.onload = () =>{
     fetch(`http://localhost:6379/api/cart/items`, {
         credentials: "include",
         method:'GET'
@@ -19,32 +18,8 @@ window.onload = () => {
         window.location = "../html/LoginPage.html";
     });
 }
-
-
-window.onbeforeunload = function(e){
-    let productsAmount = {}; //Todo: update only when amount has changed
-       for(let index = 0; index < numOfItems; index++){
-           let key = document.getElementById(index).getAttribute('data-value');
-           productsAmount[key] = document.getElementById(`amount${index}`).value;
-       }
-   // console.log(JSON.stringify(productsAmount))
-    fetch(`http://localhost:6379/api/cart/items/update`, {
-        credentials: "include",
-        method:'PUT',
-        body:JSON.stringify(productsAmount),
-        headers: {'Content-Type': 'application/json'}
-    }).catch();
-}
-
-function removeProduct(index){
-    let productToRemove = document.getElementById(index);
-    productToRemove.style.display = 'none';
-    let productAmount = document.getElementById(`amount${index}`);
-    console.log("before: " +productAmount.value);
-    productAmount.value = 0;
-    console.log("after: " +productAmount.value);
-}
-
+// <p><a href="#">Product 1</a> <span class="price">$15</span></p>
+/*
 function loadItemsData(itemList) {
     const cart = document.getElementById('products');
     let dataHtml = '';
@@ -57,7 +32,7 @@ function loadItemsData(itemList) {
                 <img src="../productImg/${item.prodImg}.png" alt="../img/GiftPrint.png" class="product-frame">
                 </div>
                 <div class="product-details">
-               
+
             <p id ="type"><strong>${item.type}</strong></p>
             <p><strong>Color: ${item.color}</strong></p>
              <p><strong>Size: ${item.size}</strong></p>
@@ -74,29 +49,4 @@ function loadItemsData(itemList) {
              </div>`
     }
     cart.innerHTML = dataHtml;
-}
-
-function searchCartItems() {
-    let input, filter, list, i, txtValue;
-    list = document.getElementsByClassName("basket-product");
-    let numberOfItems = list.length;
-    input = document.getElementById("promo-code");
-    filter = input.value.toLowerCase();
-    for (i = 0; i < numberOfItems; i++) {
-        txtValue = list[i].getAttribute('data-id');
-        console.log(txtValue)
-        if (txtValue.toLowerCase().indexOf(filter) > -1) {
-            list[i].style.display = ""; // keep showing
-        } else {
-            list[i].style.display = "none"; // remove
-        }
-    }
-}
-
-// Todo: update each product subtotal on click and not on window.onbefore unload
-
-function updateSubtotal(index){
-    let amount = document.getElementById(`amount${index}`).value;
-    let price = document.getElementById(`price${index}`).getAttribute('data-value');
-    document.getElementById(`sub-total${index}`).innerHTML = `Subtotal: ${amount * price}$`;
-}
+}*/
