@@ -55,6 +55,18 @@
     <option value="yellow">Yellow</option>
 </select>
 
+<select id="product-size" name="productSize" form="form" >
+    <!-- You can add any color with a new option and defining its hex code -->
+    <option value="S">S</option>
+    <option value="M">M</option>
+    <option value="L">L</option>
+    <option value="XL">XL</option>
+    <option value="XXL">XXL</option>
+</select>
+<br>
+<label>Product Amount:
+    <input id="product-amount" value="1" type="number" min="1" max="100" name="productAmount" form="form">
+</label>
 <br><br>
 
 <form id="form" action="http://localhost:6379/api/design/save" method="post" enctype="multipart/form-data">
@@ -68,7 +80,7 @@
 
 </form>
 <button  id="doneEdit" onclick="doneEdit()">Done editing</button>
-<button  id="continueEdit" onclick="continueEdit()">Continue editing</button>
+<button  id="continueEdit" onclick="continueEdit()" disabled>Continue editing</button>
 
 
 

@@ -9,8 +9,8 @@ window.onload = () => {
          }
          loadTableData(usersData)
      }).catch((err) =>{
-         //window.location = "../html/LoginPage.html";
-         console.log(err)
+         // User is not logged in as admin, redirect to sign in page
+         window.location = "../html/LoginPage.html";
      });
 }
 
@@ -40,7 +40,7 @@ function loadTableData(userData) {
                 let product = user.cart[productKey];
                 cart += `<tr class="productTr"><td style='border: black 1px solid'>${product.type}</td>`+
                         `<td style='border: black 1px solid'>${product.color}</td>`+
-                        `<td style='border: black 1px solid'>change size later</td>` +
+                        `<td style='border: black 1px solid'>${product.size}</td>` +
                         `<td style='border: black 1px solid'>${product.amount}</td></tr>`
             }
             cart += "</tbody> </table>"

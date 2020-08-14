@@ -62,6 +62,7 @@ function loadItemsData(itemList) {
                
             <p id ="type"><strong>${item.type}</strong></p>
             <p><strong>Color: ${item.color}</strong></p>
+             <p><strong>Size: ${item.size}</strong></p>
             </div>
             </div>
             <div class="price">Price: ${item.price}$</div>

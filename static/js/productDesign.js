@@ -66,6 +66,7 @@ document.addEventListener("keydown", function(e) {
 
 //Todo: make the add to cart open only after done editing and make done editing replace the shirt editor with a photo
 function doneEdit(){
+    // Canvas
     new Promise((resolve,reject)=>{
         if(canvas.item(0) !== undefined ){
             console.log("exists")
@@ -77,17 +78,19 @@ function doneEdit(){
             canvas.renderAll();
         }
         resolve(document.getElementById('product-div'));
-    }).then(domtoimage.toPng) //domtoimage.toPng() // todo: find better way to send img this takes a lot of time for large imgs
+        // Page
+    }).then(domtoimage.toPng) // todo: find better way to send img this takes a lot of time for large imgs
         .then(function (dataUrl) {
-            // Print the data URL of the picture in the Console
             document.getElementById('productWithImage').value = dataUrl
             document.getElementById('addToCart').disabled = false;
             document.getElementById('continueEdit').disabled = false;
             document.getElementById('doneEdit').disabled = true;
-         //   document.getElementById('product-color').disabled = true;
             document.getElementById('product-color').className = "disable";
             document.getElementById('product-custompicture').className = "disable";
+            document.getElementById('product-amount').className = "disable";
             document.getElementById('product-design').disabled = true;
+            let sizeSelect = document.getElementById('product-size');
+            if(sizeSelect !== undefined) sizeSelect.className = "disable";
         }).
 
 catch(function (error) {
@@ -109,6 +112,9 @@ function continueEdit(){
     document.getElementById('doneEdit').disabled = false;
     document.getElementById('product-color').className = "";
     document.getElementById('product-custompicture').className = "";
+    document.getElementById('product-amount').className = "";
     document.getElementById('product-design').disabled = false;
+    let sizeSelect = document.getElementById('product-size');
+    if(sizeSelect !== undefined) sizeSelect.className = "";
 
 }

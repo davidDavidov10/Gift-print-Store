@@ -176,15 +176,8 @@ app.get('/api/admin', async(request,response)=> {
                 let data = {"data": userData};
                 response.json(data);
 
-
-             /*   client.hvals("users", function (err, reply) {
-                    if (err) throw err;
-                    let data = {"data": reply};
-                    response.json(data);
-                });*/
             }else {
                 // If user is NOT admin redirect with error msg
-               // response.redirect("https://www.google.com/");
                 console.log("user is not an admin")
                 response.json("{}");
             }
@@ -192,7 +185,8 @@ app.get('/api/admin', async(request,response)=> {
 
 
     }).catch((err)=> {
-        console.log(err)
+        // If user is not logged in sid doesnt exist we get an error from getUserFromSession
+        // catch it and send so we can redirect in admin.js
         response.send();
     });
 });
@@ -259,9 +253,11 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
         let data = new Buffer.from(request.body.productWithImage.slice(22), 'base64');
         let productType = request.body.productType;
         let color = request.body.productColor;
+        let size = request.body.productSize !== undefined ? request.body.productSize : "--";
+        let amount = request.body.productAmount;
+        console.log(amount)
         // Rename file to be a unique id
         let file =  request.file;
-        console.log(file + " "+(file !== undefined) )
         if(file !== undefined){
             imgID = uuid.v4();
             fs.rename( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`,  ()=>{});
@@ -272,7 +268,7 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
         // Check if user is in db key img
         client.hget("cart", email,function (err, reply) {
             if (err)  throw err;
-            let item = { prodImg:prodImgID, imgToPrint:imgID , amount:2, type:productType, price:3, color:color}
+            let item = { prodImg:prodImgID, imgToPrint:imgID , amount:amount, type:productType, price:3, color:color, size:size}
             let cart = {};
             if (reply !== null) {
                 // User is  in db, get existing cart
@@ -298,26 +294,31 @@ function getUserFromSession(request){
         }
     );
 }
-// Todo:   cleanup redis sessions once every ? 10? hours except for remember me set interval
+
+// Todo: V add individual product details like shirt size
+// Todo:   checkout screen
+// Todo:   admin table add users -  V login activity, X  purchases, V cart
 // Todo: V remember me, else session  expiration in 30 min
 // Todo: V create homepage with products
 // Todo: V home page : search, items.
 // Todo: V admin vs. user
-// Todo:   admin table add users login activity, purchases, cart
-// Todo:   css - design design design
-// Todo:   can only enter pages if logged in
-// Todo:   checkout screen
+// Todo:   can only enter pages if logged in - do this in product design pages
 // Todo: V cart screen activate search
-// Todo:   navbar can we reuse the code here?  use script to inject code for navbar? (remember admin vs user)
+// Todo: V add logout button
+// Todo:   product prices
+// Todo:   encrypt  password
+// Todo:   cleanup redis sessions once every ? 10? hours except for remember me set interval
 // Todo:   defend against Dos attacks
 // Todo:   make sure there are at least 2-4 additional pages as required
-// Todo:   encrypt  password
-// Todo:   add individual product details like shirt size
-// Todo:   login activity - is this last login or a log of all logins ??
+// Todo:   css - design design design
+
+// Todo:   login activity -( in admin table)  is this last login or a log of all logins ??
 // Todo:   can a user see the homepage without log in ??
 // todo:   is there a better way to redirect when access is denied ??
+// Todo:   navbar can we reuse the code here?  use script to inject code for navbar? (remember admin vs user)   ??
 
 
 // Todo: if there's time
 // send confirmation email or reset password
 // previous purchases
+// purchases page for admin to handel existing orders status

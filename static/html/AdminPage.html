@@ -10,10 +10,11 @@
     <!--navbar-->
     <ul>
         <li><a href="HomePage.html">Home</a></li>
-        <li><a href="RegisterPage.html">Sign Up</a></li>
-        <li><a href="LoginPage.html">Sign In</a></li>
         <li><a href="AdminPage.html">Admin</a></li>
         <li><a href="ShoppingCartPage.html">Cart</a></li>
+        <li style="float:right"><a  lass="active" href="LoginPage.html">Sign In</a></li>
+        <li style="float:right"><button class="active" onclick="logOut()">Sign Out</button></li>
+        <script> function logOut()  {  document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; }</script>
         <li style="float:right"><a class="active" href="RegisterPage.html">sign up</a></li>
     </ul>
 </head>
