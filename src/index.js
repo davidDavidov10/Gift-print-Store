@@ -118,8 +118,7 @@ app.post('/api/signIn', (request,response)=> {
                 console.log("logged in ");
                 // Goto homepage while logged in
                 client.hset('sessions', sid, JSON.stringify({id: email}));
-                console.log(new Date());
-                client.hset("loginActivity", email, JSON.stringify({lastLogin: new Date()}));
+                client.hset("loginActivity", email, JSON.stringify({lastLogin: new Date().toLocaleString()}));
                 response.send("{}");
             }
         });
@@ -155,14 +154,20 @@ app.get('/api/admin', async(request,response)=> {
                         let users = []
                         for(let user in reply){
                             let details= await JSON.parse(reply[user]);
-                            let pushItem = await new Promise((resolve1, reject1) => {
+                            await new Promise((resolve1, reject1) => {
                                 client.hget("cart",user,async function(err, reply){
                                     resolve1({...details,"cart": JSON.parse(reply)});
                                 });
+
                             }).then((pushItem) =>{
+                                 return  new Promise((resolve2, reject2) => {
+                                    client.hget("loginActivity", user,function(err,reply){
+                                        resolve2({...pushItem,"lastLogin": JSON.parse(reply).lastLogin});
+                                    } );
+                                });
+                                }).then((pushItem)=>{
                                 users.push(pushItem);
                             });
-
                         }
                         resolve(users);
                     });

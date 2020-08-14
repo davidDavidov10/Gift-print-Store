@@ -48,7 +48,10 @@ function loadTableData(userData) {
 
 
        //dataHtml += `<tr><td>${user.firstName}</td><td>${user.lastName}</td><td>${user.email}</td></tr>`;
-        dataHtml += `<tr class ="userTr"><td>${user.firstName}</td><td>${user.lastName}</td><td>${user.email}</td><td>${cart}</td></tr>`;
+        console.log(JSON.stringify(user.lastLogin));
+        dataHtml += `<tr class ="userTr"><td class ="userTd">${user.firstName}</td><td class ="userTd">${user.lastName}</td>`
+            +`<td class ="userTd">${user.email}</td><td class ="userTd">${cart}</td><td  class ="userTd">add Purchases</td>`
+                +`<td  class ="userTd">${user.lastLogin}</td></tr>`;
     }
     tableBody.innerHTML = dataHtml;
 }
@@ -62,9 +65,12 @@ function searchAdminTable() {
     //tr = table.getElementsByTagName("tr");
     tr = table.getElementsByClassName("userTr");
     for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[col]; //0 is for col
+       // td = tr[i].getElementsByTagName("td")[col]; //0 is for col
+        td = tr[i].getElementsByClassName("userTd")[col]; //0 is for col
         if (td) {
             txtValue = td.textContent || td.innerText;
+            console.log("textvalue "+ txtValue)
+            console.log("if = " + (txtValue.toUpperCase().indexOf(filter) > -1))
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = ""; // keep showing
             } else {
