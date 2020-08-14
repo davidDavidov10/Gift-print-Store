@@ -143,17 +143,38 @@ app.get('/api/admin', async(request,response)=> {
                 client.hset("admins", "admin@admin.com" , JSON.stringify({"firstName":"admin", "lastName":"admin","password":"1234" }));
             }
         })
-
         // Check if user is an admin //todo: if we dont have more admins we can just check the mail
-        client.hget("admins", email,function (err, reply) {
-            console.log("user is = " + (reply !== null) + " admin" )
+        client.hget("admins", email,async function (err, reply) {
+
             if(reply !== null){
                 // If user is admin send users data to show in table
-                client.hvals("users", function (err, reply) {
+                let userData =  await new Promise((resolve, reject) => {
+                    client.hgetall("users", async function(err,reply){
+                        let users = []
+                        for(let user in reply){
+                            let details= await JSON.parse(reply[user]);
+                            let pushItem = await new Promise((resolve1, reject1) => {
+                                client.hget("cart",user,async function(err, reply){
+                                    resolve1({...details,"cart": JSON.parse(reply)});
+                                });
+                            }).then((pushItem) =>{
+                                users.push(pushItem);
+                            });
+
+                        }
+                        resolve(users);
+                    });
+                });
+
+                let data = {"data": userData};
+                response.json(data);
+
+
+             /*   client.hvals("users", function (err, reply) {
                     if (err) throw err;
                     let data = {"data": reply};
                     response.json(data);
-                });
+                });*/
             }else {
                 // If user is NOT admin redirect with error msg
                // response.redirect("https://www.google.com/");
@@ -164,6 +185,7 @@ app.get('/api/admin', async(request,response)=> {
 
 
     }).catch((err)=> {
+        console.log(err)
         response.send();
     });
 });
@@ -274,13 +296,13 @@ function getUserFromSession(request){
 // Todo: V remember me, else session  expiration in 30 min
 // Todo: V create homepage with products
 // Todo: V home page : search, items.
-// Todo:   admin vs. user
-// Todo:   admin add login activity, purchases, cart
+// Todo: V admin vs. user
+// Todo:   admin table add users login activity, purchases, cart
 // Todo:   css - design design design
 // Todo:   can only enter pages if logged in
 // Todo:   checkout screen
 // Todo: V cart screen activate search
-// Todo:   navbar can we reuse the code here?  use script to inject code for navbar?
+// Todo:   navbar can we reuse the code here?  use script to inject code for navbar? (remember admin vs user)
 // Todo:   defend against Dos attacks
 // Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   encrypt  password
