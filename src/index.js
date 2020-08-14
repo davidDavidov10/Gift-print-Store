@@ -94,7 +94,7 @@ app.post('/api/signIn', (request,response)=> {
             client.hget("admins", email, function (err, reply) {
                 if (reply === null) {
                     // Show unknown  email address
-                    console.log("unknown  email addressfdsfds")
+                    console.log("unknown  email address")
                     response.send(JSON.parse('{"err": "Incorrect Email"}'));
                 } else {
                     resolve(JSON.parse(reply));
@@ -118,6 +118,8 @@ app.post('/api/signIn', (request,response)=> {
                 console.log("logged in ");
                 // Goto homepage while logged in
                 client.hset('sessions', sid, JSON.stringify({id: email}));
+                console.log(new Date());
+                client.hset("loginActivity", email, JSON.stringify({lastLogin: new Date()}));
                 response.send("{}");
             }
         });
@@ -285,7 +287,6 @@ function getUserFromSession(request){
     return new Promise((resolve, reject) =>{
             // Todo: check if there is a better way to parse the sid from cookie
             let sid = request.header('Cookie').split(";")[1].slice(5);
-            console.log("sid = "+ sid);
             client.hget("sessions", sid,  (err, reply)=>{
                 resolve(JSON.parse(reply).id)
             });
