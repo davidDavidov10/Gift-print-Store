@@ -66,6 +66,8 @@ app.post('/api/signUp', async (request,response)=> {
     if(!exists){
         let userDetails = `{"firstName": "${firstName}", "lastName": "${lastName}", "email": "${email}", "password": "${password}"}`;
         client.hset('users',email ,userDetails);
+        client.hset('loginActivity', email, JSON.stringify({"lastLogin": "Hasn't logged in yet"}));
+        client.hset('cart', email, "{}");
     }else{
         response.json({"err" : "User exists for this email please log in"})
     }
@@ -165,7 +167,14 @@ app.get('/api/admin', async(request,response)=> {
                                         resolve2({...pushItem,"lastLogin": JSON.parse(reply).lastLogin});
                                     } );
                                 });
-                                }).then((pushItem)=>{
+                                }).then((pushItem) =>{
+                                return  new Promise((resolve3, reject3) => {
+                                    client.hget("purchases", user,function(err,reply){
+                                        resolve3({...pushItem,"purchases": JSON.parse(reply !== null ? reply : "{}")});
+                                    });
+                                });
+                            }).then((pushItem)=>{
+                                console.log("pushItem"  + JSON.stringify(pushItem))
                                 users.push(pushItem);
                             });
                         }
@@ -268,12 +277,16 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
             if (err)  throw err;
             let item = { prodImg:prodImgID, imgToPrint:imgID , amount:amount, type:productType, price:price, color:color, size:size, }
             let cart = {};
+            console.log(reply)
+            console.log(typeof reply)
+            console.log(reply !== "null")
             if (reply !== null) {
                 // User is  in db, get existing cart
                 cart = JSON.parse(reply);
             }
             // Add item to cart
             cart[prodImgID] = item;
+            // Todo: check calendar without img
             client.hset('cart',email ,JSON.stringify(cart));
         });
         response.redirect('back');
@@ -300,7 +313,12 @@ app.post('/api/placeOrder', upload.single('uploadedImg'), async (request,respons
             if (err)  throw err;
             // Todo: if user cart is null- dont get here
             if (reply !== null) {
-                client.hset('purchases',email ,reply);
+                client.hget('purchases',email, (err1, reply1) =>{
+                    if(reply1 !== null){
+                        reply = {...JSON.parse(reply),...JSON.parse(reply1)}
+                    }
+                    client.hset('purchases',email ,JSON.stringify(reply));
+                });
                 client.hdel('cart',email);
                 let path = request.get('referer')
                 // todo: choose redirect to something else ?
