@@ -291,17 +291,33 @@ function getUserFromSession(request){
     );
 }
 
+// Save users order to DB purchases and empty cart
+app.post('/api/placeOrder', upload.single('uploadedImg'), async (request,response) => {
+    await getUserFromSession(request).then((email) =>{
+        client.hget("cart", email,function (err, reply) {
+            if (err)  throw err;
+            // Todo: if user cart is null- dont get here
+            if (reply !== null) {
+                client.hset('purchases',email ,reply, ()=>{console.log("purchases")});
+                client.hdel('cart',email,()=>{console.log("del")});
+                console.log(request.path)
+                response.send();
+            }
+        });
+    });
+});
+
 // Todo: V add individual product details like shirt size
-// Todo:   checkout screen
+// Todo: V checkout screen
 // Todo:   admin table add users -  V login activity, X  purchases, V cart
 // Todo: V remember me, else session  expiration in 30 min
 // Todo: V create homepage with products
 // Todo: V home page : search, items.
 // Todo: V admin vs. user
-// Todo:   can only enter pages if logged in - do this in product design pages
+// Todo:   can only enter pages if logged in - do this in product design pages also checkout page
 // Todo: V cart screen activate search
 // Todo: V add logout button
-// Todo:   product prices
+// Todo: V product prices
 // Todo:   encrypt  password
 // Todo:   cleanup redis sessions once every ? 10? hours except for remember me set interval
 // Todo:   defend against Dos attacks
