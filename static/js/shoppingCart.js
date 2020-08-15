@@ -21,34 +21,35 @@ window.onload = () => {
 }
 
 
-window.onbeforeunload = function(e){
+window.onbeforeunload = function(e) {
     let productsAmount = {}; //Todo: update only when amount has changed
-       for(let index = 0; index < numOfItems; index++){
-           let key = document.getElementById(index).getAttribute('data-value');
-           productsAmount[key] = document.getElementById(`amount${index}`).value;
-       }
-   // console.log(JSON.stringify(productsAmount))
-    fetch(`http://localhost:6379/api/cart/items/update`, {
-        credentials: "include",
-        method:'PUT',
-        body:JSON.stringify(productsAmount),
-        headers: {'Content-Type': 'application/json'}
-    }).catch();
+    for (let index = 0; index < numOfItems; index++) {
+        let key = document.getElementById(index).getAttribute('data-value');
+        productsAmount[key] = document.getElementById(`amount${index}`).value;
+        fetch(`http://localhost:6379/api/cart/items/update`, {
+            credentials: "include",
+            method: 'PUT',
+            body: JSON.stringify(productsAmount),
+            headers: {'Content-Type': 'application/json'}
+        }).catch();
+    }
 }
 
 function removeProduct(index){
+    let productSubtotal = document.getElementById(`sub-total${index}`).innerText.replace("Subtotal: $","");
     let productToRemove = document.getElementById(index);
     productToRemove.style.display = 'none';
     let productAmount = document.getElementById(`amount${index}`);
-    console.log("before: " +productAmount.value);
     productAmount.value = 0;
-    console.log("after: " +productAmount.value);
+    let basketTotal = document.getElementById('basket-total').innerText.slice(1);
+    document.getElementById('basket-total').innerText = "$" +  (basketTotal - productSubtotal);
+
 }
 
 function loadItemsData(itemList) {
     const cart = document.getElementById('products');
     let dataHtml = '';
-
+    let basketTotal = 0;
     for(let [index,item] of itemList.entries()) { //todo: !!
         dataHtml +=
             `<div class="basket-product" id=${index} data-value ="${item.prodImg}" data-id="${item.type}">
@@ -63,16 +64,18 @@ function loadItemsData(itemList) {
              <p><strong>Size: ${item.size}</strong></p>
             </div>
             </div>
-            <div class="price" id="price${index}" data-value="${item.price}">Price: ${item.price}$</div>
+            <div class="price" id="price${index}" data-value="${item.price}">Price: $${item.price}</div>
                 <div class="quantity">
                 <input id="amount${index}" type="number" value="${item.amount}" min="1" class="quantity-field" onclick="updateSubtotal(${index})">
                 </div>
-                <div class="subtotal" id="sub-total${index}">Subtotal: ${item.amount * item.price}$</div>
+                <div class="subtotal" id="sub-total${index}">Subtotal: $${item.amount * item.price}</div>
                 <div class="remove">
                 <button id ="remove${index}" onclick="removeProduct(${index})">Remove</button>
                 </div>
              </div>`
+        basketTotal += item.amount * item.price;
     }
+    document.getElementById('basket-total').innerText = "$" + basketTotal;
     cart.innerHTML = dataHtml;
 }
 
@@ -84,7 +87,6 @@ function searchCartItems() {
     filter = input.value.toLowerCase();
     for (i = 0; i < numberOfItems; i++) {
         txtValue = list[i].getAttribute('data-id');
-        console.log(txtValue)
         if (txtValue.toLowerCase().indexOf(filter) > -1) {
             list[i].style.display = ""; // keep showing
         } else {
@@ -96,7 +98,11 @@ function searchCartItems() {
 // Todo: update each product subtotal on click and not on window.onbefore unload
 
 function updateSubtotal(index){
+    let basketTotal = document.getElementById('basket-total').innerText.slice(1);
     let amount = document.getElementById(`amount${index}`).value;
     let price = document.getElementById(`price${index}`).getAttribute('data-value');
-    document.getElementById(`sub-total${index}`).innerHTML = `Subtotal: ${amount * price}$`;
+    let subTotal = document.getElementById(`sub-total${index}`);
+    basketTotal = (basketTotal - subTotal.innerText.replace("Subtotal: $","")) + (amount * price);
+    subTotal.innerHTML = `Subtotal: $${amount * price}`;
+    document.getElementById('basket-total').innerText = "$" +  basketTotal;
 }

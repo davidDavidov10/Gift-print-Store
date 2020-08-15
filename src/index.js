@@ -213,7 +213,6 @@ app.put('/api/cart/items/update', async (request,response)=> {
     //Todo: when removing from db erase from server the imgs
     await getUserFromSession(request)
         .then(async (email) => {
-            console.log("in in items update");
             let productsAmounts = request.body;
             let cart = await new Promise((resolve, reject) => {
                 client.hget("cart", email, function (err, reply) {
@@ -224,16 +223,13 @@ app.put('/api/cart/items/update', async (request,response)=> {
             });
             Object.keys(productsAmounts).forEach(function (key) {
                 let amount = productsAmounts[key];
-                console.log("amount = "+ amount)
                 if (amount !== "0") {
                     cart[key].amount = amount;
 
                 } else { // Delete item
-                    console.log("key = " +key)
-                    console.log("imgToPrint = " +cart[key].imgToPrint)
-                    fs.unlink(`../static/productImg/${key}.png`,()=>console.log("deleted1"))
+                    fs.unlink(`../static/productImg/${key}.png`,()=>{})
                     //todo: check not null
-                    fs.unlink(`../static/productImg/${cart[key].imgToPrint}.png`,()=>console.log("deleted2"))
+                    fs.unlink(`../static/productImg/${cart[key].imgToPrint}.png`,()=>{})
                     delete cart[key]
                 }
             });
