@@ -4,18 +4,21 @@ window.onload = () => {
         credentials: "include",
         method:'GET'
     })
-        .then((res)=> res.json()).then((body)=> {
+        .then((res)=> res.json()).
+    then((body)=> {
         let userProductInfo = [];
-        let products = JSON.parse(body.data);
-        let productKeys = Object.keys(products); // Array of prodImg number
-        numOfItems = productKeys.length;
-        for(let i = 0; i < numOfItems; i++){
-            let key = productKeys[i];
-            let product = products[key];
-            userProductInfo.push(product);
-        }
+            let products = JSON.parse(body.data);
+            let productKeys = Object.keys(products); // Array of prodImg number
+            numOfItems = productKeys.length;
+            for(let i = 0; i < numOfItems; i++){
+                let key = productKeys[i];
+                let product = products[key];
+                userProductInfo.push(product);
+            }
+
         loadItemsData(userProductInfo);
-    }).catch(()=>{
+    }).catch((err)=>{
+        console.log(err)
         window.location = "../html/LoginPage.html";
     });
 }

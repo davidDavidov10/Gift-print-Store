@@ -198,10 +198,12 @@ app.get('/api/cart/items',  async (request,response)=> {
    await getUserFromSession(request).then((email) =>{
        client.hget("cart", email, function (err, reply) {
            if (err) throw err;
-           let data = {"data": reply };
+           let data = {"data": (reply !== null ? reply :"{}") };
            response.json(data);
        });
-   }).catch((err)=>response.send("Please log in to see cart items"));
+   }).catch((err)=> {
+       response.json({"error":"Please log in to see cart items"})
+   });
 });
 
 
@@ -298,12 +300,11 @@ app.post('/api/placeOrder', upload.single('uploadedImg'), async (request,respons
             if (err)  throw err;
             // Todo: if user cart is null- dont get here
             if (reply !== null) {
-                client.hset('purchases',email ,reply, ()=>{console.log("purchases")});
-                client.hdel('cart',email,()=>{console.log("del")});
-                console.log("headers " +request.headers)
-                console.log("path " + request.path)
-                console.log(" baseUrl " + request.baseUrl);
-                response.redirect('/HomePage.http');
+                client.hset('purchases',email ,reply);
+                client.hdel('cart',email);
+                let path = request.get('referer')
+                // todo: choose redirect to something else ?
+                response.redirect(path.replace("CheckoutPage.html","HomePage.html"));
             }
         });
     });

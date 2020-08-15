@@ -64,6 +64,7 @@
 
                 </div>
                 <input type="submit" value="Place Order" class="btn">
+                <input type="hidden"  id="origin" name="origin" value="" >
             </form>
         </div>
     </div>
@@ -78,11 +79,8 @@
         </div>
     </div>
 </div>
-<!--<script>
-    document.getElementById("form")
-    .addEventListener("submit", function(e) {
-        e.preventDefault();
-        window.location.href = "HomePage.html";
-    });</script>-->
+<script>
+    // document.getElementById("origin").value = location.origin +location.pathname;
+</script>
 </body>
 </html>
