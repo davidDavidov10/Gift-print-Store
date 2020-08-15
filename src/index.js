@@ -330,7 +330,7 @@ app.post('/api/placeOrder', upload.single('uploadedImg'), async (request,respons
 
 // Todo: V add individual product details like shirt size
 // Todo: V checkout screen
-// Todo:   admin table add users -  V login activity, X  purchases, V cart
+// Todo: V admin table add users -  V login activity, V  purchases, V cart
 // Todo: V remember me, else session  expiration in 30 min
 // Todo: V create homepage with products
 // Todo: V home page : search, items.
