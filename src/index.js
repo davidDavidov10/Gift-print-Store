@@ -285,7 +285,7 @@ function getUserFromSession(request){
             // Todo: check if there is a better way to parse the sid from cookie
             let sid = request.header('Cookie').split(";")[1].slice(5);
             client.hget("sessions", sid,  (err, reply)=>{
-                resolve(JSON.parse(reply).id)
+                resolve(JSON.parse(reply).id);
             });
         }
     );
@@ -300,8 +300,10 @@ app.post('/api/placeOrder', upload.single('uploadedImg'), async (request,respons
             if (reply !== null) {
                 client.hset('purchases',email ,reply, ()=>{console.log("purchases")});
                 client.hdel('cart',email,()=>{console.log("del")});
-                console.log(request.path)
-                response.send();
+                console.log("headers " +request.headers)
+                console.log("path " + request.path)
+                console.log(" baseUrl " + request.baseUrl);
+                response.redirect('/HomePage.http');
             }
         });
     });
