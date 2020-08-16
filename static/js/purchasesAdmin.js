@@ -53,7 +53,7 @@ function loadTableData(purchasesData) {
             +`<td  class ="userTd">${item.amount}</td><td  class ="userTd">${imageToPrintHtml}</td>`+
             `<td  class ="userTd"><img width="50" height="50" src="../productImg/${item.prodImg}.png"></td>`+
             `<td id="${index}" class ="userTd">${item.status}</td>`+
-            `<td><button onclick='()=>{console.log(${item.userEmail} + " "+ ${item.imgToPrint}+" " +${index})}'>Complete order</button></td>`+
+            `<td><button onclick="changeStatus('${item.userEmail}','${item.prodImg}','${index}')">Complete order</button></td>`+
             `</tr>`;
     }
     tableBody.innerHTML = dataHtml;
@@ -81,9 +81,8 @@ function searchAdminTable() {
 }
 
 function changeStatus(email, itemName, index){
-    console.log("in change status")
-   // document.getElementById(`${index}`).innerText = "Order Complete";
-  /*  fetch(`http://localhost:6379/api/admin/updateStatus`, {method:'PUT', credentials: "include",
-        body:{"email":email, "itemName":itemName }
-    });*/
+    document.getElementById(`${index}`).innerText = "Order Completed";
+    fetch(`http://localhost:6379/api/admin/updateStatus`, {method:'PUT', credentials: "include",
+        body:JSON.stringify({"email":email, "itemName":itemName }),headers: {'Content-Type': 'application/json'}
+    });
 }

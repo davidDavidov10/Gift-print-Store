@@ -366,7 +366,22 @@ app.get('/api/validate',  async(request, response) =>{
     }).catch((err)=>{
         response.json({"response" :"Not Authenticated"});
     });
-})
+});
+
+app.put('/api/admin/updateStatus', async(request, response) => {
+    let purchases = await new Promise( (resolve, reject) => {
+        client.hget('purchases', request.body.email, (err, reply) => {
+            if(reply !== null) resolve(reply)
+            else reject(err)
+        });
+    });
+    purchases= JSON.parse(purchases);
+    purchases[request.body.itemName].status = "Order Completed";
+    console.log("purchases: "+ JSON.stringify(purchases))
+    console.log("purchases: "+ typeof purchases)
+    client.hset('purchases',request.body.email,JSON.stringify(purchases))
+    }
+);
 
 // Get user email from session id  in cookie
 function getUserFromSession(request){
