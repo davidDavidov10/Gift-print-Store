@@ -1,7 +1,7 @@
 const redis = require('redis');
 const express = require('express');
 const bodyParser  = require('body-parser')
-//const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const fs = require('fs');
 const cors = require('cors');
 const uuid = require('uuid');
@@ -9,6 +9,7 @@ const multer  = require('multer');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 
+const bcryptRounds = 10;
 
 // How to save images
 const storage = multer.diskStorage({
@@ -55,6 +56,10 @@ app.post('/api/signUp', async (request,response)=> {
     let lastName = body.lastName;
     let email = String(body.email);
     let password = body.password;
+
+    // Hash password before saving to DB
+    password =  await bcrypt.hash(password, bcryptRounds).catch((err) => console.err(err));
+
     // Check user doesn't already exist for given email
     let exists  = await new Promise( (resolve, reject) =>{
         client.hexists('users', email, (err, reply)=>{
@@ -62,7 +67,8 @@ app.post('/api/signUp', async (request,response)=> {
 
         });
     });
-    //Todo: password encryption
+
+    // Save user to DB if doesn't already exists
     if(!exists){
         let userDetails = `{"firstName": "${firstName}", "lastName": "${lastName}", "email": "${email}", "password": "${password}"}`;
         client.hset('users',email ,userDetails);
@@ -71,7 +77,6 @@ app.post('/api/signUp', async (request,response)=> {
     }else{
         response.json({"err" : "User exists for this email please log in"})
     }
-
     //Todo: choose redirect
   //  response.redirect('back');
 });
@@ -84,9 +89,9 @@ app.post('/api/signIn', (request,response)=> {
     let password = body.password;
     let rememberMe = body.rememberMe;
 
-    //Todo: password encryption
     //TODO: handle each case
 
+    // Check if given user is an existing user from DB
     client.hget("users", email,async function (err, reply) {
         if (err)  throw err;
         await new Promise((resolve, reject) => {
@@ -103,23 +108,27 @@ app.post('/api/signIn', (request,response)=> {
                 }
             });
         } else resolve(user);
-        }).then((user)=>{
-            if (password !== user.password) {
+        }).then(async(user)=>{
+            // Check given password is the same as the encrypted password from DB
+            let isPassword =  await bcrypt.compare(password, user.password).catch((err) => console.error(err)); ;
+            if (!isPassword) {
                 // Show incorrect password
                 console.log("incorrect password")
                 response.send(JSON.parse('{"err": "Incorrect Password"}'));
             } else {
                 // Login
                 let  sid = uuid.v4();
+                let expiration = "session"
                 if(rememberMe){
                     response.cookie('sid', sid ); // todo: check how log this should be connected
                 }else{
                     response.cookie('sid', sid ,{maxAge: 1800000}); // 30 min until cookie expires
-
+                    expiration = Date.now() + 1800000;
                 }
                 console.log("logged in ");
                 // Goto homepage while logged in
-                client.hset('sessions', sid, JSON.stringify({id: email}));
+                // Save session info adn login Activity to DB
+                client.hset('sessions', sid, JSON.stringify({id: email, expire:expiration}));
                 client.hset("loginActivity", email, JSON.stringify({lastLogin: new Date().toLocaleString()}));
                 response.send("{}");
             }
@@ -297,7 +306,7 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
 // Get user email from session id  in cookie
 function getUserFromSession(request){
     return new Promise((resolve, reject) =>{
-            // Todo: check if there is a better way to parse the sid from cookie
+            // Todo: check if there is a better way to parse the sid from cookie  regex?
             let sid = request.header('Cookie').split(";")[1].slice(5);
             client.hget("sessions", sid,  (err, reply)=>{
                 resolve(JSON.parse(reply).id);
@@ -338,6 +347,23 @@ app.get('/api/design/validate', async (request, response) =>{
     });
 })
 
+setInterval(()=>{
+    console.log("/n cleaning up redis sessions " + Date.now().toLocaleString() );
+    client.hgetall("sessions", ((err, reply) => {
+        let keys = Object.keys(reply);
+        for(let keyIndex in keys){
+            let key = keys[keyIndex];
+           // console.log(reply[key]);
+            let expiration = JSON.parse(reply[key]).expire;
+            if(expiration !== "session" && Date.now() > expiration ){
+               // console.log("above session was deleted from DB");
+                client.hdel("sessions", key);
+            }
+        }
+    }))
+}, 86400000);
+//24 hours = 86400000
+
 // Todo: V add individual product details like shirt size
 // Todo: V checkout screen
 // Todo: V admin table add users -  V login activity, V  purchases, V cart
@@ -349,18 +375,21 @@ app.get('/api/design/validate', async (request, response) =>{
 // Todo: V cart screen activate search
 // Todo: V add logout button
 // Todo: V product prices
-// Todo:   encrypt  password
+// Todo: V encrypt  password
 // Todo:   cleanup redis sessions once every ? 10? hours except for remember me set interval
+// Todo:   sign out clears from sessions DB and you cant sign in again while logged in
 // Todo:   defend against Dos attacks
 // Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   css - design design design
-// Todo:  check all http methods are as they should be (get post and such)? change to https? check http status are as they should be
+// Todo:   check all http methods are as they should be (get post and such)? change to https? check http status are as they should be
 
+// Ask ohad
 // Todo:   login activity -( in admin table)  is this last login or a log of all logins ??
 // Todo:   can a user see the homepage without log in ??
 // todo:   is there a better way to redirect when access is denied ??
 // Todo:   navbar can we reuse the code here?  use script to inject code for navbar? (remember admin vs user)   ??
 // Todo:   what do we need to do with the information from the checkout page like credit card   ??
+// Todo:   encrypt password in client side ? we use bcrypt in server side how? without require bcrypt
 
 
 // Todo: if there's time
