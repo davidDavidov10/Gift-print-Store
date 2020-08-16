@@ -4,7 +4,6 @@ window.onload = () =>{
         method:'GET'
     })
         .then((res)=> res.json()).then((body)=> {
-            console.log("in then")
         let userProductInfo = [];
         let products = JSON.parse(body.data);
         let productKeys = Object.keys(products); // Array of prodImg number
@@ -16,7 +15,6 @@ window.onload = () =>{
         }
         loadItemsData(userProductInfo);
     }).catch((e)=>{
-        console.error(e);
         window.location = "../html/LoginPage.html";
     });
 }

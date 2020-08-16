@@ -307,7 +307,7 @@ function getUserFromSession(request){
 }
 
 // Save users order to DB purchases and empty cart
-app.post('/api/placeOrder', upload.single('uploadedImg'), async (request,response) => {
+app.post('/api/placeOrder', async (request,response) => {
     await getUserFromSession(request).then((email) =>{
         client.hget("cart", email,function (err, reply) {
             if (err)  throw err;
@@ -328,6 +328,16 @@ app.post('/api/placeOrder', upload.single('uploadedImg'), async (request,respons
     });
 });
 
+// When designing a product check that user is logged in if not we send user to login page
+app.get('/api/design/validate', async (request, response) =>{
+    await getUserFromSession(request).then(() =>{
+        console.log("cookie ok")
+        response.json({"response" : "Authenticated" });
+    }).catch((err)=>{
+        response.json({"response" :"Not authenticated"});
+    });
+})
+
 // Todo: V add individual product details like shirt size
 // Todo: V checkout screen
 // Todo: V admin table add users -  V login activity, V  purchases, V cart
@@ -335,7 +345,7 @@ app.post('/api/placeOrder', upload.single('uploadedImg'), async (request,respons
 // Todo: V create homepage with products
 // Todo: V home page : search, items.
 // Todo: V admin vs. user
-// Todo:   can only enter pages if logged in - do this in product design pages also checkout page
+// Todo: V can only enter pages if logged in - do this in product design pages also checkout page
 // Todo: V cart screen activate search
 // Todo: V add logout button
 // Todo: V product prices
@@ -344,6 +354,7 @@ app.post('/api/placeOrder', upload.single('uploadedImg'), async (request,respons
 // Todo:   defend against Dos attacks
 // Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   css - design design design
+// Todo:  check all http methods are as they should be (get post and such)? change to https? check http status are as they should be
 
 // Todo:   login activity -( in admin table)  is this last login or a log of all logins ??
 // Todo:   can a user see the homepage without log in ??

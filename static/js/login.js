@@ -16,7 +16,6 @@
       };
 
       let response = await fetch("http://localhost:6379/api/signIn", requestOptions)
-
      response = await response.json();
       let error = await  response.err ;
       if(error !== undefined){
