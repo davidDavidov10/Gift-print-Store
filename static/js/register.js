@@ -12,9 +12,11 @@ async function checkRegister(){
     };
 
     let response = await fetch("http://localhost:6379/api/signUp", requestOptions)
-
-    response = await response.json();
-    console.log("response =" +response.err)
-    document.getElementById('err').innerHTML = await response.err;
+    let  responseErr = await response.json().err;
+    if(responseErr !== undefined){
+        document.getElementById('err').innerHTML = await responseErr;
+    }else{
+        window.location = "../html/LoginPage.html";
+    }
 
 }

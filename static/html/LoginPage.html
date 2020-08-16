@@ -2,21 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/HomePageStyle.css">
-    <script src="../js/login.js"></script>
-    <title>LoginPage</title>
+      <script src="../js/login.js"></script>
+    <script src="../js/util.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/NavBar.css">
     <link rel = "icon" href ="../img/GiftPrintSmall.png" type = "image/x-icon">
+    <script src="../js/util.js"></script>
 
-    <!--navbar-->
-    <ul>
-        <li><a href="HomePage.html">Home</a></li>
-        <li><a href="AdminPage.html">Admin</a></li>
-        <li><a href="ShoppingCartPage.html">Cart</a></li>
-        <li style="float:right"><a  lass="active" href="LoginPage.html">Sign In</a></li>
-        <li style="float:right"><button class="active" onclick="logOut()">Sign Out</button></li>
-        <script> function logOut()  {  document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; }</script>
-        <li style="float:right"><a class="active" href="RegisterPage.html">sign up</a></li>
-    </ul>
+    <link rel="stylesheet" type="text/css" href="../css/NavBar.css">
+    <nav id="navBar"></nav>
+    <script>navBar(false)</script>
+
+    <title>LoginPage</title>
 
 </head>
 <body>
@@ -27,7 +23,6 @@
 <!--TODO: decide action  -->
 <!--Todo: check that post is the right method-->
 
-<!--<form action="http://localhost:6379/api/signIn" method="post">-->
 <form >
     <div class="container">
         <label class="email">Email</label>
@@ -36,7 +31,7 @@
         <label class="pass">Password</label>
         <input id="password" type="password" placeholder="Password" name="password" required/><br>
 
-        <label><input id="rememberMe" type="checkbox" checked="checked" name="remember">Remember me</label><br>
+        <label><input id="rememberMe" type="checkbox"  name="remember">Remember me</label><br>
 
         <button type="button"  id="submit"   onclick="checkLogin()" >Sign In</button>
         <!--TODO : add password confirmation-->

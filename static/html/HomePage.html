@@ -4,19 +4,14 @@
     <link rel="stylesheet" type="text/css" href="../css/HomePageStyle.css">
     <meta charset="UTF-8">
     <link rel = "icon" href ="../img/GiftPrintSmall.png" type = "image/x-icon">
+    <script src="../js/util.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../css/NavBar.css">
+    <nav id="navBar"></nav>
+    <script>navBar(false)</script>
 
     <title>Home</title>
 
-    <!--navbar-->
-    <ul>
-        <li><a href="HomePage.html">Home</a></li>
-        <li><a href="AdminPage.html">Admin</a></li>
-        <li><a href="ShoppingCartPage.html">Cart</a></li>
-        <li style="float:right"><a  lass="active" href="LoginPage.html">Sign In</a></li>
-        <li style="float:right"><button class="active" onclick="logOut()">Sign Out</button></li>
-        <script> function logOut()  {  document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; }</script>
-        <li style="float:right"><a class="active" href="RegisterPage.html">sign up</a></li>
-    </ul>
 </head>
 <body>
 <input id="homeSearchBar" type="text" placeholder="Search.." onkeyup="searchHomeProducts()">

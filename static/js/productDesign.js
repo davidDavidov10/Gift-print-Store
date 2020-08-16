@@ -120,10 +120,10 @@ function continueEdit(){
 }
 
  window.onload = ()=>{
-     fetch(`http://localhost:6379/api/design/validate`, {method:'GET', credentials: "include"})
+     fetch(`http://localhost:6379/api/validate`, {method:'GET', credentials: "include"})
          .then((res)=> res.json()).then((body)=> {
              console.log("body " + body)
-             if(body.response !== "Authenticated"){
+             if(body.response === "Not Authenticated"){
                  window.location = "../LoginPage.html";
              }
          })

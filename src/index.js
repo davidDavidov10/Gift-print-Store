@@ -10,6 +10,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 
 const bcryptRounds = 10;
+const adminEmail = "admin@admin.com";
+const adminPassword = "1234";
 
 // How to save images
 const storage = multer.diskStorage({
@@ -30,6 +32,14 @@ let client = redis.createClient();
 
 client.on('connect', ()=>{
     console.log("redis client connected")
+    // Check if admin exists
+    // todo: check if admin password needs to be not hardcoded
+    client.hlen("admins", async function (err, reply) {
+        let password =  await bcrypt.hash(adminPassword, bcryptRounds).catch((err) => console.err(err));
+        if (reply-0 === 0 ){
+            client.hset("admins", adminEmail , JSON.stringify({"firstName":"admin", "lastName":"admin","password": password}));
+        }
+    })
 });
 
 client.on('error', (error)=>{
@@ -48,6 +58,7 @@ const port = 6379;
 app.listen(port,()=>{
     console.log("server started on port: " + port);
 });
+
 
 // Sign up
 app.post('/api/signUp', async (request,response)=> {
@@ -74,11 +85,10 @@ app.post('/api/signUp', async (request,response)=> {
         client.hset('users',email ,userDetails);
         client.hset('loginActivity', email, JSON.stringify({"lastLogin": "Hasn't logged in yet"}));
         client.hset('cart', email, "{}");
+        response.json({"msg" : "User signed in"})
     }else{
-        response.json({"err" : "User exists for this email please log in"})
+        response.json({"err" : "User exists for this email please sign in"})
     }
-    //Todo: choose redirect
-  //  response.redirect('back');
 });
 
 
@@ -88,7 +98,7 @@ app.post('/api/signIn', (request,response)=> {
     let email = body.email;
     let password = body.password;
     let rememberMe = body.rememberMe;
-
+    let isAdmin = false;
     //TODO: handle each case
 
     // Check if given user is an existing user from DB
@@ -96,6 +106,7 @@ app.post('/api/signIn', (request,response)=> {
         if (err)  throw err;
         await new Promise((resolve, reject) => {
         let user =  JSON.parse(reply);
+
         if (user === null) {
             // Check if user is an admin
             client.hget("admins", email, function (err, reply) {
@@ -104,6 +115,7 @@ app.post('/api/signIn', (request,response)=> {
                     console.log("unknown  email address")
                     response.send(JSON.parse('{"err": "Incorrect Email"}'));
                 } else {
+                    isAdmin = true;
                     resolve(JSON.parse(reply));
                 }
             });
@@ -130,13 +142,10 @@ app.post('/api/signIn', (request,response)=> {
                 // Save session info adn login Activity to DB
                 client.hset('sessions', sid, JSON.stringify({id: email, expire:expiration}));
                 client.hset("loginActivity", email, JSON.stringify({lastLogin: new Date().toLocaleString()}));
-                response.send("{}");
+
+                response.send(JSON.parse(`{"isAdmin": ${isAdmin}}`));
             }
         });
-
-
-
-
     });
 
     //Todo: choose redirect
@@ -144,22 +153,22 @@ app.post('/api/signIn', (request,response)=> {
 });
 
 
+// Sign Out
+app.delete('/api/signOut', (request,response)=> {
+    // Todo: check if there is a better way to parse the sid from cookie  regex?
+    let sid = request.header('Cookie').split(";")[1].slice(5);
+    client.hdel("sessions", sid);
+    response.send("Signed out");
+});
+
 // Admin
 app.get('/api/admin', async(request,response)=> {
     // Check that the user is admin
     await getUserFromSession(request).then(async (email) => {
-        // Check if admin exists todo: check if the creation of "admin/"admin" needs to be when creating the redis
-        // todo: check if admin password needs to be not hardcoded
-        client.hlen("admins", function (err, reply) {
-            if (reply-0 === 0 ){
-                client.hset("admins", "admin@admin.com" , JSON.stringify({"firstName":"admin", "lastName":"admin","password":"1234" }));
-            }
-        })
         // Check if user is an admin //todo: if we dont have more admins we can just check the mail
         client.hget("admins", email,async function (err, reply) {
-
             if(reply !== null){
-                // If user is admin send users data to show in table
+                // If user is admin send client users data to show in table
                 let userData =  await new Promise((resolve, reject) => {
                     client.hgetall("users", async function(err,reply){
                         let users = []
@@ -183,7 +192,6 @@ app.get('/api/admin', async(request,response)=> {
                                     });
                                 });
                             }).then((pushItem)=>{
-                                console.log("pushItem"  + JSON.stringify(pushItem))
                                 users.push(pushItem);
                             });
                         }
@@ -200,8 +208,6 @@ app.get('/api/admin', async(request,response)=> {
                 response.json("{}");
             }
         });
-
-
     }).catch((err)=> {
         // If user is not logged in sid doesnt exist we get an error from getUserFromSession
         // catch it and send so we can redirect in admin.js
@@ -303,17 +309,6 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
     });
 });
 
-// Get user email from session id  in cookie
-function getUserFromSession(request){
-    return new Promise((resolve, reject) =>{
-            // Todo: check if there is a better way to parse the sid from cookie  regex?
-            let sid = request.header('Cookie').split(";")[1].slice(5);
-            client.hget("sessions", sid,  (err, reply)=>{
-                resolve(JSON.parse(reply).id);
-            });
-        }
-    );
-}
 
 // Save users order to DB purchases and empty cart
 app.post('/api/placeOrder', async (request,response) => {
@@ -338,15 +333,35 @@ app.post('/api/placeOrder', async (request,response) => {
 });
 
 // When designing a product check that user is logged in if not we send user to login page
-app.get('/api/design/validate', async (request, response) =>{
-    await getUserFromSession(request).then(() =>{
-        console.log("cookie ok")
-        response.json({"response" : "Authenticated" });
+app.get('/api/validate',  async(request, response) =>{
+    await getUserFromSession(request).then( async(email) =>{
+      let isAdmin = await new Promise((resolve, reject) => {
+          client.hget("admins", email,((err, reply) => {
+              resolve(reply !== null);
+          }));
+      });
+      if(isAdmin) response.json({"response" : "Admin Authenticated" });
+      else response.json({"response" : "User Authenticated" });
     }).catch((err)=>{
-        response.json({"response" :"Not authenticated"});
+        response.json({"response" :"Not Authenticated"});
     });
 })
 
+// Get user email from session id  in cookie
+function getUserFromSession(request){
+    return new Promise((resolve, reject) =>{
+            // Todo: check if there is a better way to parse the sid from cookie  regex?
+            let sid = request.header('Cookie').split(";")[1].slice(5);
+            client.hget("sessions", sid,  (err, reply)=>{
+                if(reply !== null ) resolve(JSON.parse(reply).id);
+                else reject(err);
+            });
+        }
+    );
+}
+
+
+// CleanUp redis sessions. Once a day go over sessions and delete all expired sessions from DB
 setInterval(()=>{
     console.log("/n cleaning up redis sessions " + Date.now().toLocaleString() );
     client.hgetall("sessions", ((err, reply) => {
@@ -376,8 +391,9 @@ setInterval(()=>{
 // Todo: V add logout button
 // Todo: V product prices
 // Todo: V encrypt  password
-// Todo:   cleanup redis sessions once every ? 10? hours except for remember me set interval
-// Todo:   sign out clears from sessions DB and you cant sign in again while logged in
+// Todo: V cleanup redis sessions once every ? 10? hours except for remember me set interval
+// Todo: V  V  sign out clears from sessions DB , X you cant sign in again while logged in , V and sign up redirect to sign In
+// Todo: V navbar
 // Todo:   defend against Dos attacks
 // Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   css - design design design

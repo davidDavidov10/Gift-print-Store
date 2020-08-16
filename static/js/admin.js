@@ -21,7 +21,6 @@ function loadTableData(userData) {
     for(let user of userData) {
         let cart = getItemsHtml("cart", user);
         let purchases= getItemsHtml("purchases", user);
-        console.log(JSON.stringify(user.lastLogin));
         dataHtml += `<tr class ="userTr"><td class ="userTd">${user.firstName}</td><td class ="userTd">${user.lastName}</td>`
             +`<td class ="userTd">${user.email}</td><td class ="userTd">${cart}</td><td  class ="userTd">${purchases}</td>`
                 +`<td  class ="userTd">${user.lastLogin}</td></tr>`;
@@ -42,8 +41,6 @@ function searchAdminTable() {
         td = tr[i].getElementsByClassName("userTd")[col]; //0 is for col
         if (td) {
             txtValue = td.textContent || td.innerText;
-            console.log("textvalue "+ txtValue)
-            console.log("if = " + (txtValue.toUpperCase().indexOf(filter) > -1))
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = ""; // keep showing
             } else {
@@ -55,10 +52,7 @@ function searchAdminTable() {
 
 function getItemsHtml(name, user) {
     let items = "--"
-    console.log(name)
     if(user[name] !== null){
-        console.log("user name: " + user[name])
-
         let productKeys = Object.keys(user[name])
         items = "<table class='cartTable' style='border: black 1px solid'> " +
             "    <thead>\n" +
