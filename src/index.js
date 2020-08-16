@@ -161,6 +161,7 @@ app.delete('/api/signOut', (request,response)=> {
     response.send("Signed out");
 });
 
+
 // Admin
 app.get('/api/admin', async(request,response)=> {
     // Check that the user is admin
@@ -198,10 +199,8 @@ app.get('/api/admin', async(request,response)=> {
                         resolve(users);
                     });
                 });
-
                 let data = {"data": userData};
                 response.json(data);
-
             }else {
                 // If user is NOT admin redirect with error msg
                 console.log("user is not an admin")
@@ -215,6 +214,16 @@ app.get('/api/admin', async(request,response)=> {
     });
 });
 
+
+
+app.get('/api/admin/purchases', async(request,response)=> {
+    // Check that the user is admin
+    await getUserFromSession(request).then(async (email) => {
+        client.hgetall("purchases", function(err,reply){
+          response.json(reply);
+        });
+    });
+});
 
 
 // Cart get items from db to show in cart
@@ -317,11 +326,23 @@ app.post('/api/placeOrder', async (request,response) => {
             if (err)  throw err;
             // Todo: if user cart is null- dont get here
             if (reply !== null) {
+                let cart = JSON.parse(reply);
+                let cartKeys = Object.keys(cart);
+                let info = request.body;
+                let shippingInfo = `Full Name: ${info.fullname}, Address: ${info.address} ${info.city}, Zip: ${info.zip} `
+                // Go over all items in cart and add shipping info and status
+                for(let key in cartKeys){
+                    let item = cart[cartKeys[key]];
+                    item["status"] = "In Process";
+                    item["shippingInfo"] = shippingInfo;
+                }
+                // Get existing purchases
                 client.hget('purchases',email, (err1, reply1) =>{
+                    // reply1 is the existing purchases
                     if(reply1 !== null){
-                        reply = {...JSON.parse(reply),...JSON.parse(reply1)}
+                       cart = {...cart,...JSON.parse(reply1)}
                     }
-                    client.hset('purchases',email ,JSON.stringify(reply));
+                    client.hset('purchases',email ,JSON.stringify(cart));
                 });
                 client.hdel('cart',email);
                 let path = request.get('referer')
