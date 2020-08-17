@@ -21,26 +21,13 @@ window.onload = () => {
                 purchasesData.push(item);
             }
         }
-
-       /* for(let i = 0; i< body.length; i++){
-            usersData.push(body.data[i]);
-        }*/
         loadTableData(purchasesData)
     }).catch((err) =>{
         // User is not logged in as admin, redirect to sign in page
-        console.error(err)
-       // window.location = "../html/LoginPage.html";
+        window.location = "../html/LoginPage.html";
     });
 }
 
-/*<th>User Email</th>
-<th>Shipping Info</th>
-<th>Type</th>
-<th>Color</th>
-<th>Size</th>
-<th>Amount</th>
-<th>Image to print</th>
-<th>Product image</th>*/
 
 function loadTableData(purchasesData) {
     const tableBody = document.getElementById('tableData');

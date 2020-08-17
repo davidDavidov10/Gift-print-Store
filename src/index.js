@@ -222,6 +222,10 @@ app.get('/api/admin/purchases', async(request,response)=> {
         client.hgetall("purchases", function(err,reply){
           response.json(reply);
         });
+    }).catch((err)=> {
+        // If user is not logged in sid doesnt exist we get an error from getUserFromSession
+        // catch it and send so we can redirect in admin.js
+        response.send();
     });
 });
 
@@ -430,12 +434,14 @@ setInterval(()=>{
 // Todo: V cleanup redis sessions once every ? 10? hours except for remember me set interval
 // Todo: V  V  sign out clears from sessions DB , X you cant sign in again while logged in , V and sign up redirect to sign In
 // Todo: V navbar
+// Todo: V purchases page for admin to handel existing orders status
 // Todo:   defend against Dos attacks
 // Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   css - design design design
 // Todo:   check all http methods are as they should be (get post and such)? change to https? check http status are as they should be
 
-// Ask ohad
+
+// Ask Ohad
 // Todo:   login activity -( in admin table)  is this last login or a log of all logins ??
 // Todo:   can a user see the homepage without log in ??
 // todo:   is there a better way to redirect when access is denied ??
@@ -447,4 +453,3 @@ setInterval(()=>{
 // Todo: if there's time
 // send confirmation email or reset password
 // previous purchases
-// purchases page for admin to handel existing orders status
