@@ -21,7 +21,6 @@
                 <li style="float:right"><button class="active" onclick="logOut()">Sign Out</button></li>
             </ul>`
      } else if(status.response === "User Authenticated"){
-         //Todo: if in design
          let prefix = inDesign ? "../" : "";
          navBarStr =
              `<ul>

@@ -18,24 +18,14 @@
 <body>
 <h2>Sign in</h2>
 
-
-
-<!--TODO: decide action  -->
-<!--Todo: check that post is the right method-->
-
 <form >
     <div class="container">
         <label class="email">Email</label>
         <input id="email" type="email" placeholder="email" name="email" required/><br>
-
         <label class="pass">Password</label>
         <input id="password" type="password" placeholder="Password" name="password" required/><br>
-
         <label><input id="rememberMe" type="checkbox"  name="remember">Remember me</label><br>
-
         <button type="button"  id="submit"   onclick="checkLogin()" >Sign In</button>
-        <!--TODO : add password confirmation-->
-        <!-- check that there is no such email in the database        -->
     </div>
 </form>
 <p id="err" style="color:red"></p>

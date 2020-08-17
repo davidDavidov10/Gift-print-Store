@@ -26,29 +26,37 @@ document.getElementById("product-design").addEventListener("change", function(){
 
 // When the user clicks on upload a custom picture
 document.getElementById('product-custompicture').addEventListener("change", function(e){
-    var reader = new FileReader();
+    // Validate file
+    let file = this.files[0];
+    let filename = file.name;
+    if(file.size > 1000000 || !(filename.endsWith('.jpg') || filename.endsWith('.jpeg') || filename.endsWith('.png'))){
+        alert(" Please upload an image of at most 1MB, of type jpg jpeg or png");
+        this.value = "";
+     // File validated
+    }else{
+        var reader = new FileReader();
+        reader.onload = function (event){
+            canvas.remove(canvas.item(0));
+            var imgObj = new Image();
+            imgObj.src = event.target.result;
 
-    reader.onload = function (event){
-        canvas.remove(canvas.item(0));
-        var imgObj = new Image();
-        imgObj.src = event.target.result;
+            // When the picture loads, create the image in Fabric.js
+            imgObj.onload = function () {
+                var img = new fabric.Image(imgObj);
+                document.getElementById('product-design').value = ""
+                img.scaleToHeight(100);
+                img.scaleToWidth(100);
+                canvas.centerObject(img)
+                canvas.add(img);
+                canvas.renderAll();
 
-        // When the picture loads, create the image in Fabric.js
-        imgObj.onload = function () {
-            var img = new fabric.Image(imgObj);
-            document.getElementById('product-design').value = ""
-            img.scaleToHeight(100);
-            img.scaleToWidth(100);
-            canvas.centerObject(img)
-            canvas.add(img);
-            canvas.renderAll();
-
+            };
         };
-    };
 
-    // If the user selected a picture, load it
-    if(e.target.files[0]){
-        reader.readAsDataURL(e.target.files[0]);
+        // If the user selected a picture, load it
+        if(e.target.files[0]){
+            reader.readAsDataURL(e.target.files[0]);
+        }
     }
 }, false);
 
@@ -64,7 +72,6 @@ document.addEventListener("keydown", function(e) {
 }, false);
 
 
-//Todo: make the add to cart open only after done editing and make done editing replace the shirt editor with a photo
 function doneEdit(){
     // Canvas
     new Promise((resolve,reject)=>{
@@ -79,7 +86,7 @@ function doneEdit(){
         }
         resolve(document.getElementById('product-div'));
         // Page
-    }).then(domtoimage.toPng) // todo: find better way to send img this takes a lot of time for large imgs
+    }).then(domtoimage.toPng)
         .then(function (dataUrl) {
             document.getElementById('productWithImage').value = dataUrl
             document.getElementById('addToCart').disabled = false;

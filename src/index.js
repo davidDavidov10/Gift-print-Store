@@ -19,12 +19,21 @@ const storage = multer.diskStorage({
         cb(null, '../static/productImg')
     },
     filename: function (req, file, cb) {
-        //Todo: check the file type? check file size? and name
         cb(null, file.fieldname + path.extname(file.originalname))
     }
 })
 
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 1000000 },
+    fileFilter: function (req, file, callback) {
+        let ext = path.extname(file.originalname);
+        if(ext !== '.png' && ext !== '.jpg'  && ext !== '.jpeg') {
+            return callback(new Error('Only images are allowed'))
+        }
+        callback(null, true)
+    }
+});
 
 
 const app = express();
@@ -33,7 +42,6 @@ let client = redis.createClient();
 client.on('connect', ()=>{
     console.log("redis client connected")
     // Check if admin exists
-    // todo: check if admin password needs to be not hardcoded
     client.hlen("admins", async function (err, reply) {
         let password =  await bcrypt.hash(adminPassword, bcryptRounds).catch((err) => console.err(err));
         if (reply-0 === 0 ){
@@ -78,7 +86,6 @@ app.post('/api/signUp', async (request,response)=> {
 
         });
     });
-
     // Save user to DB if doesn't already exists
     if(!exists){
         let userDetails = `{"firstName": "${firstName}", "lastName": "${lastName}", "email": "${email}", "password": "${password}"}`;
@@ -87,6 +94,7 @@ app.post('/api/signUp', async (request,response)=> {
         client.hset('cart', email, "{}");
         response.json({"msg" : "User signed in"})
     }else{
+        // If user exists already send error
         response.json({"err" : "User exists for this email please sign in"})
     }
 });
@@ -99,14 +107,12 @@ app.post('/api/signIn', (request,response)=> {
     let password = body.password;
     let rememberMe = body.rememberMe;
     let isAdmin = false;
-    //TODO: handle each case
 
     // Check if given user is an existing user from DB
     client.hget("users", email,async function (err, reply) {
         if (err)  throw err;
         await new Promise((resolve, reject) => {
         let user =  JSON.parse(reply);
-
         if (user === null) {
             // Check if user is an admin
             client.hget("admins", email, function (err, reply) {
@@ -132,7 +138,7 @@ app.post('/api/signIn', (request,response)=> {
                 let  sid = uuid.v4();
                 let expiration = "session"
                 if(rememberMe){
-                    response.cookie('sid', sid ); // todo: check how log this should be connected
+                    response.cookie('sid', sid );
                 }else{
                     response.cookie('sid', sid ,{maxAge: 1800000}); // 30 min until cookie expires
                     expiration = Date.now() + 1800000;
@@ -147,9 +153,6 @@ app.post('/api/signIn', (request,response)=> {
             }
         });
     });
-
-    //Todo: choose redirect
-
 });
 
 
@@ -273,9 +276,10 @@ app.put('/api/cart/items/update', async (request,response)=> {
                 }
             });
             client.hset('cart', email, JSON.stringify(cart));
-
+            response.send()
         })
-        .catch((err)=>response.send());
+        .catch((err)=>{
+            response.send()});
 });
 
 
@@ -435,19 +439,25 @@ setInterval(()=>{
 // Todo: V  V  sign out clears from sessions DB , X you cant sign in again while logged in , V and sign up redirect to sign In
 // Todo: V navbar
 // Todo: V purchases page for admin to handel existing orders status
+// Todo:   check all http methods are as they should be (get post and such)? change to https? check http status are as they should be
 // Todo:   defend against Dos attacks
 // Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   css - design design design
-// Todo:   check all http methods are as they should be (get post and such)? change to https? check http status are as they should be
+// Todo:   Write tests with fetch
+
 
 
 // Ask Ohad
-// Todo:   login activity -( in admin table)  is this last login or a log of all logins ??
+// Todo:   login activity - (in admin table)  is this last login or a log of all logins ??
 // Todo:   can a user see the homepage without log in ??
 // todo:   is there a better way to redirect when access is denied ??
 // Todo:   navbar can we reuse the code here?  use script to inject code for navbar? (remember admin vs user)   ??
 // Todo:   what do we need to do with the information from the checkout page like credit card   ??
 // Todo:   encrypt password in client side ? we use bcrypt in server side how? without require bcrypt
+// Todo:   defend against Dos attacks. What does this mean?
+// Todo:   can we assume the browser supports web local storage? (shopping cart updating amount)
+// Todo:   When saving admin@adimin do the email and password need to be hardcoded ?
+// Todo:   How long should a remember me be connected ? should it just be a session cookie?
 
 
 // Todo: if there's time

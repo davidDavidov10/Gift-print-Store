@@ -24,26 +24,32 @@ window.onload = () => {
 }
 
 
-window.onbeforeunload = function(e) {
-    let productsAmount = {}; //Todo: update only when amount has changed
+window.onbeforeunload =   function(e) {
+    let productsAmount = {};
     for (let index = 0; index < numOfItems; index++) {
         let key = document.getElementById(index).getAttribute('data-value');
-        productsAmount[key] = document.getElementById(`amount${index}`).value;
-        fetch(`http://localhost:6379/api/cart/items/update`, {
-            credentials: "include",
-            method: 'PUT',
-            body: JSON.stringify(productsAmount),
-            headers: {'Content-Type': 'application/json'}
-        }).catch();
+             if(localStorage.getItem(`amount${index}`)){
+            productsAmount[key] = localStorage.getItem(`amount${index}`);
+            localStorage.removeItem(`amount${index}`);
+        }
     }
+    fetch(`http://localhost:6379/api/cart/items/update`, {
+        credentials: "include",
+        method: 'PUT',
+        body: JSON.stringify(productsAmount),
+        headers: {'Content-Type': 'application/json'}
+    }).catch();
 }
 
 function removeProduct(index){
     let productSubtotal = document.getElementById(`sub-total${index}`).innerText.replace("Subtotal: $","");
     let productToRemove = document.getElementById(index);
     productToRemove.style.display = 'none';
-    let productAmount = document.getElementById(`amount${index}`);
+  /*  let productAmount = document.getElementById(`amount${index}`);
     productAmount.value = 0;
+    */
+    localStorage[`amount${index}`] = 0;
+
     let basketTotal = document.getElementById('basket-total').innerText.slice(1);
     document.getElementById('basket-total').innerText = "$" +  (basketTotal - productSubtotal);
 
@@ -53,7 +59,7 @@ function loadItemsData(itemList) {
     const cart = document.getElementById('products');
     let dataHtml = '';
     let basketTotal = 0;
-    for(let [index,item] of itemList.entries()) { //todo: !!
+    for(let [index,item] of itemList.entries()) {
         dataHtml +=
             `<div class="basket-product" id=${index} data-value ="${item.prodImg}" data-id="${item.type}">
                 <div class="item" >
@@ -98,9 +104,9 @@ function searchCartItems() {
     }
 }
 
-// Todo: update each product subtotal on click and not on window.onbefore unload
-
+//  Update each product subtotal on click  and save amount to local storage
 function updateSubtotal(index){
+    // Update subtotal
     let basketTotal = document.getElementById('basket-total').innerText.slice(1);
     let amount = document.getElementById(`amount${index}`).value;
     let price = document.getElementById(`price${index}`).getAttribute('data-value');
@@ -108,4 +114,6 @@ function updateSubtotal(index){
     basketTotal = (basketTotal - subTotal.innerText.replace("Subtotal: $","")) + (amount * price);
     subTotal.innerHTML = `Subtotal: $${amount * price}`;
     document.getElementById('basket-total').innerText = "$" +  basketTotal;
+    // Save amount to local storage
+    localStorage[`amount${index}`] = amount;
 }

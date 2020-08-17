@@ -59,7 +59,7 @@
 <form id="form" action="http://localhost:6379/api/design/save" method="post" enctype="multipart/form-data">
     <label for="product-custompicture">Upload your own design:</label>
     <!--the image-->
-    <input type="file" id="product-custompicture" name="uploadedImg" />
+    <input type="file" id="product-custompicture" name="uploadedImg" accept=".jpg,.png,.jpeg"/>
 
     <button type="submit" id="addToCart" disabled >Add to cart</button>
     <input type="hidden" name="productWithImage" id="productWithImage" value="">

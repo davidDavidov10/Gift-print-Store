@@ -18,10 +18,8 @@
           document.getElementById('err').innerHTML = error;
       }else{
           let isAdmin = await  response.isAdmin;
-          console.log(isAdmin)
           if(isAdmin) window.location = "../html/AdminPage.html";
           else  window.location = "../html/HomePage.html";
-         // Todo: do we do the same for admin and guest user?
       }
 
 
