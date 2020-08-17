@@ -56,7 +56,6 @@ client.on('error', (error)=>{
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-//app.use(cors());
 app.use(cors({ origin: 'http://localhost:63342' , credentials :  true}));
 app.use(cookieParser());
 
@@ -92,10 +91,10 @@ app.post('/api/signUp', async (request,response)=> {
         client.hset('users',email ,userDetails);
         client.hset('loginActivity', email, JSON.stringify({"lastLogin": "Hasn't logged in yet"}));
         client.hset('cart', email, "{}");
-        response.json({"msg" : "User signed in"})
+        response.status(200).json({"msg" : "User signed in"})
     }else{
         // If user exists already send error
-        response.json({"err" : "User exists for this email please sign in"})
+        response.status(401).json({"err" : "User exists for this email please sign in"})
     }
 });
 
@@ -119,7 +118,7 @@ app.post('/api/signIn', (request,response)=> {
                 if (reply === null) {
                     // Show unknown  email address
                     console.log("unknown  email address")
-                    response.send(JSON.parse('{"err": "Incorrect Email"}'));
+                    response.status(401).send(JSON.parse('{"err": "Incorrect Email"}'));
                 } else {
                     isAdmin = true;
                     resolve(JSON.parse(reply));
@@ -132,7 +131,7 @@ app.post('/api/signIn', (request,response)=> {
             if (!isPassword) {
                 // Show incorrect password
                 console.log("incorrect password")
-                response.send(JSON.parse('{"err": "Incorrect Password"}'));
+                response.status(401).send(JSON.parse('{"err": "Incorrect Password"}'));
             } else {
                 // Login
                 let  sid = uuid.v4();
@@ -149,7 +148,7 @@ app.post('/api/signIn', (request,response)=> {
                 client.hset('sessions', sid, JSON.stringify({id: email, expire:expiration}));
                 client.hset("loginActivity", email, JSON.stringify({lastLogin: new Date().toLocaleString()}));
 
-                response.send(JSON.parse(`{"isAdmin": ${isAdmin}}`));
+                response.status(200).send(JSON.parse(`{"isAdmin": ${isAdmin}}`));
             }
         });
     });
@@ -160,11 +159,11 @@ app.post('/api/signIn', (request,response)=> {
 app.delete('/api/signOut', (request,response)=> {
     let sid = request.header('Cookie').replace(/.*sid=([^;]+).*/i,'$1');
     client.hdel("sessions", sid);
-    response.send("Signed out");
+    response.status(200).send("Signed out");
 });
 
 
-// Admin
+// Admin get admin table info
 app.get('/api/admin', async(request,response)=> {
     // Check that the user is admin
     await getUserFromSession(request).then(async (email) => {
@@ -202,32 +201,32 @@ app.get('/api/admin', async(request,response)=> {
                     });
                 });
                 let data = {"data": userData};
-                response.json(data);
+                response.status(200).json(data);
             }else {
                 // If user is NOT admin redirect with error msg
                 console.log("user is not an admin")
-                response.json("{}");
+                response.status(401).json("{}");
             }
         });
     }).catch((err)=> {
         // If user is not logged in sid doesnt exist we get an error from getUserFromSession
         // catch it and send so we can redirect in admin.js
-        response.send();
+        response.status(401).send();
     });
 });
 
 
-
+// Admin get info for purchases table
 app.get('/api/admin/purchases', async(request,response)=> {
     // Check that the user is admin
     await getUserFromSession(request).then(async (email) => {
         client.hgetall("purchases", function(err,reply){
-          response.json(reply);
+          response.status(200).json(reply);
         });
     }).catch((err)=> {
         // If user is not logged in sid doesnt exist we get an error from getUserFromSession
         // catch it and send so we can redirect in admin.js
-        response.send();
+        response.status(401).send();
     });
 });
 
@@ -238,16 +237,16 @@ app.get('/api/cart/items',  async (request,response)=> {
        client.hget("cart", email, function (err, reply) {
            if (err) throw err;
            let data = {"data": (reply !== null ? reply :"{}") };
-           response.json(data);
+           response.status(200).json(data);
        });
    }).catch((err)=> {
-       response.json({"error":"Please log in to see cart items"})
+       response.status(401).json({"error":"Please log in to see cart items"})
    });
 });
 
 
 
-// Cart update db product amount and del from cart
+// Cart update db product amount and delete from cart if needed
 app.put('/api/cart/items/update', async (request,response)=> {
     await getUserFromSession(request)
         .then(async (email) => {
@@ -271,17 +270,16 @@ app.put('/api/cart/items/update', async (request,response)=> {
                 }
             });
             client.hset('cart', email, JSON.stringify(cart));
-            response.send()
+            response.status(200).send()
         })
         .catch((err)=>{
-            response.send()});
+            response.status(401).send()});
 });
 
 
 // Product design and save in user cart, save imgs in server
 app.post('/api/design/save', upload.single('uploadedImg'),  async(request,response) => {
     await getUserFromSession(request).then((email) =>{
-       // let body =  request.body;
         let imgID = "No selected img"
         let prodImgID = uuid.v4();
         let data = new Buffer.from(request.body.productWithImage.slice(22), 'base64');
@@ -290,13 +288,13 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
         let size = request.body.productSize !== undefined ? request.body.productSize : "--";
         let amount = request.body.productAmount;
         let price = request.body.price;
+
         // Rename file to be a unique id
         let file =  request.file;
         if(file !== undefined){
             imgID = uuid.v4();
             fs.rename( file.path, `${file.destination}/${imgID}${path.extname(file.path)}`,  ()=>{});
         }
-
         fs.writeFile(`../static/productImg/${prodImgID}.png`, data,()=>{});
 
         // Check if user is in db key img
@@ -304,9 +302,6 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
             if (err)  throw err;
             let item = { prodImg:prodImgID, imgToPrint:imgID , amount:amount, type:productType, price:price, color:color, size:size, }
             let cart = {};
-            console.log(reply)
-            console.log(typeof reply)
-            console.log(reply !== "null")
             if (reply !== null) {
                 // User is  in db, get existing cart
                 cart = JSON.parse(reply);
@@ -315,8 +310,7 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
             cart[prodImgID] = item;
             client.hset('cart',email ,JSON.stringify(cart));
         });
-        response.redirect('back');
-
+        response.status(200).redirect('back'); //Todo: decide if we need to redirect to somewhere else
     });
 });
 
@@ -347,11 +341,12 @@ app.post('/api/placeOrder', async (request,response) => {
                 });
                 client.hdel('cart',email);
                 let path = request.get('referer')
-                response.redirect(path.replace("CheckoutPage.html","HomePage.html"));
+                response.status(200).redirect(path.replace("CheckoutPage.html","HomePage.html"));
             }
         });
     });
 });
+
 
 // When designing a product check that user is logged in if not we send user to login page
 app.get('/api/validate',  async(request, response) =>{
@@ -361,13 +356,15 @@ app.get('/api/validate',  async(request, response) =>{
               resolve(reply !== null);
           }));
       });
-      if(isAdmin) response.json({"response" : "Admin Authenticated" });
-      else response.json({"response" : "User Authenticated" });
+      if(isAdmin) response.status(200).json({"response" : "Admin Authenticated" });
+      else response.status(200).json({"response" : "User Authenticated" });
     }).catch((err)=>{
-        response.json({"response" :"Not Authenticated"});
+        response.status(401).json({"response" :"Not Authenticated"});
     });
 });
 
+
+// Admin -  update the status of a purchase from purchase table
 app.put('/api/admin/updateStatus', async(request, response) => {
     let purchases = await new Promise( (resolve, reject) => {
         client.hget('purchases', request.body.email, (err, reply) => {
@@ -379,9 +376,9 @@ app.put('/api/admin/updateStatus', async(request, response) => {
     purchases[request.body.itemName].status = "Order Completed";
     console.log("purchases: "+ JSON.stringify(purchases))
     console.log("purchases: "+ typeof purchases)
-    client.hset('purchases',request.body.email,JSON.stringify(purchases))
-    }
-);
+    client.hset('purchases', request.body.email, JSON.stringify(purchases))
+    response.status(200).send();
+});
 
 // Get user email from session id  in cookie
 function getUserFromSession(request){
