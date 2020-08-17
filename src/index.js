@@ -158,8 +158,7 @@ app.post('/api/signIn', (request,response)=> {
 
 // Sign Out
 app.delete('/api/signOut', (request,response)=> {
-    // Todo: check if there is a better way to parse the sid from cookie  regex?
-    let sid = request.header('Cookie').split(";")[1].slice(5);
+    let sid = request.header('Cookie').replace(/.*sid=([^;]+).*/i,'$1');
     client.hdel("sessions", sid);
     response.send("Signed out");
 });
@@ -169,7 +168,7 @@ app.delete('/api/signOut', (request,response)=> {
 app.get('/api/admin', async(request,response)=> {
     // Check that the user is admin
     await getUserFromSession(request).then(async (email) => {
-        // Check if user is an admin //todo: if we dont have more admins we can just check the mail
+        // Check if user is an admin
         client.hget("admins", email,async function (err, reply) {
             if(reply !== null){
                 // If user is admin send client users data to show in table
@@ -250,9 +249,6 @@ app.get('/api/cart/items',  async (request,response)=> {
 
 // Cart update db product amount and del from cart
 app.put('/api/cart/items/update', async (request,response)=> {
-    //Todo: update according to last change by user and not on last closed window
-    //Todo: save and get the amount to change from local storage
-    //Todo: when removing from db erase from server the imgs
     await getUserFromSession(request)
         .then(async (email) => {
             let productsAmounts = request.body;
@@ -260,7 +256,7 @@ app.put('/api/cart/items/update', async (request,response)=> {
                 client.hget("cart", email, function (err, reply) {
                     if (err) throw err;
                     let cart = JSON.parse(reply);
-                    resolve(cart)//todo: if cart == null
+                    resolve(cart)
                 });
             });
             Object.keys(productsAmounts).forEach(function (key) {
@@ -268,9 +264,8 @@ app.put('/api/cart/items/update', async (request,response)=> {
                 if (amount !== "0") {
                     cart[key].amount = amount;
 
-                } else { // Delete item
+                } else { // Delete item and remove the item imaged from server
                     fs.unlink(`../static/productImg/${key}.png`,()=>{})
-                    //todo: check not null
                     fs.unlink(`../static/productImg/${cart[key].imgToPrint}.png`,()=>{})
                     delete cart[key]
                 }
@@ -318,7 +313,6 @@ app.post('/api/design/save', upload.single('uploadedImg'),  async(request,respon
             }
             // Add item to cart
             cart[prodImgID] = item;
-            // Todo: check calendar without img
             client.hset('cart',email ,JSON.stringify(cart));
         });
         response.redirect('back');
@@ -332,7 +326,6 @@ app.post('/api/placeOrder', async (request,response) => {
     await getUserFromSession(request).then((email) =>{
         client.hget("cart", email,function (err, reply) {
             if (err)  throw err;
-            // Todo: if user cart is null- dont get here
             if (reply !== null) {
                 let cart = JSON.parse(reply);
                 let cartKeys = Object.keys(cart);
@@ -354,7 +347,6 @@ app.post('/api/placeOrder', async (request,response) => {
                 });
                 client.hdel('cart',email);
                 let path = request.get('referer')
-                // todo: choose redirect to something else ?
                 response.redirect(path.replace("CheckoutPage.html","HomePage.html"));
             }
         });
@@ -394,8 +386,7 @@ app.put('/api/admin/updateStatus', async(request, response) => {
 // Get user email from session id  in cookie
 function getUserFromSession(request){
     return new Promise((resolve, reject) =>{
-            // Todo: check if there is a better way to parse the sid from cookie  regex?
-            let sid = request.header('Cookie').split(";")[1].slice(5);
+        let sid = request.header('Cookie').replace(/.*sid=([^;]+).*/i,'$1');
             client.hget("sessions", sid,  (err, reply)=>{
                 if(reply !== null ) resolve(JSON.parse(reply).id);
                 else reject(err);
@@ -456,7 +447,7 @@ setInterval(()=>{
 // Todo:   encrypt password in client side ? we use bcrypt in server side how? without require bcrypt
 // Todo:   defend against Dos attacks. What does this mean?
 // Todo:   can we assume the browser supports web local storage? (shopping cart updating amount)
-// Todo:   When saving admin@adimin do the email and password need to be hardcoded ?
+// Todo:   When saving admin@adimin do the email and password need to be hardcoded? can admin add more admins?
 // Todo:   How long should a remember me be connected ? should it just be a session cookie?
 
 
