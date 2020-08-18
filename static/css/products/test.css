@@ -136,14 +136,6 @@ img {
     content: "\f00d";
     color: #fff; }
 
-.orange {
-    background: #ff9f1a; }
-
-.green {
-    background: #85ad00; }
-
-.blue {
-    background: #0076ad; }
 
 .tooltip-inner {
     padding: 1.3em; }
@@ -176,3 +168,63 @@ img {
 /*# sourceMappingURL=style.css.map */
 
 
+/* color select*/
+
+input {
+    display: none;
+}
+
+.button {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.button-span {
+    display: block;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    border-radius: 100%;
+    background: #eeeeee;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    transition: ease .3s;
+}
+
+.button span:hover {
+    padding: 10px;
+}
+
+.white-color .button span {
+    background: white;
+}
+
+.black-color .button-span {
+    background: black;
+}
+
+.red-color .button-span {
+    background: red;
+}
+
+.green-color .button-span {
+    background:green;
+}
+
+.blue-color .button-span {
+    background: blue;
+}
+
+.yellow-color .button-span {
+    background: yellow;
+}
