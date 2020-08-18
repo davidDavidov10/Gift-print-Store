@@ -4,7 +4,7 @@
     left: 190px;
     z-index: 10;
     width: 200px;
-    height: 400px;
+    height: 260px;
 }
 
 .canvas-container{
@@ -12,6 +12,7 @@
     height: 200px;
     position: relative;
     user-select: none;
+    border-radius: 25px;
 
 }
 
