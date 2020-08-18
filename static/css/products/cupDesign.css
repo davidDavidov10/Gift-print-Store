@@ -1,7 +1,7 @@
 .drawing-area{
     position: absolute;
-    top: 60px;
-    left: 200px;
+    top: 100px;
+    left: 190px;
     z-index: 10;
     width: 200px;
     height: 400px;
@@ -9,9 +9,10 @@
 
 .canvas-container{
     width: 200px;
-    height: 400px;
+    height: 200px;
     position: relative;
     user-select: none;
+
 }
 
 #product-div{

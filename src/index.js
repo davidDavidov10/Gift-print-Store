@@ -427,10 +427,10 @@ setInterval(()=>{
 // Todo: V  V  sign out clears from sessions DB , X you cant sign in again while logged in , V and sign up redirect to sign In
 // Todo: V navbar
 // Todo: V purchases page for admin to handel existing orders status
-// Todo:   check all http methods are as they should be (get post and such)? change to https? check http status are as they should be
-// Todo:   defend against Dos attacks
+// Todo: V check all http methods are as they should be (get post and such)? change to https? check http status are as they should be
 // Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   css - design design design
+// Todo:   defend against Dos attacks
 // Todo:   Write tests with fetch
 
 
