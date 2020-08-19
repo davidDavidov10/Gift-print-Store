@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="../../css/products/cupDesign.css">
+    <link rel = "icon" href ="../../img/GiftPrintSmall.png" type = "image/x-icon">
+    <script src="../../js/util.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../../css/NavBar.css">
+    <nav id="navBar"></nav>
+    <script>navBar(true)</script>
+
+
+    <link rel="stylesheet" type="text/css" href="../../css/products/testCup.css">
+
+    <title>Test Cup</title>
+
+</head>
+<body>
+<!-- Create the container of the tool -->
+<div id="product-div">
+    <!--
+        Initially, the image will have the background tshirt that has transparency
+        So we can simply update the color with CSS or JavaScript dinamically
+    -->
+    <img id="product-backgroundpicture" src="../../img/background_cup.png"/>
+
+    <div id="drawingArea" class="drawing-area">
+        <div class="canvas-container">
+            <canvas id="product-canvas" width="200" height="260"></canvas>
+        </div>
+    </div>
+</div>
+
+<p>To remove a loaded picture on the T-Shirt select it and press the <kbd>DEL</kbd> key.</p>
+<!-- The select that will allow the user to pick one of the static designs -->
+<br>
+<label for="product-design">Product Design:</label>
+<select id="product-design">
+    <option value="">Design your own ...</option>
+    <option value="../../img/GiftPrint.png">example</option>
+</select>
+
+<!-- The Select that allows the user to change the color of the T-Shirt -->
+<br><br>
+<div id="color-selector">
+    <label >Product Color:</label>
+    <label class="white-color">
+        <input type="radio" name="productColor" value="white" form="form" class="color-buttons" checked >
+        <div class="button"><span class="button-span"></span></div>
+    </label>
+    <label class="black-color">
+        <input type="radio" name="productColor" value="black" form="form" class="color-buttons">
+        <div class="button"><span class="button-span"></span></div>
+    </label>
+    <label class="red-color">
+        <input type="radio" name="productColor" value="red" form="form" class="color-buttons">
+        <div class="button"><span class="button-span"></span></div>
+    </label>
+    <label class="green-color">
+        <input type="radio" name="productColor" value="green" form="form" class="color-buttons">
+        <div class="button"><span class="button-span"></span></div>
+    </label>
+    <label class="yellow-color">
+        <input type="radio" name="productColor" value="yellow" form="form" class="color-buttons">
+        <div class="button"><span class="button-span"></span></div>
+    </label>
+    <label class="blue-color">
+        <input type="radio" name="productColor" value="blue" form="form" class="color-buttons">
+        <div class="button"><span class="button-span"></span></div>
+    </label>
+</div>
+
+
+<label>Product Amount:
+    <input id="product-amount" value="1" type="number" min="1" max="100" name="productAmount" form="form">
+</label>
+<br>
+
+<form id="form" action="http://localhost:6379/api/design/save" method="post" enctype="multipart/form-data">
+    <label for="product-custompicture">Upload your own design:</label>
+    <!--the image-->
+    <input type="file" id="product-custompicture" name="uploadedImg" accept=".jpg,.png,.jpeg"/>
+
+    <button type="submit" id="addToCart" disabled >Add to cart</button>
+    <input type="hidden" name="productWithImage" id="productWithImage" value="">
+    <input type="hidden"  name="productType" id="productType" value="Cup">
+    <input type="hidden" name="price" id="price" value="7.50">
+
+</form>
+<button  id="doneEdit" onclick="doneEdit()">Done editing</button>
+<button  id="continueEdit" onclick="continueEdit()" disabled>Continue editing</button>
+
+
+
+<script src="../../js/fabric.min.js"></script>
+<script src="../../js/productDesign.js"></script>
+<script src="../../js/dom-to-image.min.js"></script>
+
+</body>
+</html>

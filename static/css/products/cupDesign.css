@@ -32,6 +32,9 @@
     user-select: none;
     cursor: default;
 }
-
+.disable{
+    pointer-events:none;
+    background:grey;
+}
 /*Todo: adapt to cup the size and position of canvas*/
 /*Todo: create better cup img*/

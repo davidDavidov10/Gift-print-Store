@@ -11,10 +11,17 @@ function updateProductImage(imageURL){
     });
 }
 
-// Update the Product color according to the selected color by the user
+/*// Update the Product color according to the selected color by the user
 document.getElementById("product-color").addEventListener("change", function(){
     document.getElementById("product-div").style.backgroundColor = this.value;
-}, false);
+}, false);*/
+
+// Update the Product color according to the selected color by the user
+document.getElementsByName("productColor").forEach((element) =>{
+    element.addEventListener("change", function(){
+        document.getElementById("product-div").style.backgroundColor = this.value;
+    }, false);
+})
 
 // Update the Product color according to the selected color by the user
 document.getElementById("product-design").addEventListener("change", function(){
@@ -93,15 +100,17 @@ function doneEdit(){
             document.getElementById('addToCart').disabled = false;
             document.getElementById('continueEdit').disabled = false;
             document.getElementById('doneEdit').disabled = true;
-            document.getElementById('product-color').className = "disable";
             document.getElementById('product-custompicture').className = "disable";
             document.getElementById('product-amount').className = "disable";
             document.getElementById('product-design').disabled = true;
             let sizeSelect = document.getElementById('product-size');
-            if(sizeSelect !== undefined) sizeSelect.className = "disable";
-        }).
-
-catch(function (error) {
+            if(sizeSelect) sizeSelect.className = "disable";
+            document.getElementsByName("productColor").forEach((element) =>{
+                console.log(element.checked)
+                if(!element.checked) element.disabled = true;
+            })
+        })
+        .catch(function (error) {
         console.error('oops, something went wrong!', error);
     });
 }
@@ -118,19 +127,20 @@ function continueEdit(){
     document.getElementById('addToCart').disabled = true;
     document.getElementById('continueEdit').disabled = true;
     document.getElementById('doneEdit').disabled = false;
-    document.getElementById('product-color').className = "";
     document.getElementById('product-custompicture').className = "";
     document.getElementById('product-amount').className = "";
     document.getElementById('product-design').disabled = false;
     let sizeSelect = document.getElementById('product-size');
-    if(sizeSelect !== undefined) sizeSelect.className = "";
+    if(sizeSelect) sizeSelect.className = "";
+    document.getElementsByName("productColor").forEach((element) =>{
+        element.disabled = false;
+    })
 
 }
 
  window.onload = ()=>{
      fetch(`http://localhost:6379/api/validate`, {method:'GET', credentials: "include"})
          .then((res)=> res.json()).then((body)=> {
-             console.log("body " + body)
              if(body.response === "Not Authenticated"){
                  window.location = "../LoginPage.html";
              }

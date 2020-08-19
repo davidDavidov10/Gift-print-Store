@@ -169,7 +169,7 @@ img {
 
 
 /* color select*/
-
+/*
 input {
     display: none;
 }
@@ -183,7 +183,7 @@ input {
     cursor: pointer;
 }
 
-.button-span {
+.button span {
     display: block;
     position: absolute;
     width: 50px;
@@ -206,8 +206,9 @@ input {
 }
 
 .white-color .button span {
-    background: white;
-}
+    background: blueviolet;
+}*/
+/*
 
 .black-color .button-span {
     background: black;
@@ -227,4 +228,10 @@ input {
 
 .yellow-color .button-span {
     background: yellow;
+}
+*/
+
+.disable{
+    pointer-events:none;
+    background:grey;
 }

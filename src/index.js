@@ -436,13 +436,13 @@ setInterval(()=>{
 
 
 // Ask Ohad
+// Todo:   defend against Dos attacks. What does this mean?
 // Todo:   login activity - (in admin table)  is this last login or a log of all logins ??
 // Todo:   can a user see the homepage without log in ??
 // todo:   is there a better way to redirect when access is denied ??
 // Todo:   navbar can we reuse the code here?  use script to inject code for navbar? (remember admin vs user)   ??
 // Todo:   what do we need to do with the information from the checkout page like credit card   ??
 // Todo:   encrypt password in client side ? we use bcrypt in server side how? without require bcrypt
-// Todo:   defend against Dos attacks. What does this mean?
 // Todo:   can we assume the browser supports web local storage? (shopping cart updating amount)
 // Todo:   When saving admin@adimin do the email and password need to be hardcoded? can admin add more admins?
 // Todo:   How long should a remember me be connected ? should it just be a session cookie?
