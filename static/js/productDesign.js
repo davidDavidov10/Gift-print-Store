@@ -11,11 +11,6 @@ function updateProductImage(imageURL){
     });
 }
 
-/*// Update the Product color according to the selected color by the user
-document.getElementById("product-color").addEventListener("change", function(){
-    document.getElementById("product-div").style.backgroundColor = this.value;
-}, false);*/
-
 // Update the Product color according to the selected color by the user
 document.getElementsByName("productColor").forEach((element) =>{
     element.addEventListener("change", function(){
