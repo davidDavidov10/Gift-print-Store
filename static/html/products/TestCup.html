@@ -8,6 +8,7 @@
 <!--    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" type="text/css">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
 
     <meta charset="UTF-8">
@@ -28,7 +29,7 @@
 
 </head>
 <body>
-<div class="container1" style="border: #8B0000 2px solid">
+<div class="container" >
     <div class="card">
         <div class="container-fliud">
             <div class="wrapper row">
@@ -57,13 +58,14 @@
                     <p class="product-description">Suspendisse quos? Tempus cras iure temporibus? Eu laudantium cubilia sem sem! Repudiandae et! Massa senectus enim minim sociosqu delectus posuere.</p>
                     <h4 class="price">Price: <span>$7.50</span></h4>
 
-                <!-- The select that will allow the user to pick one of the static designs -->
-                <br>
+                    <!-- The Select that allows the user to change the amount of the product -->
+                    <h5><b><label>Product Amount:</label></b></h5>
+                    <input id="product-amount" value="1" type="number" min="1" max="100" name="productAmount" form="form">
 
-                                   <!-- The Select that allows the user to change the color of the T-Shirt -->
-                <br><br>
+
+                    <!-- The Select that allows the user to change the color of the product -->
                      <div id="color-selector">
-                        <label >Product Color:</label>
+                         <h5><label ><b>Product Color:</b></label></h5>
                         <label class="white-color">
                             <input type="radio" name="productColor" value="white" form="form" class="color-buttons" checked >
                             <div class="button"><span class="button-span"></span></div>
@@ -90,19 +92,15 @@
                         </label>
                     </div>
 
-                        <label for="product-design">Product Design:</label>
+                    <!-- The Select that allows the user to change the design of the product -->
+                        <h5><b><label for="product-design">Product Design:</label></b></h5>
                         <select id="product-design">
                             <option value="">Design your own ...</option>
                             <option value="../../img/GiftPrint.png">example</option>
                         </select>
 
-                        <label>Product Amount:
-                            <input id="product-amount" value="1" type="number" min="1" max="100" name="productAmount" form="form">
-                        </label>
-
-
                         <form id="form" action="http://localhost:6379/api/design/save" method="post" enctype="multipart/form-data">
-                            <!--the image-->
+                            <!-- The Select that allows the user to change the image of the product -->
                             <div class="custom-file mb-3">
                                 <label for="product-custompicture" class="custom-file-label">Upload your own design:</label>
                                 <input type="file" id="product-custompicture" name="uploadedImg" accept=".jpg,.png,.jpeg"  class="custom-file-input"/>
@@ -111,13 +109,13 @@
                             <input type="hidden" name="productWithImage" id="productWithImage" value="">
                             <input type="hidden"  name="productType" id="productType" value="Cup">
                             <input type="hidden" name="price" id="price" value="7.50">
-
                         </form>
+
                         <div class="action">
-                            <button type="submit" form="form" class="add-to-cart btn  btn-default"  id="addToCart" disabled>Add to cart</button>
                             <button class="add-to-cart btn btn-default" id="doneEdit" onclick="doneEdit()">Done editing</button>
                             <button class="add-to-cart btn btn-default" id="continueEdit" onclick="continueEdit()" disabled>Continue editing</button>
                         </div>
+                    <button type="submit" form="form" class="add-to-cart btn  btn-default btn-block"   id="addToCart" disabled> Add to cart  <i class="fas fa-shopping-cart"> </i></button>
 
                 </div>
             </div>

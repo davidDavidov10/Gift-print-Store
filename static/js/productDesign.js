@@ -63,17 +63,6 @@ document.getElementById('product-custompicture').addEventListener("change", func
     }
 }, false);
 
-// When the user selects a picture that has been added and press the DEL key
-// The object will be removed !
-document.addEventListener("keydown", function(e) {
-    var keyCode = e.keyCode;
-
-    if(keyCode == 46){
-        console.log("Removing selected element on Fabric.js on DELETE key !");
-        canvas.remove(canvas.getActiveObject());
-    }
-}, false);
-
 
 function doneEdit(){
     // Canvas

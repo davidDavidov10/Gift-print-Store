@@ -34,8 +34,9 @@
     transition: ease .3s;
 }
 
-.button-span:hover {
-    padding: 10px;
+span.button-span:hover {
+    border: black 3px solid;
+    padding: 30px;
 }
 
 .white-color .button-span {
@@ -61,7 +62,8 @@
 
 
 
-/*****************globals*************/
+
+/*!*****************globals*************!*/
 body {
     font-family: 'open sans';
     overflow-x: hidden; }
@@ -81,13 +83,19 @@ img {
     flex-direction: column; }
 @media screen and (max-width: 996px) {
     .preview {
-        margin-bottom: 20px; } }
+        margin-bottom: 20px;
+    } }
 
 .preview-pic {
-   /* -webkit-box-flex: 1;
+    -webkit-box-flex: 1;
     -webkit-flex-grow: 1;
     -ms-flex-positive: 1;
-    flex-grow: 1;*/ }
+    flex-grow: 1;
+    /*justify-content: center;*/
+    /*display: flex;*/
+    /*width : 505px;*/
+    border: green 3px solid;
+  }
 
 .preview-thumbnail.nav-tabs {
     border: none;
@@ -111,23 +119,30 @@ img {
     -webkit-animation-name: opacity;
     animation-name: opacity;
     -webkit-animation-duration: .3s;
-    animation-duration: .3s; }
+    animation-duration: .3s;
+    border: greenyellows 3px solid;
+}
 
 .card {
     border-radius: 25px;
     margin-top: 50px;
-    background: #eee;
+    /*background: #eee;*/
+    border: black 2px solid;
+    background: whitesmoke;
     padding: 3em;
     line-height: 1.5em;
 
-  border: red 2px solid;}
+  }
 
-@media screen and (min-width: 997px) {
+/*@media screen and (min-width: 997px) {*/
     .wrapper {
-        display: -webkit-box;
+      /*  display: -webkit-box;
         display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex; } }
+        display: -ms-flexbox;*/
+        display: flex;
+        border: blue 3px solid;
+    }
+/*}*/
 
 .details {
     display: -webkit-box;
@@ -138,7 +153,9 @@ img {
     -webkit-box-direction: normal;
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
-    flex-direction: column; }
+    flex-direction: column;
+    border: red 3px solid;
+}
 
 .product-title, .price, .sizes, .colors {
     text-transform: UPPERCASE;
@@ -177,9 +194,11 @@ img {
     color: #fff;
     -webkit-transition: background .3s ease;
     transition: background .3s ease; }
+
 .add-to-cart:hover, .like:hover {
     background: #b36800;
     color: #fff; }
+
 .add-to-cart[disabled]{
     border: 1px solid #999999;
     background-color: #cccccc;
@@ -218,8 +237,20 @@ img {
         -webkit-transform: scale(1);
         transform: scale(1); } }
 
-.custom-file-label{
-    width:50%;
-}.custom-file-input{
-     width:50%;
+
+.custom-file-input ,.custom-file-label, #product-design{
+     width:70%;
+
  }
+#product-amount{
+    width:15%;
+}
+#doneEdit, #continueEdit{
+    width: 50%;
+}
+.action {
+    display: flex;
+}
+#product-div{
+    display: flex;
+}
