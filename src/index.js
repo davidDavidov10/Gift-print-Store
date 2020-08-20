@@ -411,6 +411,7 @@ setInterval(()=>{
 }, 86400000);
 //24 hours = 86400000
 
+// Todo:   remove imgs from DB after purchase complete from admin
 // Todo:   in product design change text to something real
 // Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   css - design design design
