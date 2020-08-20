@@ -1,40 +1,7 @@
 .drawing-area{
     position: absolute;
-    top: 100px;
-    left: 190px;
-    z-index: 10;
-    width: 200px;
-    height: 260px;
+    top: 22%;
+    left: 38%;
+    width: 40%;
+    height: 52%;
 }
-
-.canvas-container{
-    width: 100%;
-    height: 100%;
-    position: relative;
-    user-select: none;
-    border-radius: 25px;
-
-}
-
-#product-div{
-    width: 500px;
-    height: 500px;
-    position: relative;
-    background-color: #fff;
-}
-
-#canvas{
-    position: absolute;
-    width: 200px;
-    height: 400px;
-    left: 0px;
-    top: 0px;
-    user-select: none;
-    cursor: default;
-}
-.disable{
-    pointer-events:none;
-    background:grey;
-}
-/*Todo: adapt to cup the size and position of canvas*/
-/*Todo: create better cup img*/

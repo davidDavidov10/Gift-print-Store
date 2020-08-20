@@ -1,3 +1,33 @@
+
+.canvas-container{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    user-select: none;
+    border-radius: 25px;
+}
+
+
+#product-div{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #fff;
+}
+
+#canvas{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    user-select: none;
+    cursor: default;
+}
+
+
+
+
 .disable{
     pointer-events:none;
     background:#cccccc;
@@ -58,45 +88,6 @@ span.button-span:hover {
     background: blue;
 }
 
-
-
-.drawing-area{
-    position: absolute;
-    top: 22%;
-    left: 38%;
-    width: 40%;
-    height: 52%;
-}
-
-
-.canvas-container{
-    width: 100%;
-    height: 100%;
-    position: relative;
-    user-select: none;
-    border-radius: 25px;
-}
-
-
-
-#product-div{
-    width: 100%;
-    height: 100%;
-    position: relative;
-    background-color: #fff;
-}
-
-#canvas{
-    /*position: absolute;*/
-    position: relative;
-    width: 100%;
-    height: 100%;
-    left: 0px;
-    top: 0px;
-    user-select: none;
-    cursor: default;
-}
-
 /*!*****************globals*************!*/
 body {
     font-family: 'open sans';
@@ -122,13 +113,8 @@ img {
     } }
 
 .preview-pic {
-    /*-webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-  */
     display: flex;
-  }
+}
 
 .preview-thumbnail.nav-tabs {
     border: none;
@@ -153,24 +139,19 @@ img {
     animation-name: opacity;
     -webkit-animation-duration: .3s;
     animation-duration: .3s;
-    /*border: greenyellow 3px solid;*/
 }
 
 .card {
     border-radius: 25px;
     margin-top: 50px;
-    /*background: #eee;*/
-    background: whitesmoke;
+      background: whitesmoke;
     padding: 3em;
     line-height: 1.5em;
 
-  }
+}
 
 @media screen and (min-width: 997px) {
     .wrapper {
-      /*  display: -webkit-box;
-        display: -webkit-flex;
-        display: -ms-flexbox;*/
         display: flex;
         flex-wrap: wrap;
     }
@@ -270,9 +251,9 @@ img {
 
 
 .custom-file-input ,.custom-file-label, #product-design{
-     width:70%;
+    width:70%;
 
- }
+}
 #product-amount{
     width:15%;
 }
