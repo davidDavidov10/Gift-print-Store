@@ -1,4 +1,5 @@
 let canvas = new fabric.Canvas('product-canvas');
+canvasResize();
 //canvas.setHeight( window.getComputedStyle(document.getElementsByClassName('canvas-container').item(0)).getPropertyValue('width'));
 //canvas.setWidth( window.getComputedStyle(document.getElementsByClassName('canvas-container').item(0)).getPropertyValue('height'));
 function updateProductImage(imageURL){
@@ -132,3 +133,16 @@ function continueEdit(){
          .catch((err) => {
          });
  }
+
+ window.addEventListener('resize' , ()=>{
+    canvasResize();
+ });
+
+function canvasResize(){
+    let imgWidth = document.getElementById('product-backgroundpicture').width;
+    let imgHeight = document.getElementById('product-backgroundpicture').height;
+    let ratio = document.getElementById('ratio').value;
+    ratio = JSON.parse(ratio);
+    canvas.setHeight(imgHeight * ratio.height);
+    canvas.setWidth(imgWidth * ratio.width);
+}

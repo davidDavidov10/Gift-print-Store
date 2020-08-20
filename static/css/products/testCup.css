@@ -60,9 +60,46 @@ span.button-span:hover {
 
 
 
+.drawing-area{
+    position: absolute;
+    top: 22%;
+    left: 38%;
+    width: 40%;
+    height: 52%;
+}
+
+
+.canvas-container{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    user-select: none;
+    border-radius: 25px;
+}
 
 
 
+#product-div{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #fff;
+}
+
+#canvas{
+    /*position: absolute;*/
+    position: relative;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    user-select: none;
+    cursor: default;
+}
+.disable{
+    pointer-events:none;
+    background:grey;
+}
 /*!*****************globals*************!*/
 body {
     font-family: 'open sans';
@@ -119,7 +156,7 @@ img {
     animation-name: opacity;
     -webkit-animation-duration: .3s;
     animation-duration: .3s;
-    border: greenyellows 3px solid;
+    /*border: greenyellow 3px solid;*/
 }
 
 .card {
@@ -132,7 +169,7 @@ img {
 
   }
 
-/*@media screen and (min-width: 997px) {*/
+@media screen and (min-width: 997px) {
     .wrapper {
       /*  display: -webkit-box;
         display: -webkit-flex;
@@ -140,7 +177,7 @@ img {
         display: flex;
         flex-wrap: wrap;
     }
-/*}*/
+}
 
 .details {
     display: -webkit-box;
