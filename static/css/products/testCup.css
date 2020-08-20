@@ -1,6 +1,6 @@
 .disable{
     pointer-events:none;
-    background:grey;
+    background:#cccccc;
 }
 
 .color-buttons {
@@ -35,7 +35,7 @@
 }
 
 span.button-span:hover {
-    border: black 3px solid;
+    border: black 1px solid;
     padding: 30px;
 }
 
@@ -96,10 +96,7 @@ span.button-span:hover {
     user-select: none;
     cursor: default;
 }
-.disable{
-    pointer-events:none;
-    background:grey;
-}
+
 /*!*****************globals*************!*/
 body {
     font-family: 'open sans';
@@ -284,4 +281,7 @@ img {
 }
 .action {
     display: flex;
+}
+#product-design{
+    margin-bottom: 10px;
 }

@@ -411,23 +411,7 @@ setInterval(()=>{
 }, 86400000);
 //24 hours = 86400000
 
-// Todo: V add individual product details like shirt size
-// Todo: V checkout screen
-// Todo: V admin table add users -  V login activity, V  purchases, V cart
-// Todo: V remember me, else session  expiration in 30 min
-// Todo: V create homepage with products
-// Todo: V home page : search, items.
-// Todo: V admin vs. user
-// Todo: V can only enter pages if logged in - do this in product design pages also checkout page
-// Todo: V cart screen activate search
-// Todo: V add logout button
-// Todo: V product prices
-// Todo: V encrypt  password
-// Todo: V cleanup redis sessions once every ? 10? hours except for remember me set interval
-// Todo: V  V  sign out clears from sessions DB , X you cant sign in again while logged in , V and sign up redirect to sign In
-// Todo: V navbar
-// Todo: V purchases page for admin to handel existing orders status
-// Todo: V check all http methods are as they should be (get post and such)? change to https? check http status are as they should be
+// Todo:   in product design change text to something real
 // Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   css - design design design
 // Todo:   defend against Dos attacks
