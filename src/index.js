@@ -373,10 +373,11 @@ app.put('/api/admin/updateStatus', async(request, response) => {
         });
     });
     purchases= JSON.parse(purchases);
-    purchases[request.body.itemName].status = "Order Completed";
-    console.log("purchases: "+ JSON.stringify(purchases))
-    console.log("purchases: "+ typeof purchases)
-    client.hset('purchases', request.body.email, JSON.stringify(purchases))
+    let item =  purchases[request.body.itemName];
+    item.status = "Order Completed";
+    client.hset('purchases', String(request.body.email), JSON.stringify(purchases))
+    fs.unlink(`../static/productImg/${item.imgToPrint}.png`,()=>{console.log("delete 1")})
+    fs.unlink(`../static/productImg/${item.prodImg}.png`,()=>{})
     response.status(200).send();
 });
 
@@ -411,7 +412,6 @@ setInterval(()=>{
 }, 86400000);
 //24 hours = 86400000
 
-// Todo:   remove imgs from DB after purchase complete from admin
 // Todo:   in product design change text to something real
 // Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   css - design design design

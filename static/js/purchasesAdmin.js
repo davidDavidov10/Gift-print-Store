@@ -35,11 +35,20 @@ function loadTableData(purchasesData) {
     let dataHtml = '';
     for(let [index,item] of purchasesData.entries()) {
         let imageToPrintHtml = item.imgToPrint === "No selected img" ? "No uploaded image" :`<a href="../productImg/${item.imgToPrint}.png" download>Image to print</a>`
+        console.log("index = "+ index)
+        console.log("item.status = " + item.status);
+
         dataHtml += `<tr class ="userTr"><td class ="userTd">${item.userEmail}</td><td class ="userTd">${item.shippingInfo}</td>`
             +`<td class ="userTd">${item.type}</td><td class ="userTd">${item.color}</td><td  class ="userTd">${item.size}</td>`
-            +`<td  class ="userTd">${item.amount}</td><td  class ="userTd">${imageToPrintHtml}</td>`+
-            `<td  class ="userTd"><img width="50" height="50" src="../productImg/${item.prodImg}.png"></td>`+
-            `<td id="${index}" class ="userTd">${item.status}</td>`+
+            +`<td  class ="userTd">${item.amount}</td>`
+                if(item.status === "Order Completed"){
+                    dataHtml +=`<td  class ="userTd">Completed order, no image to download</td>`+
+                        `<td  class ="userTd">Completed order, no product image to show</td>`
+                }else{
+                    dataHtml +=`<td  class ="userTd">${imageToPrintHtml}</td>`+
+                        `<td  class ="userTd"><img width="50" height="50" src="../productImg/${item.prodImg}.png"></td>`
+                }
+            dataHtml += `<td id="${index}" class ="userTd">${item.status}</td>`+
             `<td><button onclick="changeStatus('${item.userEmail}','${item.prodImg}','${index}')">Complete order</button></td>`+
             `</tr>`;
     }
@@ -52,7 +61,6 @@ function searchAdminTable() {
     filter = input.value.toUpperCase();
     table = document.getElementById("purchasesTable");
     col = document.getElementById("searchTypes").value;
-    //tr = table.getElementsByTagName("tr");
     tr = table.getElementsByClassName("userTr");
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByClassName("userTd")[col]; //0 is for col
