@@ -21,26 +21,29 @@
 
 <body>
 
-<main>
-    <div class="basket" id="basket">
-        <div class="basket-module">
-            <input id="promo-code" type="text" name="promo-code"  placeholder="Search..." class="promo-code-field"  onkeyup="searchCartItems()" >
+<div class="container">
+    <div class="left-side">
+        <div class="search-bar-container" id="basket">
+            <div class="search-bar">
+                <input id="search-bar" type="text" name="search-bar" placeholder="Search..." class="promo-code-field" onkeyup="searchCartItems()" >
+            </div>
+        </div>
+
+        <div id="products"  class="product-container"></div>
+    </div>
+
+    <div class="summary">
+        <div class="summary-total-items"><span class="total-items"></span> Items in your Bag</div>
+        <div class="summary-total">
+            <div class="total-title">Total</div>
+            <div class="total-value final-value" id="basket-total">0.00</div>
+        </div>
+        <div class="summary-checkout">
+            <button  class="checkout-cta" ><a href="CheckoutPage.html">Go to Secure Checkout</a></button>
         </div>
     </div>
-    <div id="products" ></div>
-    <aside>
-        <div class="summary">
-            <div class="summary-total-items"><span class="total-items"></span> Items in your Bag</div>
-            <div class="summary-total">
-                <div class="total-title">Total</div>
-                <div class="total-value final-value" id="basket-total">0.00</div>
-            </div>
-            <div class="summary-checkout">
-                <button  class="checkout-cta" ><a href="CheckoutPage.html">Go to Secure Checkout</a></button>
-            </div>
-        </div>
-    </aside>
-</main>
+
+</div>
 
 </body>
 

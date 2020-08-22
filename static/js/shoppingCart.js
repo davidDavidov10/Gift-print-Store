@@ -92,7 +92,7 @@ function searchCartItems() {
     let input, filter, list, i, txtValue;
     list = document.getElementsByClassName("basket-product");
     let numberOfItems = list.length;
-    input = document.getElementById("promo-code");
+    input = document.getElementById("search-bar");
     filter = input.value.toLowerCase();
     for (i = 0; i < numberOfItems; i++) {
         txtValue = list[i].getAttribute('data-id');

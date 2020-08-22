@@ -54,7 +54,7 @@ button:focus {
 }
 
 img,
-.basket-module,
+.search-bar,
 .basket-labels,
 .basket-product {
     width: 100%;
@@ -62,8 +62,8 @@ img,
 
 input,
 button,
-.basket,
-.basket-module,
+.search-bar-container,
+.search-bar,
 .basket-labels,
 .item,
 .price,
@@ -75,21 +75,12 @@ button,
     float: left;
 }
 
-/*
-.price:before,
-.subtotal:before,
-.subtotal-value:before,
-.total-value:before,
-.promo-value:before {
-    content: '$';
-}
-*/
 
 .hide {
     display: none;
 }
 
-main {
+.left-side {
     clear: both;
     font-size: 0.75rem;
     margin: 0 auto;
@@ -98,19 +89,19 @@ main {
     width: 960px;
 }
 
-.basket,
-aside {
+.search-bar-container,
+.summary {
     padding: 0 1rem;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
-.basket {
+.search-bar-container {
     width: 70%;
 }
 
-.basket-module {
+.search-bar {
     color: #111;
 }
 
@@ -237,21 +228,26 @@ li.subtotal:before {
     width: 3.75rem;
 }
 
-aside {
+.left-side {
     float: right;
     position: relative;
-    width: 30%;
+    margin-left: 5%;
+    width: 70%;
+    border: #8B0000 2px solid;
 }
 
 .summary {
     background-color: #eee;
     border: 1px solid #aaa;
     padding: 1rem;
-    position: fixed;
+    position: sticky;
     width: 250px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    height: fit-content;
+    margin: 1%;
+    border: yellow 2px solid;
 }
 
 .summary-total-items {
@@ -328,19 +324,9 @@ aside {
     width: 100%;
 }
 
-.summary-delivery-selection {
-    background-color: #ccc;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    display: block;
-    font-size: 0.625rem;
-    height: 34px;
-    width: 100%;
-}
 
 @media screen and (max-width: 640px) {
-    aside,
-    .basket,
+    .search-bar-container,
     .summary,
     .item,
     .remove {
@@ -349,7 +335,7 @@ aside {
     .basket-labels {
         display: none;
     }
-    .basket-module {
+    .search-bar {
         margin-bottom: 1rem;
     }
     .item {
@@ -388,19 +374,22 @@ aside {
 }
 
 @media screen and (min-width: 641px) and (max-width: 960px) {
-    aside {
-        padding: 0 1rem 0 0;
-    }
+
     .summary {
         width: 28%;
+        padding: 0 1rem 0 0;
     }
 }
 
 @media screen and (max-width: 960px) {
-    main {
+    .left-side {
         width: 100%;
     }
     .product-details {
         padding: 0 1rem;
     }
+}
+
+.container{
+    /*display: flex;*/
 }
