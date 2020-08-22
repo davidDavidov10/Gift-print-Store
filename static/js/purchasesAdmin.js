@@ -35,21 +35,22 @@ function loadTableData(purchasesData) {
     let dataHtml = '';
     for(let [index,item] of purchasesData.entries()) {
         let imageToPrintHtml = item.imgToPrint === "No selected img" ? "No uploaded image" :`<a href="../productImg/${item.imgToPrint}.png" download>Image to print</a>`
-        console.log("index = "+ index)
-        console.log("item.status = " + item.status);
+        dataHtml += `<tr class ="userTr"><td class ="userTd"><a href="mailto:${item.email}">${item.userEmail}</a></td>`+
+            `<td class ="userTd" style="white-space:pre-wrap">${item.shippingInfo}</td>`+
+            `<td class ="userTd">${item.type}</td><td class ="userTd">${item.color}</td>`+
+            `<td class ="userTd">${item.size}</td>`+
+            `<td class ="userTd">${item.amount}</td>`
 
-        dataHtml += `<tr class ="userTr"><td class ="userTd">${item.userEmail}</td><td class ="userTd">${item.shippingInfo}</td>`
-            +`<td class ="userTd">${item.type}</td><td class ="userTd">${item.color}</td><td  class ="userTd">${item.size}</td>`
-            +`<td  class ="userTd">${item.amount}</td>`
                 if(item.status === "Order Completed"){
                     dataHtml +=`<td  class ="userTd">Completed order, no image to download</td>`+
-                        `<td  class ="userTd">Completed order, no product image to show</td>`
+                        `<td  class ="userTd">Completed order, no product image to show</td>`+
+                        `<td id="${index}" class ="userTd" style="color:green">${item.status}</td>`
                 }else{
                     dataHtml +=`<td  class ="userTd">${imageToPrintHtml}</td>`+
-                        `<td  class ="userTd"><img width="50" height="50" src="../productImg/${item.prodImg}.png"></td>`
+                        `<td class ="userTd"><a href="../productImg/${item.prodImg}.png" download ><img class="product-img" width="50" height="50" src="../productImg/${item.prodImg}.png"></a></td>`+
+                        `<td id="${index}" class ="userTd" style="color:red">${item.status}</td>`
                 }
-            dataHtml += `<td id="${index}" class ="userTd">${item.status}</td>`+
-            `<td><button onclick="changeStatus('${item.userEmail}','${item.prodImg}','${index}')">Complete order</button></td>`+
+            dataHtml += `<td><button onclick="changeStatus('${item.userEmail}','${item.prodImg}','${index}')">Complete order</button></td>`+
             `</tr>`;
     }
     tableBody.innerHTML = dataHtml;
@@ -77,6 +78,7 @@ function searchAdminTable() {
 
 function changeStatus(email, itemName, index){
     document.getElementById(`${index}`).innerText = "Order Completed";
+    document.getElementById(`${index}`).style.color = "green";
     fetch(`http://localhost:6379/api/admin/updateStatus`, {method:'PUT', credentials: "include",
         body:JSON.stringify({"email":email, "itemName":itemName }),headers: {'Content-Type': 'application/json'}
     });

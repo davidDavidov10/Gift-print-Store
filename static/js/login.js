@@ -6,7 +6,7 @@
 
       let requestOptions = {
            method: 'POST',
-           credentials: "include",
+          credentials: "include",
            headers: {'Content-Type': 'application/json'},
            body:JSON.stringify({"email":email, "password":pass, "rememberMe":rememberMe})
       };

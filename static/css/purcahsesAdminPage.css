@@ -26,13 +26,14 @@ table {
 }
 
 th, td {
-    padding: 1%;
     border: 1px black solid;
+    padding: 15px;
 }
 
 th {
     background-color:  #2980b9;
     color: #ffffff;
+
 }
 
 tr:nth-child(odd) {
@@ -70,7 +71,6 @@ i {
 
 tr.table-header {
     border: 1px solid #BBBEBF;
-
 }
 
 
@@ -124,3 +124,7 @@ input[type=text] {
 }
 
 
+.product-img:hover{
+    width: 200px;
+    height: 200px;
+}

@@ -8,6 +8,7 @@
     <script src="../js/util.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../css/NavBar.css">
+    <link rel="stylesheet" type="text/css" href="../css/purcahsesAdminPage.css">
     <nav id="navBar"></nav>
     <script>navBar(false)</script>
 
@@ -15,44 +16,51 @@
 
 </head>
 <body>
-
-<div>
-    <input id="purchasesSearchBar" type="text" placeholder="Search.." onkeyup="searchAdminTable()">
-    <select id="searchTypes">
-        <option value="0">User Email</option>
-        <option value="1">Shipping Info</option>
-        <option value="2">Type</option>
-        <option value="3">Color</option>
-        <option value="4">Size</option>
-        <option value="5">Amount</option>
-        <option value="6">Image to print</option>
-        <option value="7">Product image</option>
-        <option value="8">Status</option>
-    </select>
-    </form>
-</div>
-
-<table id="purchasesTable">
-    <thead>
-    <tr>
+<div class="table-container">
+    <section class="filterBar">
+        <div id="searchBar-container" class="search-ui" >
+            <div class="search-ui">
+                <label >Search</label>
+                <div class="search-container">
+                    <input id="purchasesSearchBar" type="text" placeholder="Search.." onkeyup="searchAdminTable()">
+                </div>
+            </div>
+            <div class="filter-ui">
+                <label>Search By</label>
+                <div class="styled-select">
+                <select id="searchTypes">
+                    <option value="0">User Email</option>
+                    <option value="1">Shipping Info</option>
+                    <option value="2">Type</option>
+                    <option value="3">Color</option>
+                    <option value="4">Size</option>
+                    <option value="5">Amount</option>
+                    <option value="6">Image to print</option>
+                    <option value="7">Product image</option>
+                    <option value="8">Status</option>
+                </select>
+                </div>
+            </div>
+        </div>
+    </section>
+    <table id="purchasesTable">
         <thead>
-        <th>User Email</th>
-        <th>Shipping Info</th>
-        <th>Type</th>
-        <th>Color</th>
-        <th>Size</th>
-        <th>Amount</th>
-        <th>Image to print</th>
-        <th>Product image</th>
-        <th>Status</th>
-    </thead>
-
-
-    </tr>
-    </thead>
-    <tbody id ="tableData">
-
-    </tbody>
-</table>
+            <tr class="table-header">
+                <th>User Email</th>
+                <th>Shipping Info</th>
+                <th>Type</th>
+                <th>Color</th>
+                <th>Size</th>
+                <th>Amount</th>
+                <th>Image to print</th>
+                <th>Product image</th>
+                <th>Status</th>
+                <th>Change status</th>
+            </tr>
+        </thead>
+        <tbody id ="tableData">
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

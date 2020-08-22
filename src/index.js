@@ -324,11 +324,11 @@ app.post('/api/placeOrder', async (request,response) => {
                 let cart = JSON.parse(reply);
                 let cartKeys = Object.keys(cart);
                 let info = request.body;
-                let shippingInfo = `Full Name: ${info.fullname}, Address: ${info.address} ${info.city}, Zip: ${info.zip} `
+                let shippingInfo = `Full Name: ${info.fullname},\nAddress: ${info.address} ${info.city},\nZip: ${info.zip} `
                 // Go over all items in cart and add shipping info and status
                 for(let key in cartKeys){
                     let item = cart[cartKeys[key]];
-                    item["status"] = "In Process";
+                    item["status"] = "Waiting to be processed";
                     item["shippingInfo"] = shippingInfo;
                 }
                 // Get existing purchases
@@ -431,7 +431,7 @@ setInterval(()=>{
 // Todo:   can we assume the browser supports web local storage? (shopping cart updating amount)
 // Todo:   When saving admin@adimin do the email and password need to be hardcoded? can admin add more admins?
 // Todo:   How long should a remember me be connected ? should it just be a session cookie?
-
+// Todo:   How should we test
 
 // Todo: if there's time
 // send confirmation email or reset password
