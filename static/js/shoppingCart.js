@@ -63,24 +63,26 @@ function loadItemsData(itemList) {
         dataHtml +=
             `<div class="basket-product" id=${index} data-value ="${item.prodImg}" data-id="${item.type}">
                 <div class="item" >
-                <div class="product-image">
-                <img src="../productImg/${item.prodImg}.png" alt="../img/GiftPrint.png" class="product-frame">
-                </div>
-                <div class="product-details">
-               
-            <p id ="type"><strong>${item.type}</strong></p>
-            <p><strong>Color: ${item.color}</strong></p>
-             <p><strong>Size: ${item.size}</strong></p>
-            </div>
-            </div>
-            <div class="price" id="price${index}" data-value="${item.price}"><b>Price: $${item.price}</b></div>
-                <div class="quantity"><b class="amount">Amount:</b>
-                <input id="amount${index}" type="number" value="${item.amount}" min="1" class="quantity-field" onclick="updateSubtotal(${index})">
-                
-                </div>
-                <div class="subtotal" id="sub-total${index}"><b>Subtotal: $${item.amount * item.price}</b></div>
-                <div class="remove">
-                <button id ="remove${index}" onclick="removeProduct(${index})">Remove</button>
+                    <div class="product-image">
+                    <img src="../productImg/${item.prodImg}.png" alt="../img/GiftPrint.png" class="product-frame">
+                    </div>
+                    <div class="product-details">
+                        <p id ="type"><strong>${item.type}</strong></p>
+                        <p><strong>Color: ${item.color}</strong></p>
+                        <p><strong>Size: ${item.size}</strong></p>
+                    </div>
+                    <div class="amount-price">
+                        <div class="price" id="price${index}" data-value="${item.price}"><b>Price: $${item.price}</b></div>
+                        <div class="quantity"><b class="amount">Amount:</b>
+                        <input id="amount${index}" type="number" value="${item.amount}" min="1" class="quantity-field" onclick="updateSubtotal(${index})">
+                        </div>
+                  </div>
+                  <div class="subtotal-remove">
+                    <div class="subtotal" id="sub-total${index}"><b>Subtotal: $${item.amount * item.price}</b></div>
+                    <div class="remove">
+                    <button id ="remove${index}" onclick="removeProduct(${index})">Remove</button>
+                    </div>
+                  </div>
                 </div>
              </div>`
         basketTotal += item.amount * item.price;

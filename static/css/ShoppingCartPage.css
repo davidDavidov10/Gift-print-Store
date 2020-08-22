@@ -156,13 +156,16 @@ li.subtotal:before {
 }
 
 .item {
-    width: 40%;
+    width: 100%;
+    display: flex;
+    height: 100%;
 }
 
 .price,
 .quantity,
 .subtotal {
-    width: 15%;
+    width: 100%;
+    margin-bottom: 5px;
 }
 
 .subtotal {
@@ -170,12 +173,12 @@ li.subtotal:before {
 }
 
 .remove {
-    bottom: 1.125rem;
     float: right;
-    position: absolute;
+    /*position:inherit;*/
     right: 1.125rem;
     text-align: right;
     width: 45%;
+    margin-top: 100%;
 }
 
 .remove button {
@@ -204,11 +207,11 @@ li.subtotal:before {
 }
 
 .product-image {
-    width: 35%;
+    width: 25%;
 }
 
 .product-details {
-    width: 50%;
+    width: 25%;
 }
 
 .product-details {
@@ -357,12 +360,9 @@ li.subtotal:before {
     }
     .quantity {
         text-align: left;
-        width: 34%;
-        border: #2196F3 2px solid;
     }
     .quantity-field {
         float: right;
-        border: deeppink 2px solid;
 
     }
 
@@ -405,11 +405,17 @@ li.subtotal:before {
 }
 .price{
     width: fit-content;
-    /*margin-right: 30px ;*/
     margin-right: 5% ;
 
 }
 .amount{
     float: left;
-    margin-right: 2px;
+}
+.subtotal-remove{
+    width: 25%;
+}
+.amount-price{
+    margin-top: 1.5%;
+    width: 25%;
+    display:block;
 }
