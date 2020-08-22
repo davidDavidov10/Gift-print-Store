@@ -6,16 +6,21 @@
     box-sizing: border-box;
 }
 
-html, body{
+/*html, body{
     background: url("https://i.imgur.com/uMtfBaA.png");
     font: 400 14px Pt Sans;
-}
+}*/
 
 .displaybox{
-    width: 85%;
+    width:70%;
     padding: 30px;
-    margin: 100px auto;
-    background-color: rgba(255,255,255,0.8);
+    margin-bottom: 100px;
+    margin-right: 100px;
+    margin-left: 15%;
+    /*background-color: rgba(255,255,255,0.8);*/
+    /*background: linear-gradient(to bottom, #6e529d 0%,#d97b93 100%);*/
+    background: linear-gradient(to bottom, lightskyblue 0%,teal 100%);
+    border-radius: 25px;
     box-shadow: inset 1px 1px 1px rgba(0,0,0,0.15), 1px 1px 1px rgba(0,0,0,0.15);
     display: flex;
     flex-direction: row;
@@ -30,6 +35,7 @@ html, body{
     box-shadow: inset 1px 1px 1px rgba(0,0,0,0.05), 1px 1px 1px rgba(0,0,0,0.05);
     position: relative;
     z-index: 100;
+    border-radius: 10px;
 }
 
 .dis1{
@@ -133,7 +139,7 @@ html, body{
     font-weight: 700;
     width: 100%;
     padding: 10px;
-    background-color: rgba(20,20,20,0.7);
+    background-color:#ff9f1a;
     color: white;
     text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
     border-radius: 3px;
@@ -143,6 +149,7 @@ html, body{
     transform: translateY(30px);
     transition: all ease 0.5s;
     box-shadow: inset 1px 1px 1px rgba(0,0,0,0.05), 1px 1px 1px rgba(0,0,0,0.05);
+    text-decoration: none;
 }
 
 .faspace{
@@ -175,6 +182,39 @@ html, body{
 }
 
 .disbut:hover{
-    background-color: rgba(200,20,20,0.6);
+    background-color: #b36800;
     transition: all ease 0.5s;
+}
+
+.container-home{
+display: block;
+}
+
+.search-bar {
+    width: 100%;
+    color: #111;
+    margin-left: 2%;
+    margin-bottom: 1rem;
+    /*padding:1%;*/
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: left;
+}
+
+#homeSearchBar{
+    width: 20%;
+    height:30px;
+}
+
+.logo{
+    width: 100%;
+    height: 2%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+.logo-image{
+    width: 30%;
+    display: block;
+    margin: auto;
 }
