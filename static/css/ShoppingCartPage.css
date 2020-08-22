@@ -188,6 +188,7 @@ li.subtotal:before {
     float: none;
     padding: 5px;
     text-transform: uppercase;
+    border-radius: 5px;
 }
 
 .item-heading {
@@ -328,6 +329,7 @@ li.subtotal:before {
     border: none;
     -webkit-transition: background .3s ease;
     transition: background .3s ease;
+    border-radius: 10px;
 }
 
 

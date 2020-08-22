@@ -15,25 +15,25 @@
      let navBarStr;
      if(status.response === "Admin Authenticated"){
          navBarStr =
-             `<ul>
-                 <li><a href="AdminPage.html">Admin</a></li>
-                 <li><a href="PurchasesAdmin.html">Costumer Purchases</a></li>
-                <li style="float:right"><button class="active" onclick="logOut()">Sign Out</button></li>
+             `<ul class="nav-bar-ul">
+                 <li class="nav-bar-li"><a href="AdminPage.html">Admin</a></li>
+                 <li class="nav-bar-li"><a href="PurchasesAdmin.html">Costumer Purchases</a></li>
+                <li class="nav-bar-li" style="float:right"><button class="active" onclick="logOut()">Sign Out</button></li>
             </ul>`
      } else if(status.response === "User Authenticated"){
          let prefix = inDesign ? "../" : "";
          navBarStr =
-             `<ul>
-                 <li><a href="${prefix}HomePage.html">Home</a></li>
-                 <li><a href="${prefix}ShoppingCartPage.html">Cart</a></li>
-                 <li style="float:right"><button class="active" onclick="logOut()">Sign Out</button></li>
+             `<ul class="nav-bar-ul">
+                 <li class="nav-bar-li"><a href="${prefix}HomePage.html">Home</a></li>
+                 <li class="nav-bar-li"><a href="${prefix}ShoppingCartPage.html">Cart</a></li>
+                 <li class="nav-bar-li" style="float:right"><button class="active" onclick="logOut()">Sign Out</button></li>
             </ul>`
      }else if(status.response === "Not Authenticated") {
          navBarStr =
-             `<ul>
-                 <li><a href="HomePage.html">Home</a></li>
-                 <li style="float:right"><a  lass="active" href="LoginPage.html">Sign In</a></li>
-                 <li style="float:right"><a class="active" href="RegisterPage.html">sign up</a></li>
+             `<ul class="nav-bar-ul">
+                 <li class="nav-bar-li"><a href="HomePage.html">Home</a></li>
+                 <li class="nav-bar-li" style="float:right"><a  lass="active" href="LoginPage.html">Sign In</a></li>
+                 <li class="nav-bar-li" style="float:right"><a class="active" href="RegisterPage.html">sign up</a></li>
              </ul>`
 
      }
