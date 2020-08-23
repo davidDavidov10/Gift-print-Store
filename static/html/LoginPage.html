@@ -9,6 +9,7 @@
     <script src="../js/util.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../css/NavBar.css">
+    <link rel="stylesheet" type="text/css" href="../css/loginPage.css">
     <nav id="navBar"></nav>
     <script>navBar(false)</script>
 
@@ -16,24 +17,26 @@
 
 </head>
 <body>
-<h2>Sign in</h2>
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+               <h2 > Sign In </h2>
 
-<form >
-    <div class="container">
-        <label class="email">Email</label>
-        <input id="email" type="email" placeholder="email" name="email" required/><br>
-        <label class="pass">Password</label>
-        <input id="password" type="password" placeholder="Password" name="password" required/><br>
-        <label><input id="rememberMe" type="checkbox"  name="remember">Remember me</label><br>
-        <button type="button"  id="submit"   onclick="checkLogin()" >Sign In</button>
+        <!-- Login Form -->
+        <form>
+            <input type="email" id="email" class="fadeIn second" name="email" placeholder="email" required>
+            <input type="password" id="password" class="fadeIn third" name="password" placeholder="password" required>
+            <br>
+            <label><input id="rememberMe" type="checkbox"  name="remember">Remember me</label>
+            <br>
+            <button type="button"  id="submit"  class="fadeIn fourth" onclick="checkLogin()" >Sign In</button>
+        </form>
+
+        <!-- Error handle -->
+        <div id="formFooter">
+            <p id="err" style="color:red"></p>
+        </div>
+
     </div>
-</form>
-<p id="err" style="color:red"></p>
-<p id="err1" style="color:green"></p>
-
-
-<p id="demo"></p>
-
-
+</div>
 </body>
 </html>

@@ -1,0 +1,23 @@
+.container{
+    border: #111111 3px solid;
+    background-color: #2196F3;
+    width:30%;
+    /*text-align: center;*/
+    margin-left: 35%;
+    margin-top: 10%;
+    margin-bottom: 29%;
+
+}
+body{
+    border: orange 4px solid;
+}
+
+ .input-container{
+    padding-bottom: 5%;
+    margin-left: 30%;
+}
+
+.header, .button-class{
+    margin-left: 45%;
+    margin-bottom: 5%;
+}
