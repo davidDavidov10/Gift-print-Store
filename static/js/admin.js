@@ -4,7 +4,6 @@ window.onload = () => {
         .then((res)=> res.json()).then((body)=> {
          let usersData = []
          for(let i = 0; i< body.data.length; i++){
-
              usersData.push(body.data[i]);
          }
          loadTableData(usersData)
@@ -16,20 +15,22 @@ window.onload = () => {
 
 
 function loadTableData(userData) {
+
     const tableBody = document.getElementById('tableData');
     let dataHtml = '';
     for(let user of userData) {
         let cart = getItemsHtml("cart", user);
         let purchases= getItemsHtml("purchases", user);
-        let loginColor = user.lastLogin === "Hasn't logged in yet" ? 'style="color:red"': ""
+        let loginActivity = createLoginActivity(user.loginActivity)
+               // let loginColor = user.loginActivity === "Hasn't logged in yet" ? 'style="color:red"': ""
         dataHtml += `<tr class ="userTr"><td class ="userTd">${user.firstName}</td><td class ="userTd">${user.lastName}</td>`
             +`<td class ="userTd"><a href="mailto:${user.email}">${user.email}</a></td><td class ="userTd">${cart}</td><td  class ="userTd">${purchases}</td>`
-                +`<td  class ="userTd" ${loginColor}>${user.lastLogin}</td></tr>`;
+                +`<td  class ="userTd" >${loginActivity}</td></tr>`;
     }
     tableBody.innerHTML = dataHtml;
 }
 
-// Todo: for individual col design add span with class
+
 
 function searchAdminTable() {
     let input, filter, table, tr, td, i, txtValue, col;
@@ -82,4 +83,14 @@ function getItemsHtml(name, user) {
         }
     }
  return items;
+}
+
+function createLoginActivity(loginJson){
+    let keys = Object.keys(loginJson);
+    let ans = `<ol start="0">`;
+    for(let i = 0; i < keys.length; i++){
+            ans += `<li> ${loginJson[i]}</li>`
+    }
+    ans += `</ol>`
+    return ans
 }

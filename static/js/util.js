@@ -32,7 +32,7 @@
          navBarStr +=
              `<ul class="nav-bar-ul">
                 <li class="nav-bar-li"><a class="a" href="HomePage.html"><i class="fa fa-fw fa-home"></i> Home</a></li>
-                 <li class="nav-bar-li" style="float:right"><a class="a" href="RegisterPage.html"><i class="fa fa-fw  fa-user-plus"></i> sign up</a></li>
+                 <li class="nav-bar-li" style="float:right"><a class="a" href="RegisterPage.html"><i class="fa fa-fw  fa-user-plus"></i> Sign up</a></li>
                  <li class="nav-bar-li" style="float:right"><a class="a" href="LoginPage.html"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
              </ul>`
 

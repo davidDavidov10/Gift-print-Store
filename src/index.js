@@ -89,7 +89,7 @@ app.post('/api/signUp', async (request,response)=> {
     if(!exists){
         let userDetails = `{"firstName": "${firstName}", "lastName": "${lastName}", "email": "${email}", "password": "${password}"}`;
         client.hset('users',email ,userDetails);
-        client.hset('loginActivity', email, JSON.stringify({"lastLogin": "Hasn't logged in yet"}));
+        client.hset('loginActivity', email, JSON.stringify({"0": "Signed up: "+new Date().toLocaleString()}));
         client.hset('cart', email, "{}");
         response.status(200).json({"msg" : "User signed in"})
     }else{
@@ -146,7 +146,14 @@ app.post('/api/signIn', (request,response)=> {
                 // Goto homepage while logged in
                 // Save session info adn login Activity to DB
                 client.hset('sessions', sid, JSON.stringify({id: email, expire:expiration}));
-                client.hset("loginActivity", email, JSON.stringify({lastLogin: new Date().toLocaleString()}));
+                let loginActivity = await new Promise((resolve, reject) => {
+                    client.hget("loginActivity", email,(err1, reply1) => {
+                        resolve(reply1);
+                    });
+                });
+                loginActivity = JSON.parse(loginActivity);
+                loginActivity[Object.keys(loginActivity).length] = new Date().toLocaleString();
+                client.hset("loginActivity", email, JSON.stringify(loginActivity));
 
                 response.status(200).send(JSON.parse(`{"isAdmin": ${isAdmin}}`));
             }
@@ -184,7 +191,8 @@ app.get('/api/admin', async(request,response)=> {
                             }).then((pushItem) =>{
                                  return  new Promise((resolve2, reject2) => {
                                     client.hget("loginActivity", user,function(err,reply){
-                                        resolve2({...pushItem,"lastLogin": JSON.parse(reply).lastLogin});
+                                        console.log("login activity: " + reply )
+                                        resolve2({...pushItem,"loginActivity": JSON.parse(reply)});
                                     } );
                                 });
                                 }).then((pushItem) =>{
@@ -412,26 +420,29 @@ setInterval(()=>{
 }, 86400000);
 //24 hours = 86400000
 
+
+// Todo:   login activity - every login committed
+// Todo:   A user CANT see the homepage without log in
 // Todo:   in product design change text to something real
 // Todo:   make sure there are at least 2-4 additional pages as required
-// Todo:   css - design design design
+// Todo:   split index to different node js files for each page
+// Todo:   Go over code: 1. async await where possible 2.try catch (check errors)
 // Todo:   defend against Dos attacks
 // Todo:   Write tests with fetch
 
 
 
+
 // Ask Ohad
-// Todo:   defend against Dos attacks. What does this mean?
-// Todo:   login activity - (in admin table)  is this last login or a log of all logins ??
-// Todo:   can a user see the homepage without log in ??
-// todo:   is there a better way to redirect when access is denied ??
+// Todo:   defend against Dos attacks. What does this mean -
+//  Ans:   mostly stuff that will make your server crash e.g. invalid input + few requests in the same time attack (let's say 5 requests)
+
+// Todo:   is there a better way to redirect when access is denied ??
 // Todo:   navbar can we reuse the code here?  use script to inject code for navbar? (remember admin vs user)   ??
 // Todo:   what do we need to do with the information from the checkout page like credit card   ??
-// Todo:   encrypt password in client side ? we use bcrypt in server side how? without require bcrypt
-// Todo:   can we assume the browser supports web local storage? (shopping cart updating amount)
-// Todo:   When saving admin@adimin do the email and password need to be hardcoded? can admin add more admins?
 // Todo:   How long should a remember me be connected ? should it just be a session cookie?
-// Todo:   How should we test
+// Todo:   How should we test ?
+// Todo:   Set the url ?
 
 // Todo: if there's time
 // send confirmation email or reset password
