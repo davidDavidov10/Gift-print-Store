@@ -179,6 +179,11 @@ input[type=password]::placeholder, input[type=email]::placeholder {
     animation-duration:1s;
 }
 
+.fadeIn.first {
+    -webkit-animation-delay: 0.4s;
+    -moz-animation-delay: 0.4s;
+    animation-delay: 0.4s;
+}
 
 .fadeIn.second {
     -webkit-animation-delay: 0.6s;

@@ -17,22 +17,26 @@
 
 </head>
 <body>
-    <div class="container">
-        <h2>Sign up</h2>
-        <label class="First name">First name</label>
-        <input type="text" placeholder="name"  name="FirstName" id="first_name" required/><br>
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <h2 > Sign Up </h2>
 
-        <label class="Last name">Last name</label>
-        <input type="text" placeholder="Last name" name="LastName" id="last_name" required/><br>
+        <!-- Login Form -->
 
-        <label class="email">Email</label>
-        <input type="email" placeholder="email" name="email" id="email" pattern=".+@.+[.].+" required /><br>
-        <label class="pass">Password</label>
-        <input type="password" placeholder="Password" name="password" id="password" required/><br>
+        <input type="text" class="fadeIn first" placeholder="First name"  name="FirstName" id="first_name"/>
+        <input type="text" class="fadeIn second" placeholder="Last name" name="LastName" id="last_name"/><br>
+        <input type="email" id="email" class="fadeIn third" name="email" placeholder="Email" pattern=".+@.+[.].+">
+        <input type="password" id="password" class="fadeIn fourth" name="password" placeholder="Password">
+        <button class="fadeIn fifth" onclick="checkRegister()">Sign Up</button>
 
-        <button onclick="checkRegister()">Sign up</button><br>
-        <p id="err" style="color:red"></p>
+
+        <!-- Error handle -->
+        <div id="formFooter">
+            <p id="err" style="color:red"></p>
+        </div>
+
     </div>
-
+</div>
 </body>
 </html>
