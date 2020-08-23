@@ -118,3 +118,28 @@ input[type=text] {
 }
 
 
+
+.collapsible {
+    background-color:lightgrey;
+    color:  #787D80;
+    cursor: pointer;
+    padding: 2%;
+    width: fit-content;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+.active, .collapsible:hover {
+    background-color: #555;
+    color: white;
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+}
+

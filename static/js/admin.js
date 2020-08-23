@@ -6,12 +6,15 @@ window.onload = () => {
          for(let i = 0; i< body.data.length; i++){
              usersData.push(body.data[i]);
          }
-         loadTableData(usersData)
+         loadTableData(usersData);
+         collapsible();
      }).catch((err) =>{
          // User is not logged in as admin, redirect to sign in page
          window.location = "../html/LoginPage.html";
      });
 }
+
+
 
 
 function loadTableData(userData) {
@@ -87,10 +90,26 @@ function getItemsHtml(name, user) {
 
 function createLoginActivity(loginJson){
     let keys = Object.keys(loginJson);
-    let ans = `<ol start="0">`;
+    let ans = `<button type="button" class="collapsible">Show user activity</button><div class="content"><ol start="0">`;
     for(let i = 0; i < keys.length; i++){
             ans += `<li> ${loginJson[i]}</li>`
     }
-    ans += `</ol>`
+    ans += `</ol></div>`
     return ans
+}
+
+function collapsible(){
+    let coll = document.getElementsByClassName("collapsible");
+      for (let i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+
 }

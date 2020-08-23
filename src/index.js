@@ -421,7 +421,7 @@ setInterval(()=>{
 //24 hours = 86400000
 
 
-// Todo:   login activity - every login committed
+
 // Todo:   A user CANT see the homepage without log in
 // Todo:   in product design change text to something real
 // Todo:   make sure there are at least 2-4 additional pages as required
