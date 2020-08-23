@@ -62,12 +62,6 @@ a {
     text-decoration: none;
 }
 
-i {
-    float: right;
-    padding: 0px 15px;
-    color: #787D80;
-    font-size: 12px;
-}
 
 tr.table-header {
     border: 1px solid #BBBEBF;

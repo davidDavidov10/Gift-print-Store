@@ -12,28 +12,28 @@
     // status = Logged In / Not Logged In / Admin
     let status = await fetch(`http://localhost:6379/api/validate`, {credentials: "include", method:'GET'})
         .then((res)=> res.json());
-     let navBarStr;
+     let navBarStr = `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">`;
      if(status.response === "Admin Authenticated"){
-         navBarStr =
+         navBarStr +=
              `<ul class="nav-bar-ul">
-                 <li class="nav-bar-li"><a href="AdminPage.html">Admin</a></li>
-                 <li class="nav-bar-li"><a href="PurchasesAdmin.html">Costumer Purchases</a></li>
-                <li class="nav-bar-li" style="float:right"><button class="active" onclick="logOut()">Sign Out</button></li>
+                 <li class="nav-bar-li"><a class="a" href="AdminPage.html"><i class="fa fa-fw fa-user-tie"></i> Admin</a></li>
+                 <li class="nav-bar-li"><a class="a" href="PurchasesAdmin.html"><i class="fa fa-fw fa-shopping-cart"></i> Costumer Purchases</a></li>
+                <li class="nav-bar-li" style="float:right"><a class="a" onclick="logOut()"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
             </ul>`
      } else if(status.response === "User Authenticated"){
          let prefix = inDesign ? "../" : "";
-         navBarStr =
+         navBarStr +=
              `<ul class="nav-bar-ul">
-                 <li class="nav-bar-li"><a href="${prefix}HomePage.html">Home</a></li>
-                 <li class="nav-bar-li"><a href="${prefix}ShoppingCartPage.html">Cart</a></li>
-                 <li class="nav-bar-li" style="float:right"><button class="active" onclick="logOut()">Sign Out</button></li>
+                 <li class="nav-bar-li"><a class="a" href="${prefix}HomePage.html"><i class="fa fa-fw fa-home"></i> Home</a></li>
+                 <li class="nav-bar-li"><a class="a" href="${prefix}ShoppingCartPage.html"><i class="fa fa-shopping-cart faspace"></i> Cart</a></li>
+                 <li class="nav-bar-li" style="float:right"><a class="a" onclick="logOut()"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
             </ul>`
      }else if(status.response === "Not Authenticated") {
-         navBarStr =
+         navBarStr +=
              `<ul class="nav-bar-ul">
-                 <li class="nav-bar-li"><a href="HomePage.html">Home</a></li>
-                 <li class="nav-bar-li" style="float:right"><a  lass="active" href="LoginPage.html">Sign In</a></li>
-                 <li class="nav-bar-li" style="float:right"><a class="active" href="RegisterPage.html">sign up</a></li>
+                <li class="nav-bar-li"><a class="a" href="HomePage.html"><i class="fa fa-fw fa-home"></i> Home</a></li>
+                 <li class="nav-bar-li" style="float:right"><a class="a" href="RegisterPage.html"><i class="fa fa-fw  fa-user-plus"></i> sign up</a></li>
+                 <li class="nav-bar-li" style="float:right"><a class="a" href="LoginPage.html"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
              </ul>`
 
      }

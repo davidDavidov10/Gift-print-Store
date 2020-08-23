@@ -91,7 +91,9 @@ span.button-span:hover {
 /*!*****************globals*************!*/
 body {
     font-family: 'open sans';
-    overflow-x: hidden; }
+    overflow-x: hidden;
+    line-height: inherit;
+}
 
 img {
     max-width: 100%; }
