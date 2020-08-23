@@ -421,10 +421,8 @@ setInterval(()=>{
 //24 hours = 86400000
 
 
-
-// Todo:   A user CANT see the homepage without log in
+// Todo:   Make admin unable to get into  cart  product design  home page  checkput - crushes server :(
 // Todo:   in product design change text to something real
-// Todo:   make sure there are at least 2-4 additional pages as required
 // Todo:   split index to different node js files for each page
 // Todo:   Go over code: 1. async await where possible 2.try catch (check errors)
 // Todo:   defend against Dos attacks
@@ -443,6 +441,7 @@ setInterval(()=>{
 // Todo:   How long should a remember me be connected ? should it just be a session cookie?
 // Todo:   How should we test ?
 // Todo:   Set the url ?
+// Todo:   make sure there are at least 2-4 additional pages as required. are our pages enough
 
 // Todo: if there's time
 // send confirmation email or reset password

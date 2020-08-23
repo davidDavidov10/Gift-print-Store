@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <link rel = "icon" href ="../img/GiftPrintSmall.png" type = "image/x-icon">
     <script src="../js/util.js"></script>
+    <script src="../js/homePage.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../css/NavBar.css">
     <nav id="navBar">.</nav>
@@ -130,23 +131,6 @@
     </div>
 </div>
 </body>
-<script>
 
-    function searchHomeProducts() {
-        let input, filter, list, i, txtValue;
-        list = document.getElementsByClassName("roll");
-        let numberOfItems = list.length;
-        input = document.getElementById("homeSearchBar");
-        filter = input.value.toLowerCase();
-        for (i = 0; i < numberOfItems; i++) {
-            txtValue = list[i].id;
-            if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                list[i].style.display = ""; // keep showing
-            } else {
-                list[i].style.display = "none"; // remove
-            }
-        }
-    }
-</script>
 </html>
 

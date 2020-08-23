@@ -1,0 +1,24 @@
+
+function searchHomeProducts() {
+    let input, filter, list, i, txtValue;
+    list = document.getElementsByClassName("roll");
+    let numberOfItems = list.length;
+    input = document.getElementById("homeSearchBar");
+    filter = input.value.toLowerCase();
+    for (i = 0; i < numberOfItems; i++) {
+        txtValue = list[i].id;
+        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+            list[i].style.display = ""; // keep showing
+        } else {
+            list[i].style.display = "none"; // remove
+        }
+    }
+}
+
+
+window.onload = async()=> {
+    let res = await fetch(`http://localhost:6379/api/validate`, {credentials: "include", method:'GET'});
+       if(res.status === 401){
+           window.location = "../html/LoginPage.html";
+       }
+}
