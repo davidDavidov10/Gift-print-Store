@@ -490,7 +490,6 @@ setInterval(()=>{
 //24 hours = 86400000
 
 
-// Todo:   in product design change text to something real
 // Todo:   split index to different node js files for each page
 // Todo:   Go over code: 1. async await where possible 2.try catch (check errors)
 // Todo:   defend against Dos attacks
