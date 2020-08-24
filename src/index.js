@@ -137,7 +137,7 @@ app.post('/api/signIn', (request,response)=> {
                 let  sid = uuid.v4();
                 let expiration = "session"
                 if(rememberMe){
-                    response.cookie('sid', sid );
+                    response.cookie('sid', sid ,{maxAge: 2592000000}); // 30 days until cookie expires
                 }else{
                     response.cookie('sid', sid ,{maxAge: 1800000}); // 30 min until cookie expires
                     expiration = Date.now() + 1800000;
@@ -421,7 +421,8 @@ setInterval(()=>{
 //24 hours = 86400000
 
 
-// Todo:   Make admin unable to get into  cart  product design  home page  checkput - crushes server :(
+
+// Todo:   Make admin unable to get into  cart  product design  home page  checkout - crushes server :(
 // Todo:   in product design change text to something real
 // Todo:   split index to different node js files for each page
 // Todo:   Go over code: 1. async await where possible 2.try catch (check errors)
@@ -438,7 +439,6 @@ setInterval(()=>{
 // Todo:   is there a better way to redirect when access is denied ??
 // Todo:   navbar can we reuse the code here?  use script to inject code for navbar? (remember admin vs user)   ??
 // Todo:   what do we need to do with the information from the checkout page like credit card   ??
-// Todo:   How long should a remember me be connected ? should it just be a session cookie?
 // Todo:   How should we test ?
 // Todo:   Set the url ?
 // Todo:   make sure there are at least 2-4 additional pages as required. are our pages enough
