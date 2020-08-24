@@ -7,22 +7,25 @@ window.onload = async() => {
         else {
             let body = await res.json();
             let purchasesData = []
-            let userEmails = Object.keys(body);
-            for (let userIndex in userEmails) {
-                let userEmail = userEmails[userIndex];
-                let userItems = JSON.parse(body[userEmail]);
-                let itemKeys = Object.keys(userItems);
-                for (let itemIndex in itemKeys) {
-                    let itemKey = itemKeys[itemIndex];
-                    let item = userItems[itemKey];
-                    item.userEmail = userEmail;
-                    purchasesData.push(item);
+            if(body !== null){
+                let userEmails = Object.keys(body);
+                for (let userIndex in userEmails) {
+                    let userEmail = userEmails[userIndex];
+                    let userItems = JSON.parse(body[userEmail]);
+                    let itemKeys = Object.keys(userItems);
+                    for (let itemIndex in itemKeys) {
+                        let itemKey = itemKeys[itemIndex];
+                        let item = userItems[itemKey];
+                        item.userEmail = userEmail;
+                        purchasesData.push(item);
+                    }
                 }
-            }loadTableData(purchasesData)
+            }
+           loadTableData(purchasesData)
         }
      }catch(e){
     // Send to error page
-    window.location = "../html/ErrorPage.html";
+        window.location = "../html/ErrorPage.html";
     }
 }
 
