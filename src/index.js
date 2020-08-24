@@ -103,15 +103,13 @@ app.put('/api/admin/updateStatus', (req, res) => adminPurchases.updateStatus(req
 util.cleanUpExpiredSessionsFromRedis()
 
 
-
-// Todo:   Split index to different node js files for each page
-// Todo:   Go over code: 1. async await where possible 2.try catch (check errors)
-// Todo:   Split redis connection to redisConnector.js
 // Todo:   Change redis client to async client
+// Todo:   Go over code: 1. async await where possible 2.try catch (check errors)
 // Todo:   defend against Dos attacks
 // Todo:   Write tests with fetch
 // Todo:   Add readme files
 // Todo:   Check project package json for submit
+
 
 
 
