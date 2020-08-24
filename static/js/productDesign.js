@@ -123,15 +123,15 @@ function continueEdit(){
 
 }
 
- window.onload = ()=>{
-     fetch(`http://localhost:6379/api/validate`, {method:'GET', credentials: "include"})
-         .then((res)=> res.json()).then((body)=> {
-             if(body.response === "Not Authenticated"){
-                 window.location = "../LoginPage.html";
-             }
-         })
-         .catch((err) => {
-         });
+ window.onload = async()=>{
+     try{
+         let res = await fetch(`http://localhost:6379/api/design/validate`, {method:'GET', credentials: "include"});
+         if(res.status === 401) window.location = "../../html/LoginPage.html"; // Not authenticated user
+         else if(res.status === 500) throw Error("wrong response status: " + res.status) // Server error
+     }catch(err){
+         // Send to error page
+         window.location = "../../html/ErrorPage.html";
+     }
  }
 
  window.addEventListener('resize' , ()=>{

@@ -1,20 +1,22 @@
-
-window.onload = () => {
-     fetch(`http://localhost:6379/api/admin`, {method:'GET', credentials: "include"})
-        .then((res)=> res.json()).then((body)=> {
-         let usersData = []
-         for(let i = 0; i< body.data.length; i++){
-             usersData.push(body.data[i]);
-         }
-         loadTableData(usersData);
-         collapsible();
-     }).catch((err) =>{
-         // User is not logged in as admin, redirect to sign in page
-         window.location = "../html/LoginPage.html";
-     });
+window.onload = async() => {
+    try{
+        let res = await fetch(`http://localhost:6379/api/admin`, {method:'GET', credentials: "include"});
+        if(res.status === 401) window.location = "../html/LoginPage.html"; // Not authenticated user
+        else if(res.status === 500) throw Error("wrong response status: " + res.status) // Server error
+        else{ // User is admin
+            let body = await res.json();
+            let usersData = []
+            for(let i = 0; i< body.data.length; i++){
+                usersData.push(body.data[i]);
+            }
+            loadTableData(usersData);
+            collapsible();
+        }
+    }catch(err){
+        // Send to error page
+         window.location = "../html/ErrorPage.html";
+    }
 }
-
-
 
 
 function loadTableData(userData) {

@@ -1,31 +1,29 @@
 
-window.onload = () => {
-    fetch(`http://localhost:6379/api/admin/purchases`, {method:'GET', credentials: "include"})
-        .then((res)=> res.json()).then((body)=> {
-            console.log("body = " +JSON.stringify(body));
-
-        let purchasesData = []
-        console.log("length = " + body.length)
-        console.log("keys = " + Object.keys(body).length)
-        console.log("body[0] = " + body[0])
-        let userEmails = Object.keys(body);
-        for(let userIndex in userEmails) {
-            let userEmail = userEmails[userIndex];
-            let userItems = JSON.parse(body[userEmail]);
-            let itemKeys = Object.keys(userItems);
-
-            for(let itemIndex in itemKeys ) {
-                let itemKey = itemKeys[itemIndex];
-                let item = userItems[itemKey];
-                item.userEmail = userEmail;
-                purchasesData.push(item);
-            }
+window.onload = async() => {
+    try {
+        let res = await fetch(`http://localhost:6379/api/admin/purchases`, {method: 'GET', credentials: "include"})
+        if (res.status === 401) window.location = "../html/LoginPage.html"; //User not authenticated
+        else if (res.status === 500) throw Error("wrong response status: " + res.status) // Server error
+        else {
+            let body = await res.json();
+            let purchasesData = []
+            let userEmails = Object.keys(body);
+            for (let userIndex in userEmails) {
+                let userEmail = userEmails[userIndex];
+                let userItems = JSON.parse(body[userEmail]);
+                let itemKeys = Object.keys(userItems);
+                for (let itemIndex in itemKeys) {
+                    let itemKey = itemKeys[itemIndex];
+                    let item = userItems[itemKey];
+                    item.userEmail = userEmail;
+                    purchasesData.push(item);
+                }
+            }loadTableData(purchasesData)
         }
-        loadTableData(purchasesData)
-    }).catch((err) =>{
-        // User is not logged in as admin, redirect to sign in page
-        window.location = "../html/LoginPage.html";
-    });
+     }catch(e){
+    // Send to error page
+    window.location = "../html/ErrorPage.html";
+    }
 }
 
 

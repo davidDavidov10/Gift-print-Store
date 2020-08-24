@@ -17,8 +17,12 @@ function searchHomeProducts() {
 
 
 window.onload = async()=> {
-    let res = await fetch(`http://localhost:6379/api/validate`, {credentials: "include", method:'GET'});
-       if(res.status === 401){
-           window.location = "../html/LoginPage.html";
-       }
+    try{
+        let res = await fetch(`http://localhost:6379/api/home`, {credentials: "include", method:'GET'});
+        if(res.status === 401) window.location = "../html/LoginPage.html"; //User not authenticated
+        else if(res.status === 500) throw Error("wrong response status: " + res.status) // Server error
+    }catch (e) {
+        // Send to error page
+        window.location = "../html/ErrorPage.html";
+    }
 }

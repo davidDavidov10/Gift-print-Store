@@ -1,24 +1,27 @@
-window.onload = () =>{
-    fetch(`http://localhost:6379/api/cart/items`, {
-        credentials: "include",
-        method:'GET'
-    })
-        .then((res)=> res.json()).then((body)=> {
-        let userProductInfo = [];
-        let products = JSON.parse(body.data);
-        let productKeys = Object.keys(products); // Array of prodImg number
-        numOfItems = productKeys.length;
-        for(let i = 0; i < numOfItems; i++){
-            let key = productKeys[i];
-            let product = products[key];
-            userProductInfo.push(product);
+window.onload = async() =>{
+    try {
+        let res = await fetch(`http://localhost:6379/api/cart/items`, {credentials: "include", method: 'GET'})
+        if (res.status === 401) window.location = "../html/LoginPage.html"; //User not authenticated
+        else if (res.status === 500) throw Error("wrong response status: " + res.status) // Server error
+
+        else {
+            let body = await res.json();
+            let userProductInfo = [];
+            let products = JSON.parse(body.data);
+            let productKeys = Object.keys(products); // Array of prodImg number
+            numOfItems = productKeys.length;
+            for (let i = 0; i < numOfItems; i++) {
+                let key = productKeys[i];
+                let product = products[key];
+                userProductInfo.push(product);
+            }
+            loadItemsData(userProductInfo);
         }
-        loadItemsData(userProductInfo);
-    }).catch((e)=>{
-        window.location = "../html/LoginPage.html";
-    });
+    }catch(e){
+        // Send to error page
+        window.location = "../html/ErrorPage.html";
+    }
 }
-// <p><a href="#">Product 1</a> <span class="price">$15</span></p>
 
 function loadItemsData(itemList) {
     const cartList = document.getElementById('productsList');

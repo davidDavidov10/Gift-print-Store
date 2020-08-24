@@ -1,4 +1,5 @@
 const redis = require('redis');
+const { asyncRedis } = require('@toomee/async-redis');
 const express = require('express');
 const bodyParser  = require('body-parser')
 const bcrypt = require('bcrypt');
@@ -37,7 +38,11 @@ const upload = multer({
 
 
 const app = express();
-let client = redis.createClient();
+
+const client = redis.createClient();
+//Todo: make redis async
+// const redisClient = redis.createClient();
+// const client = asyncRedis(redisClient);
 
 client.on('connect', ()=>{
     console.log("redis client connected")
@@ -135,9 +140,10 @@ app.post('/api/signIn', (request,response)=> {
             } else {
                 // Login
                 let  sid = uuid.v4();
-                let expiration = "session"
+                let expiration;
                 if(rememberMe){
                     response.cookie('sid', sid ,{maxAge: 2592000000}); // 30 days until cookie expires
+                    expiration = Date.now() +  2592000000;
                 }else{
                     response.cookie('sid', sid ,{maxAge: 1800000}); // 30 min until cookie expires
                     expiration = Date.now() + 1800000;
@@ -211,15 +217,15 @@ app.get('/api/admin', async(request,response)=> {
                 let data = {"data": userData};
                 response.status(200).json(data);
             }else {
-                // If user is NOT admin redirect with error msg
-                console.log("user is not an admin")
-                response.status(401).json("{}");
+                // If user is NOT admin but is signed in, redirect with error msg
+                response.status(401).json("{User is logged in but is not an admin}");
             }
         });
     }).catch((err)=> {
-        // If user is not logged in sid doesnt exist we get an error from getUserFromSession
+        // If user is not logged in, sid doesnt exist we get an error from getUserFromSession
         // catch it and send so we can redirect in admin.js
-        response.status(401).send();
+        if(err === "User is not logged in")  response.status(401).json(err);
+        else  response.status(500).json(err);
     });
 });
 
@@ -228,27 +234,50 @@ app.get('/api/admin', async(request,response)=> {
 app.get('/api/admin/purchases', async(request,response)=> {
     // Check that the user is admin
     await getUserFromSession(request).then(async (email) => {
-        client.hgetall("purchases", function(err,reply){
-          response.status(200).json(reply);
+        let isAdmin = await new Promise((resolve, reject) => {
+            client.hget("admins", email,((err, reply) => {
+                resolve(reply !== null);
+            }));
         });
+        if(!isAdmin){
+            response.status(401).json("User is not admin")
+        }else{
+            client.hgetall("purchases", function(err,reply){
+                response.status(200).json(reply);
+            });
+        }
     }).catch((err)=> {
         // If user is not logged in sid doesnt exist we get an error from getUserFromSession
         // catch it and send so we can redirect in admin.js
-        response.status(401).send();
+        if(err === "User is not logged in")  response.status(401).json(err);
+        else  response.status(500).json(err);
     });
 });
 
 
 // Cart get items from db to show in cart
 app.get('/api/cart/items',  async (request,response)=> {
-   await getUserFromSession(request).then((email) =>{
-       client.hget("cart", email, function (err, reply) {
-           if (err) throw err;
-           let data = {"data": (reply !== null ? reply :"{}") };
-           response.status(200).json(data);
+   await getUserFromSession(request).then(async(email) =>{
+       let isAdmin = await new Promise((resolve, reject) => {
+           client.hget("admins", email,((err, reply) => {
+               resolve(reply !== null);
+           }));
        });
+       if(isAdmin){
+           response.status(401).json("User admin and doesnt have a cart")
+       }
+       else{
+           client.hget("cart", email, function (err, reply) {
+               if (err) throw err;
+               let data = {"data": (reply !== null ? reply :"{}") };
+               response.status(200).json(data);
+           });
+       }
    }).catch((err)=> {
-       response.status(401).json({"error":"Please log in to see cart items"})
+       console.log(err)
+       if(err === "User is not logged in")  response.status(401).json(err);
+       else  response.status(500).json(err);
+
    });
 });
 
@@ -356,20 +385,54 @@ app.post('/api/placeOrder', async (request,response) => {
 });
 
 
-// When designing a product check that user is logged in if not we send user to login page
-app.get('/api/validate',  async(request, response) =>{
+// When designing a product check that user is logged in if not we send user to login page - for nav-bar
+app.get('/api/design/validate',  async(request, response) =>{
     await getUserFromSession(request).then( async(email) =>{
       let isAdmin = await new Promise((resolve, reject) => {
           client.hget("admins", email,((err, reply) => {
               resolve(reply !== null);
           }));
       });
-      if(isAdmin) response.status(200).json({"response" : "Admin Authenticated" });
+      if(isAdmin) response.status(401).json({"response" : "Admin Authenticated" });
       else response.status(200).json({"response" : "User Authenticated" });
     }).catch((err)=>{
-        response.status(401).json({"response" :"Not Authenticated"});
+        if(err === "User is not logged in") response.status(401).json({"response" :"Not Authenticated"});
+        else  response.status(500).json(err);
     });
 });
+
+// When calling nav-bar check that user is logged and if the user is admin
+app.get('/api/validate',  async(request, response) =>{
+    await getUserFromSession(request).then( async(email) =>{
+        let isAdmin = await new Promise((resolve, reject) => {
+            client.hget("admins", email,((err, reply) => {
+                resolve(reply !== null);
+            }));
+        });
+        if(isAdmin) response.status(200).json({"response" : "Admin Authenticated" });
+        else response.status(200).json({"response" : "User Authenticated" });
+    }).catch((err)=>{
+        if(err === "User is not logged in") response.status(200).json({"response" :"Not Authenticated"});
+        else  response.status(500).json(err);
+    });
+});
+
+// When entering homepage chaeck if user is logged in if not we send user to login page
+app.get('/api/home',  async(request, response) =>{
+    await getUserFromSession(request).then( async(email) =>{
+        let isAdmin = await new Promise((resolve, reject) => {
+            client.hget("admins", email,((err, reply) => {
+                resolve(reply !== null);
+            }));
+        });
+        if(isAdmin) response.status(401).json({"response" : "Admin User" });
+        else response.status(200).json({"response" : "User Authenticated" });
+    }).catch((err)=>{
+        if(err === "User is not logged in") response.status(401).json({"response" :"Not Authenticated"});
+        else response.status(500).json(err);
+    });
+});
+
 
 
 // Admin -  update the status of a purchase from purchase table
@@ -389,17 +452,23 @@ app.put('/api/admin/updateStatus', async(request, response) => {
     response.status(200).send();
 });
 
+
 // Get user email from session id  in cookie
+// Returns user email if user session is validated. Else throw error, user is not logged in
 function getUserFromSession(request){
-    return new Promise((resolve, reject) =>{
-        let sid = request.header('Cookie').replace(/.*sid=([^;]+).*/i,'$1');
-            client.hget("sessions", sid,  (err, reply)=>{
-                if(reply !== null ) resolve(JSON.parse(reply).id);
-                else reject(err);
+        return new Promise((resolve, reject) =>{
+        // let sid = request.header('Cookie').replace(/.*sid=([^;]+).*/i,'$1');
+        let sid = request.header('Cookie').match(/sid=([^;]+)/i,);
+        if(sid === null) reject("User is not logged in")
+        else sid = sid[1];
+        client.hget("sessions", sid,  (err, reply)=>{
+            if(reply !== null ) resolve(JSON.parse(reply).id);
+            else reject("User is not logged in");//
             });
         }
     );
 }
+
 
 
 // CleanUp redis sessions. Once a day go over sessions and delete all expired sessions from DB
@@ -421,8 +490,6 @@ setInterval(()=>{
 //24 hours = 86400000
 
 
-
-// Todo:   Make admin unable to get into  cart  product design  home page  checkout - crushes server :(
 // Todo:   in product design change text to something real
 // Todo:   split index to different node js files for each page
 // Todo:   Go over code: 1. async await where possible 2.try catch (check errors)

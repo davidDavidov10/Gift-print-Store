@@ -8,6 +8,8 @@
          });
  }
 
+
+ // Todo: consider response status for nav-bar validate
  async function navBar(inDesign) {
     // status = Logged In / Not Logged In / Admin
     let status = await fetch(`http://localhost:6379/api/validate`, {credentials: "include", method:'GET'})
