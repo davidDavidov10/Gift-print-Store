@@ -2,25 +2,6 @@
 
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,600);
 
-/*
-html,
-
-html a {
-    -webkit-font-smoothing: antialiased;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
-}
-*/
-
-/*
-body {
-    background-color: #fff;
-    color: #666;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 62.5%;
-    margin: 0 auto;
-}
-*/
-
 a {
     border: 0 none;
     outline: 0;
@@ -321,7 +302,6 @@ li.subtotal:before {
     float: none;
     font-size: 0.75rem;
     text-align: center;
-    text-transform: uppercase;
     padding: 0.625rem 0;
     width: 100%;
     background: #ff9f1a;
@@ -330,6 +310,9 @@ li.subtotal:before {
     -webkit-transition: background .3s ease;
     transition: background .3s ease;
     border-radius: 10px;
+    text-transform: UPPERCASE;
+    font-weight: bold;
+    color: #fff;
 }
 
 

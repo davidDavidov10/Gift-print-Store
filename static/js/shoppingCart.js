@@ -77,7 +77,7 @@ function loadItemsData(itemList) {
                     <div class="amount-price">
                         <div class="price" id="price${index}" data-value="${item.price}"><b>Price: $${item.price}</b></div>
                         <div class="quantity"><b class="amount">Amount:</b>
-                        <input id="amount${index}" type="number" value="${item.amount}" min="1" class="quantity-field" onclick="updateSubtotal(${index})">
+                        <input id="amount${index}" type="number" value="${item.amount}" min="1" class="quantity-field" onchange="updateSubtotal(${index})">
                         </div>
                   </div>
                   <div class="subtotal-remove">

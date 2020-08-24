@@ -108,8 +108,10 @@ function collapsible(){
             let content = this.nextElementSibling;
             if (content.style.display === "block") {
                 content.style.display = "none";
+                coll[i].innerText = "Show user activity"
             } else {
                 content.style.display = "block";
+                coll[i].innerText = "Hide user activity"
             }
         });
     }

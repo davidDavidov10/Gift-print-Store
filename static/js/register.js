@@ -1,13 +1,15 @@
 async function checkRegister(){
-    if (document.getElementById('first_name').value === ""){
-     document.getElementById('err').innerText = "Please enter your first name"
-    }else if(document.getElementById('last_name').value === ""){
-        document.getElementById('err').innerText = "Please enter your last name"
+    // Check validity of inputs
+    if (! /^[a-zA-z -]+$/.test(document.getElementById('first_name').value)){
+     document.getElementById('err').innerText = "Please enter your first name \n(use only A-Z a-z space or -)"
+    }else if(! /^[a-zA-z -]+$/.test(document.getElementById('last_name').value)){
+        document.getElementById('err').innerText = "Please enter your last name \n(use only A-Z a-z space or -)"
     } else if(!document.getElementById('email').checkValidity() || document.getElementById('email').value === ""){
     document.getElementById('err').innerText = "Not a valid email please try again"
     }else if(document.getElementById('password').value === ""){
     document.getElementById('err').innerText = "Please enter a password"
     }else{
+        // Input is valid
         let email = document.getElementById('email').value;
         let pass = document.getElementById('password').value;
         let firstName = document.getElementById('first_name').value;
