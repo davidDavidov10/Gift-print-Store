@@ -115,18 +115,19 @@ util.cleanUpExpiredSessionsFromRedis()
 
 
 // Ask Ohad
+// Todo:   make sure there are at least 2-4 additional pages as required. are our pages enough
 // Todo:   defend against Dos attacks. What does this mean -
-// Answer: mostly stuff that will make your server crash e.g. invalid input + few requests in the same time attack (let's say 5 requests)
+// Answer: few requests in the same time attack (let's say 5 requests) do we need to do something for this seems to work?
 
 // Todo:   How should we test ?
 //  "Build test.js that test intelligently all the meaningful routes that your server
 //   supports. You only need to test the server-side routes."
-//   does it mean we dont need to test the actions in the client side like create shirt design?
+//   does it mean that we dont need to test the actions in the client side like create shirt design?
 
 // Todo:   Set the url ?
-// Todo:   make sure there are at least 2-4 additional pages as required. are our pages enough
 // Todo:   Is it ok to use then, or do we always need async await
-// Todo:   Does readme need to be accessible from the website or just an html in the project
+// Todo:   Does the readMe html need to be accessible from the website (nav-bar) or just an html in the project
+
 
 // Todo: if there's time
 // send confirmation email or reset password
