@@ -62,28 +62,18 @@ async function testDesignValidate(sid) {
 async function testDesignSave(sid, productImg, type, color, size, amount, price) {
     // Todo: how to send images
     console.log("\n #################### Test Design Save #################");
-   /* let formData = JSON.stringify({
-        "productWithImage": productImg,
-        "productType": type,
-        "productColor": color,
-        "productSize": size,
-        "productAmount": amount,
-        "price": price
-    });*/
-   /* let formData= new FormData();
-    formData.append("productType": type,)
-    formData.append("productColor": color,)
-    formData.append("productSize": size,)
-    formData.append("productAmount": amount,)
-    formData.append( "price": price,)
-*/
+
+    let formData= new FormData();
+    formData.append("productWithImage", productImg)
+    formData.append("productType", type)
+    formData.append("productColor", color)
+    formData.append("productSize",size)
+    formData.append("productAmount", amount)
+    formData.append( "price", price)
+
     let response = await fetch("http://localhost:8080/api/design/save",{
         method: 'POST', credentials: "include",
-        // headers: {'Cookie': 'sid=' + sid, 'enctype': "multipart/form-data", 'enctype': "multipart/form-data"},
-        // headers: {'Cookie': 'sid=' + sid,'Content-Type': 'multipart/form-data'},
-        headers: {'Cookie': 'sid=' + sid,
-            // "contentType": "multipart/form-data; boundary=----WebKitFormBoundary4vJdFXDqqivZ8tvx"},
-            "contentType": "multipart/form-data"},
+        headers: {'Cookie': 'sid=' + sid},
         body: formData
     });
     console.log("response status: " + response.status)
@@ -100,7 +90,7 @@ async function testAll() {
     await testHome(userSid);
     await testDesignValidate(userSid);
     let image = await imageToBase64("../static/img/testImg.png");
-    await testDesignSave(userSid,image , "shirt","black","S","3")
+    await testDesignSave(userSid,"data:image/png;base64,"+image , "shirt","black","S","3","9.00")
 }
 
 testAll()

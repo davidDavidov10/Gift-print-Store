@@ -10,9 +10,6 @@ async function save(request,response){
     await util.getUserFromSession(request).then((email) =>{
         let imgID = "No selected img"
         let prodImgID = uuid.v4();
-        console.log("request " +request)
-        console.log("body " + JSON.stringify(request.body))
-        console.log("productWithImg " +request.body.productWithImage)
         let data = new Buffer.from(request.body.productWithImage.slice(22), 'base64');
         let productType = request.body.productType;
         let color = request.body.productColor;
