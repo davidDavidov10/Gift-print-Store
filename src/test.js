@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const imageToBase64 = require('image-to-base64');
-const fetch64 = require('fetch-base64');
+const  FormData = require('form-data');
 
 async function testSignUp(email, pass, firstName, lastName) {
     console.log("\n #################### Test sign up #################");
@@ -62,20 +62,21 @@ async function testDesignValidate(sid) {
 async function testDesignSave(sid, productImg, type, color, size, amount, price) {
     // Todo: how to send images
     console.log("\n #################### Test Design Save #################");
-    let formData = JSON.stringify({
+   /* let formData = JSON.stringify({
         "productWithImage": productImg,
         "productType": type,
         "productColor": color,
         "productSize": size,
         "productAmount": amount,
         "price": price
-    });
-    /*formData.append("productType": type,)
+    });*/
+   /* let formData= new FormData();
+    formData.append("productType": type,)
     formData.append("productColor": color,)
     formData.append("productSize": size,)
     formData.append("productAmount": amount,)
-    formData.append( "price": price,)*/
-
+    formData.append( "price": price,)
+*/
     let response = await fetch("http://localhost:8080/api/design/save",{
         method: 'POST', credentials: "include",
         // headers: {'Cookie': 'sid=' + sid, 'enctype': "multipart/form-data", 'enctype': "multipart/form-data"},
