@@ -1,5 +1,5 @@
  function logOut()  {
-     fetch(`http://localhost:6379/api/signOut`, {method:'DELETE', credentials: "include"})
+     fetch(`http://localhost:8080/api/signOut`, {method:'DELETE', credentials: "include"})
          .then(() =>{
              document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
              navBar(false);
@@ -12,7 +12,7 @@
  // Todo: consider response status for nav-bar validate
  async function navBar(inDesign) {
     // status = Logged In / Not Logged In / Admin
-    let status = await fetch(`http://localhost:6379/api/validate`, {credentials: "include", method:'GET'})
+    let status = await fetch(`http://localhost:8080/api/validate`, {credentials: "include", method:'GET'})
         .then((res)=> res.json());
      let navBarStr = `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">`;
      if(status.response === "Admin Authenticated"){

@@ -1,7 +1,7 @@
 var numOfItems =0;
 window.onload = async() => {
     try{
-        let res = await fetch(`http://localhost:6379/api/cart/items`, { credentials: "include",method:'GET'})
+        let res = await fetch(`http://localhost:8080/api/cart/items`, { credentials: "include",method:'GET'})
         if(res.status === 401) window.location = "../html/LoginPage.html"; //User not authenticated
         else if(res.status === 500) throw Error("wrong response status: " + res.status) // Server error
 
@@ -37,7 +37,7 @@ window.onbeforeunload =   function(e) {
             localStorage.removeItem(`amount${index}`);
         }
     }
-    fetch(`http://localhost:6379/api/cart/items/update`, {
+    fetch(`http://localhost:8080/api/cart/items/update`, {
         credentials: "include",
         method: 'PUT',
         body: JSON.stringify(productsAmount),

@@ -22,7 +22,7 @@ async function checkRegister(){
             body:JSON.stringify({"email":email, "password":pass, "firstName":firstName, "lastName":lastName})
         };
 
-        let response = await fetch("http://localhost:6379/api/signUp", requestOptions)
+        let response = await fetch("http://localhost:8080/api/signUp", requestOptions)
 
         response = await response.json();
         let  responseErr = await response.err;

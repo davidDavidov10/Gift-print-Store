@@ -1,7 +1,7 @@
 
 window.onload = async() => {
     try {
-        let res = await fetch(`http://localhost:6379/api/admin/purchases`, {method: 'GET', credentials: "include"})
+        let res = await fetch(`http://localhost:8080/api/admin/purchases`, {method: 'GET', credentials: "include"})
         if (res.status === 401) window.location = "../html/LoginPage.html"; //User not authenticated
         else if (res.status === 500) throw Error("wrong response status: " + res.status) // Server error
         else {
@@ -80,7 +80,7 @@ function searchAdminTable() {
 function changeStatus(email, itemName, index){
     document.getElementById(`${index}`).innerText = "Order Completed";
     document.getElementById(`${index}`).style.color = "green";
-    fetch(`http://localhost:6379/api/admin/updateStatus`, {method:'PUT', credentials: "include",
+    fetch(`http://localhost:8080/api/admin/updateStatus`, {method:'PUT', credentials: "include",
         body:JSON.stringify({"email":email, "itemName":itemName }),headers: {'Content-Type': 'application/json'}
     });
 }

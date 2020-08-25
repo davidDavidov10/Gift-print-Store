@@ -43,6 +43,7 @@ const upload = multer({
 
 
 // Set up express
+
 const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -50,14 +51,15 @@ app.use(bodyParser.json());
 app.use(cors({ origin: 'http://localhost:63342' , credentials :  true}));
 app.use(cookieParser());
 
-const port = 6379;
+
+const port = 8080;
 app.listen(port,()=>{
     console.log("server started on port: " + port);
 });
 
 
 
-// Express handle routs
+// Express handle routes
 
 // Sign up
 app.post('/api/signUp',((req, res) => signUp(req,res)));
@@ -111,9 +113,6 @@ util.cleanUpExpiredSessionsFromRedis()
 // Todo:   Check project package json for submit
 
 
-
-
-
 // Ask Ohad
 // Todo:   make sure there are at least 2-4 additional pages as required. are our pages enough
 // Todo:   defend against Dos attacks. What does this mean -
@@ -129,6 +128,8 @@ util.cleanUpExpiredSessionsFromRedis()
 // Todo:   Does the readMe html need to be accessible from the website (nav-bar) or just an html in the project
 
 
+
 // Todo: if there's time
 // send confirmation email or reset password
 // previous purchases
+
