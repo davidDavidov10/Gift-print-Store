@@ -1,7 +1,5 @@
 let canvas = new fabric.Canvas('product-canvas');
 canvasResize();
-//canvas.setHeight( window.getComputedStyle(document.getElementsByClassName('canvas-container').item(0)).getPropertyValue('width'));
-//canvas.setWidth( window.getComputedStyle(document.getElementsByClassName('canvas-container').item(0)).getPropertyValue('height'));
 function updateProductImage(imageURL){
     fabric.Image.fromURL(imageURL, function(img) {
         img.scaleToHeight(150);

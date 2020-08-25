@@ -12,7 +12,7 @@ function signOut(request,response) {
 function getUserFromSession(request){
     return new Promise((resolve, reject) =>{
             // let sid = request.header('Cookie').replace(/.*sid=([^;]+).*/i,'$1');
-            let sid = request.header('Cookie').match(/sid=([^;]+)/i,);
+            let sid = request.header('Cookie').match(/sid=([^;]+)/i);
             if(sid === null) reject("User is not logged in")
             else sid = sid[1];
             client.hget("sessions", sid,  (err, reply)=>{

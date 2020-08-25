@@ -72,7 +72,7 @@ function loadItemsData(itemList) {
             `<div class="basket-product" id=${index} data-value ="${item.prodImg}" data-id="${item.type}">
                 <div class="item" >
                     <div class="product-image">
-                    <img src="../productImg/${item.prodImg}.png" alt="../img/GiftPrint.png" class="product-frame">
+                    <img src="../productImg/${item.prodImg}.jpeg" alt="../img/GiftPrint.png" class="product-frame">
                     </div>
                     <div class="product-details">
                         <p id ="type"><strong>${item.type}</strong></p>

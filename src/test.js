@@ -1,96 +1,107 @@
 const fetch = require('node-fetch');
+const imageToBase64 = require('image-to-base64');
+const fetch64 = require('fetch-base64');
 
-
-async function testSignUp(email, pass, firstName, lastName){
+async function testSignUp(email, pass, firstName, lastName) {
+    console.log("\n #################### Test sign up #################");
     let requestOptions = {
         method: 'POST',
         credentials: "include",
         headers: {'Content-Type': 'application/json'},
-        body:JSON.stringify({"email":email, "password":pass, "firstName":firstName, "lastName":lastName})
+        body: JSON.stringify({"email": email, "password": pass, "firstName": firstName, "lastName": lastName})
     };
-
     let response = await fetch("http://localhost:8080/api/signUp", requestOptions)
-    console.log("response: " +response)
-
+    console.log("response status: " + response.status)
     response = await response.json();
-    console.log("response.json(): " +response)
-
-    let  responseErr = await response.err;
-    console.log("responseErr: " +response.err)
+    console.log("response : " + JSON.stringify(response))
 }
 
-/*function testSignUp(email, pass, firstName, lastName){
+async function testSignIn(email, pass, rememberMe) {
+    console.log("\n #################### Test sign In #################");
     let requestOptions = {
         method: 'POST',
         credentials: "include",
         headers: {'Content-Type': 'application/json'},
-        body:JSON.stringify({"email":email, "password":pass, "firstName":firstName, "lastName":lastName})
+        body: JSON.stringify({"email": email, "password": pass, "rememberMe": rememberMe})
     };
-
-   return  fetch("http://localhost:6379/api/signUp", requestOptions)
+    let response = await fetch("http://localhost:8080/api/signIn", requestOptions)
+    console.log("response status: " + response.status)
+    // let sid =  response.header('Cookie').match(/sid=([^;]+)/i,);
+    let sid = response.headers.raw()['set-cookie'][0].match(/sid=([^;]+)/i)[1];
+    console.log("sid: " + sid)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+    return (sid)
 }
 
 
-testSignUp("1@2.com", "1234", "david","test");*/
+async function testHome(sid) {
+    console.log("\n #################### Test Home #################");
+    let response = await fetch(`http://localhost:8080/api/home`, {
+        method: 'GET', credentials: "include",
+        headers: {'Cookie': 'sid=' + sid}
+    });
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
 
-//
-// var request = require('request');
-// var options = {
-//     'method': 'POST',
-//     'credentials':'include',
-//     'url': 'http://localhost:6379/api/signUp',
-//     'headers': {
-//         'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify({"email":"1@3.com","password":"pass","firstName":"firstName","lastName":"lastName"})
-//
-// };
-// request(options, function (error, response) {
-//     if (error) throw new Error(error);
-//     console.log(response.body);
-// });
-
-/*
-fetch(`http://localhost:6379/api/cart/items`, { credentials: "include",method:'GET'})
-    .then(res => res.json())
-    .then(json => console.log(json));*/
+async function testDesignValidate(sid) {
+    console.log("\n #################### Test Design Validate #################");
+    let response = await fetch(`http://localhost:8080/api/design/validate`, {
+        method: 'GET', credentials: "include",
+        headers: {'Cookie': 'sid=' + sid}
+    });
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
 
 
 
-/*
+async function testDesignSave(sid, productImg, type, color, size, amount, price) {
+    // Todo: how to send images
+    console.log("\n #################### Test Design Save #################");
+    let formData = JSON.stringify({
+        "productWithImage": productImg,
+        "productType": type,
+        "productColor": color,
+        "productSize": size,
+        "productAmount": amount,
+        "price": price
+    });
+    /*formData.append("productType": type,)
+    formData.append("productColor": color,)
+    formData.append("productSize": size,)
+    formData.append("productAmount": amount,)
+    formData.append( "price": price,)*/
 
-var raw = JSON.stringify({"email":"1@233.com","password":"pass","firstName":"firstName","lastName":"lastName"});
-
-var requestOptions = {
-    method: 'POST',
-    headers: {"Content-Type": "application/json"},
-    body: raw,
-    redirect: 'follow'
-};
-
-fetch("http://localhost:6379/api/signUp", requestOptions)
-    .then(res => res.json())
-    .then(body =>{
-        console.log(body);});
-*/
-
-
-
-var raw = JSON.stringify({"email":"1@2.com","password":"1234","rememberMe":true});
-
-// var requestOptions = {
-//     method: 'POST',
-//     headers: {"Content-Type": "application/json"},
-//     body: raw,
-// };
-//
-// fetch("http://localhost:8080/api/signIn", requestOptions)
-//     .then(response => response.text())
-//     .then(result => console.log(result))
-//     .catch(error => console.log('error', error))
-
+    let response = await fetch("http://localhost:8080/api/design/save",{
+        method: 'POST', credentials: "include",
+        // headers: {'Cookie': 'sid=' + sid, 'enctype': "multipart/form-data", 'enctype': "multipart/form-data"},
+        // headers: {'Cookie': 'sid=' + sid,'Content-Type': 'multipart/form-data'},
+        headers: {'Cookie': 'sid=' + sid,
+            // "contentType": "multipart/form-data; boundary=----WebKitFormBoundary4vJdFXDqqivZ8tvx"},
+            "contentType": "multipart/form-data"},
+        body: formData
+    });
+    console.log("response status: " + response.status)
+    // response = await response.j;
+    // console.log("response.json(): " + JSON.stringify(response))
+}
 
 
-//
-// fetch("http://localhost:8080/test").then(res => res.json())
-//     .then(console.log).catch(console.log)
+
+
+async function testAll() {
+    await testSignUp("a@b.com", "1234", "Test", "Testenson")
+    let userSid = await testSignIn("a@b.com", "1234", false)
+    await testHome(userSid);
+    await testDesignValidate(userSid);
+    let image = await imageToBase64("../static/img/testImg.png");
+    await testDesignSave(userSid,image , "shirt","black","S","3")
+}
+
+testAll()
+
+// note when there is no cookie header we get status 500
