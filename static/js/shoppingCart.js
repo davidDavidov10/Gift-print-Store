@@ -9,8 +9,10 @@ window.onload = async() => {
             let body = await res.json();
             let userProductInfo = [];
             let products = JSON.parse(body.data);
+            console.log("products " +products)
             let productKeys = Object.keys(products); // Array of prodImg number
             numOfItems = productKeys.length;
+            if(numOfItems > 0) document.getElementById('check-out').disabled = false;
             for(let i = 0; i < numOfItems; i++){
                 let key = productKeys[i];
                 let product = products[key];
@@ -21,7 +23,7 @@ window.onload = async() => {
         }
     }catch (e) {
         // Send to error page
-        window.location = "../html/ErrorPage.html";
+       window.location = "../html/ErrorPage.html";
     }
 }
 
@@ -55,6 +57,9 @@ function removeProduct(index){
 
     let basketTotal = document.getElementById('basket-total').innerText.slice(1);
     document.getElementById('basket-total').innerText = "$" +  (basketTotal - productSubtotal);
+    if(document.getElementById('basket-total').innerText.slice(1) == 0){
+        document.getElementById('check-out').disabled = true;
+    }
 
 }
 

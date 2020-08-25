@@ -9,13 +9,19 @@ window.onload = async() =>{
             let userProductInfo = [];
             let products = JSON.parse(body.data);
             let productKeys = Object.keys(products); // Array of prodImg number
-            numOfItems = productKeys.length;
-            for (let i = 0; i < numOfItems; i++) {
-                let key = productKeys[i];
-                let product = products[key];
-                userProductInfo.push(product);
+            let numOfItems = productKeys.length;
+            if(numOfItems <= 0){
+                alert("Cannot checkout with no items, please try again after adding items to your cart");
+                window.location = "../html/HomePage.html";
+            }else{
+                for (let i = 0; i < numOfItems; i++) {
+                    let key = productKeys[i];
+                    let product = products[key];
+                    userProductInfo.push(product);
+                }
+                loadItemsData(userProductInfo);
             }
-            loadItemsData(userProductInfo);
+
         }
     }catch(e){
         // Send to error page
