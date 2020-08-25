@@ -74,7 +74,8 @@ async function testDesignSave(sid, productImg, type, color, size, amount, price)
     let response = await fetch("http://localhost:8080/api/design/save",{
         method: 'POST', credentials: "include",
         headers: {'Cookie': 'sid=' + sid},
-        body: formData
+        body: formData,
+        redirect: 'manual'
     });
     console.log("response status: " + response.status)
     // response = await response.j;

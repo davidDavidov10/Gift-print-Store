@@ -29,7 +29,6 @@ async function save(request,response){
         client.hget("cart", email,function (err, reply) {
             if (err)  throw err;
             let item = { prodImg:prodImgID, imgToPrint:imgID , amount:amount, type:productType, price:price, color:color, size:size, }
-            console.log("item: " +JSON.stringify(item))
             let cart = {};
             if (reply !== null) {
                 // User is  in db, get existing cart
