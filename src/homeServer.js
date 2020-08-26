@@ -11,7 +11,6 @@ async function home(request, response){
         if(isAdmin) response.status(401).json({"response" : "Admin User" });
         else response.status(200).json({"response" : "User Authenticated" });
     }).catch((err)=>{
-        console.log(err)
         if(err === "User is not logged in") response.status(401).json({"response" :"Not Authenticated"});
         else response.status(500).json(err);
     });

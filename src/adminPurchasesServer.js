@@ -27,18 +27,36 @@ async function adminPurchases(request,response){
 
 
 async function updateStatus(request, response){
-    let purchases = await new Promise( (resolve, reject) => {
-        client.hget('purchases', request.body.email, (err, reply) => {
-            if(reply !== null) resolve(reply)
-            else reject(err)
+    await util.getUserFromSession(request).then(async (email) => {
+        let isAdmin = await new Promise((resolve, reject) => {
+            client.hget("admins", email, ((err, reply) => {
+                resolve(reply !== null);
+            }));
         });
+        if(isAdmin){
+            let purchases = await new Promise((resolve, reject) => {
+                client.hget('purchases', request.body.email, (err, reply) => {
+                    if (reply !== null) resolve(reply)
+                    else reject(err)
+                });
+            });
+            purchases = JSON.parse(purchases);
+            let item = purchases[request.body.itemName];
+            if (item === undefined) response.status(400).json({error: "No such item exists in purchases"});
+            else {
+                item.status = "Order Completed";
+                client.hset('purchases', String(request.body.email), JSON.stringify(purchases))
+                fs.unlink(`../static/productImg/${item.imgToPrint}.png`, () => {
+                })
+                fs.unlink(`../static/productImg/${item.prodImg}.png`, () => {
+                })
+                response.status(200).json({msg: "Order is completed"});
+            }
+        }else{
+            response.status(401).json({error: "User is not admin"});
+        }
+
     });
-    purchases= JSON.parse(purchases);
-    let item =  purchases[request.body.itemName];
-    item.status = "Order Completed";
-    client.hset('purchases', String(request.body.email), JSON.stringify(purchases))
-    fs.unlink(`../static/productImg/${item.imgToPrint}.png`,()=>{})
-    fs.unlink(`../static/productImg/${item.prodImg}.png`,()=>{})
-    response.status(200).send();
 }
+
 module.exports =  {adminPurchases, updateStatus };

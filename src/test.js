@@ -1,6 +1,9 @@
 const fetch = require('node-fetch');
 const imageToBase64 = require('image-to-base64');
 const  FormData = require('form-data');
+const chalk = require('chalk');
+
+
 
 async function testSignUp(email, pass, firstName, lastName) {
     console.log("\n #################### Test sign up #################");
@@ -27,13 +30,16 @@ async function testSignIn(email, pass, rememberMe) {
     let response = await fetch("http://localhost:8080/api/signIn", requestOptions)
     console.log("response status: " + response.status)
     // let sid =  response.header('Cookie').match(/sid=([^;]+)/i,);
-    let sid = response.headers.raw()['set-cookie'][0].match(/sid=([^;]+)/i)[1];
+    let cookie = response.headers.raw()['set-cookie'][0]
+    let sid = cookie.match(/sid=([^;]+)/i)[1];
     console.log("sid: " + sid)
+    let maxAge = cookie.match(/Max-Age=([^;]+)/i)[1];
+    console.log("Max-Age in minutes: " +   maxAge/60)
+    console.log("Remember Me: " +   rememberMe)
     response = await response.json();
     console.log("response.json(): " + JSON.stringify(response))
     return (sid)
 }
-
 
 async function testHome(sid) {
     console.log("\n #################### Test Home #################");
@@ -94,7 +100,7 @@ async function testDesignSave(sid, productImg, type, color, size, amount, price)
 
 
 async function testCartItems(sid) {
-    console.log("\n #################### Test Cat Items #################");
+    console.log("\n #################### Test Cart Items #################");
     let response = await fetch(`http://localhost:8080/api/cart/items`, {
         credentials: "include", method:'GET',
         headers: {'Cookie': 'sid=' + sid}
@@ -102,11 +108,12 @@ async function testCartItems(sid) {
     console.log("response status: " + response.status)
     response = await response.json();
     console.log("response.json(): " + JSON.stringify(response))
-    return Object.keys(JSON.parse(response.data))[0]
+    let item = response.data !== undefined ? Object.keys(JSON.parse(response.data))[0] : null;
+    return item ;
 }
 
 async function testCartItemsUpdate(sid, productId) {
-    console.log("\n #################### Test Cat Items Update #################");
+    console.log("\n #################### Test Cart Items Update #################");
     let productAmount ={};
     productAmount[productId] = 15;
     let response = await    fetch(`http://localhost:8080/api/cart/items/update`, {
@@ -115,22 +122,30 @@ async function testCartItemsUpdate(sid, productId) {
         body: JSON.stringify(productAmount),
         headers: {'Content-Type': 'application/json', 'Cookie': 'sid=' + sid}
     });
-    console.log("response status: " + response.status)
+    console.log("response status: " + response.status);
 }
 
 
-async function testCheckout(sid, fullname, address, city, zip) {
+async function testCheckout(sid, fullname, address, city, zip, email,cardname,cardnumber,expmoth,expyear,cvv) {
     console.log("\n #################### Test Checkout #################");
     let formData= new FormData();
-    formData.append("fullname", fullname)
-    formData.append("address", address)
-    formData.append("city", city)
-    formData.append("zip", zip)
+    formData.append("fullname", fullname);
+    formData.append("address", address);
+    formData.append("city", city);
+    formData.append("zip", zip);
+    formData.append("email", email);
+    formData.append("cardname", cardname);
+    formData.append("cardnumber", cardnumber);
+    formData.append("expmonth", expmoth);
+    formData.append("expyear", expyear);
+    formData.append("cvv", cvv);
+    console.log(formData)
     let response = await fetch("http://localhost:8080/api/placeOrder", {
-        credentials: "include", method: 'POST',
-        headers: {'Cookie': 'sid=' + sid, referrer: "https://www.google.com"},
+        method: 'POST', credentials: "include",
+        headers: {'Cookie': 'sid=' + sid, referrer: "https://www.google.com", 'Content-Type': 'text/html; charset=utf-8',
+        },
         body: formData
-    })
+    });
     console.log("response status: " + response.status);
 }
 
@@ -175,36 +190,90 @@ async function testAdminPurchasesUpdateStatus(sid, email, itemName) {
 
     })
     console.log("response status: " + response.status);
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
+
+
+async function testHomeWithoutCookies() {
+    console.log("\n #################### Test Home Without Cookies #################");
+    let response = await fetch(`http://localhost:8080/api/home`, {
+        method: 'GET', credentials: "include",
+    });
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
 }
 
 async function testAll() {
-    // User login and sign up
-    await testSignUp("a@b.com", "1234", "Test", "Testenson");
+
+   // User login and sign up
+   //  console.log(chalk.blue('\nUser login and sign up'));
+    // await testSignUp("a@b.com", "1234", "Test", "Testenson");
     let userSid = await testSignIn("a@b.com", "1234", false);
-    await testHome(userSid);
-    await testValidate(userSid);
+    // await testHome(userSid);
+    // await testValidate(userSid);
 
     // Create product and add to cart
+    console.log(chalk.blue('\nCreate product and add to cart'));
     await testDesignValidate(userSid);
     let image = await imageToBase64("../static/img/testImg.png");
     await testDesignSave(userSid,"data:image/png;base64,"+image , "shirt","black","S","3","9.00");
-    let productId = await testCartItems(userSid);
+
 
     // Check cart content and sign out from user
+    console.log(chalk.blue('\nCheck cart content and sign out from user'));
+    let productId = await testCartItems(userSid);
     await testCartItemsUpdate(userSid, productId);
     await testCartItems(userSid);
-    await testCheckout(userSid,"Big Bird","1st Sesame  street","Tel Aviv", "1234567");
+    await testCheckout(userSid,"Big Bird","1st Sesame street","Tel Aviv", "1234567",
+        "blah@blah.com","blah","1111222233334444","01","1234","123" );
     await testSignOut(userSid);
-
-    // Admin login and check admin page
-    let adminSid = await testSignIn("admin@admin.com", "1234", true);
-    await testAdmin(adminSid);
-    // Admin costumer purchases check and check complete order
-    await testAdminPurchases(adminSid);
-    await testAdminPurchasesUpdateStatus(adminSid,"a@b.com", productId);
-    await testAdminPurchases(adminSid);
+    //
+    // // Admin login and check admin page
+    // console.log(chalk.blue('\nAdmin login and check admin page'));
+    // let adminSid = await testSignIn("admin@admin.com", "1234", true);
+    // await testAdmin(adminSid);
+    //
+    // // Admin costumer purchases check and check complete order and sign out
+    // console.log(chalk.blue('\nAdmin costumer purchases check and check complete order and sign out'));
+    // await testAdminPurchases(adminSid);
+    // await testAdminPurchasesUpdateStatus(adminSid,"a@b.com", productId);
+    // await testAdminPurchases(adminSid);
+    // await testSignOut(userSid);
+    //
+    // // Try entering home without signing in
+    // console.log(chalk.blue('\nTry entering home without signing in'));
+    // await testHome("");
+    // await testHomeWithoutCookies()
+    //
+    // // Try entering home and cart as admin
+    // console.log(chalk.blue('\nTry entering home and cart as admin'));
+    // adminSid = await testSignIn("admin@admin.com", "1234", false);
+    // await testHome(adminSid);
+    // productId = await testCartItems(adminSid);
+    // await testCartItemsUpdate(adminSid, productId);
+    // await testCartItems(adminSid);
+    // await testCheckout(adminSid,"Big Bird","1st Sesame street","Tel Aviv", "1234567");
+    // await testSignOut(adminSid);
+    //
+    // // Try entering admin page and admin purchases page as non-admin user
+    // console.log(chalk.blue('\nTry entering  admin page and admin purchases page as non-admin user'));
+    // userSid = await testSignIn("a@b.com", "1234", false);
+    // await testAdmin(userSid);
+    // await testAdminPurchases(userSid);
+    // await testAdminPurchasesUpdateStatus(userSid,"a@b.com", productId);
+    // await testSignOut(userSid);
+    //
+    // // Try  updating a non existing product's status in admin purchases
+    // console.log(chalk.blue('\nTry  updating a non existing product\'s status in admin purchases'));
+    // adminSid = await testSignIn("admin@admin.com", "1234", false);
+    // await testAdminPurchasesUpdateStatus(adminSid,"a@b.com", "non existing item name");
 }
 
 testAll()
 
+//checkout when cart is empty
+
 // note when there is no cookie header we get status 500
+//sign out after cookie is erased from db
