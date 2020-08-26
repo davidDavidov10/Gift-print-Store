@@ -2,8 +2,11 @@ const client = require('./redisConnector');
 
 
 function signOut(request,response) {
-    let sid = request.header('Cookie').replace(/.*sid=([^;]+).*/i, '$1');
-    client.hdel("sessions", sid);
+    let cookie = request.header('Cookie')
+    if(cookie){
+        let sid = cookie.replace(/.*sid=([^;]+).*/i, '$1');
+        client.hdel("sessions", sid);
+    }
     response.status(200).send("Signed out");
 }
 

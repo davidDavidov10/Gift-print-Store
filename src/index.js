@@ -107,8 +107,6 @@ util.cleanUpExpiredSessionsFromRedis()
 
 // Todo:   Change redis client to async client
 // Todo:   Go over code: 1. async await where possible 2.try catch (check errors)
-// Todo:   defend against Dos attacks
-// Todo:   Write tests with fetch
 // Todo:   Add readme files
 // Todo:   Check project package json for submit
 

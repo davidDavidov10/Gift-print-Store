@@ -126,25 +126,20 @@ async function testCartItemsUpdate(sid, productId) {
 }
 
 
-async function testCheckout(sid, fullname, address, city, zip, email,cardname,cardnumber,expmoth,expyear,cvv) {
+async function testCheckout(sid, fullname, address, city, zip) {
     console.log("\n #################### Test Checkout #################");
-    let formData= new FormData();
-    formData.append("fullname", fullname);
-    formData.append("address", address);
-    formData.append("city", city);
-    formData.append("zip", zip);
-    formData.append("email", email);
-    formData.append("cardname", cardname);
-    formData.append("cardnumber", cardnumber);
-    formData.append("expmonth", expmoth);
-    formData.append("expyear", expyear);
-    formData.append("cvv", cvv);
-    console.log(formData)
+    let urlencoded = new URLSearchParams();
+    urlencoded.append("fullname", fullname);
+    urlencoded.append("address", address);
+    urlencoded.append("city", city);
+    urlencoded.append("zip", zip);
+
+
     let response = await fetch("http://localhost:8080/api/placeOrder", {
         method: 'POST', credentials: "include",
-        headers: {'Cookie': 'sid=' + sid, referrer: "https://www.google.com", 'Content-Type': 'text/html; charset=utf-8',
+        headers: {'Cookie': 'sid=' + sid, referrer: "https://www.google.com", 'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: formData
+        body: urlencoded
     });
     console.log("response status: " + response.status);
 }
@@ -208,11 +203,11 @@ async function testHomeWithoutCookies() {
 async function testAll() {
 
    // User login and sign up
-   //  console.log(chalk.blue('\nUser login and sign up'));
-    // await testSignUp("a@b.com", "1234", "Test", "Testenson");
+    console.log(chalk.blue('\nUser login and sign up'));
+    await testSignUp("a@b.com", "1234", "Test", "Testenson");
     let userSid = await testSignIn("a@b.com", "1234", false);
-    // await testHome(userSid);
-    // await testValidate(userSid);
+    await testHome(userSid);
+    await testValidate(userSid);
 
     // Create product and add to cart
     console.log(chalk.blue('\nCreate product and add to cart'));
@@ -226,54 +221,52 @@ async function testAll() {
     let productId = await testCartItems(userSid);
     await testCartItemsUpdate(userSid, productId);
     await testCartItems(userSid);
-    await testCheckout(userSid,"Big Bird","1st Sesame street","Tel Aviv", "1234567",
-        "blah@blah.com","blah","1111222233334444","01","1234","123" );
+    await testCheckout(userSid,"Big Bird","1st Sesame street","Tel Aviv", "1234567");
     await testSignOut(userSid);
-    //
-    // // Admin login and check admin page
-    // console.log(chalk.blue('\nAdmin login and check admin page'));
-    // let adminSid = await testSignIn("admin@admin.com", "1234", true);
-    // await testAdmin(adminSid);
-    //
-    // // Admin costumer purchases check and check complete order and sign out
-    // console.log(chalk.blue('\nAdmin costumer purchases check and check complete order and sign out'));
-    // await testAdminPurchases(adminSid);
-    // await testAdminPurchasesUpdateStatus(adminSid,"a@b.com", productId);
-    // await testAdminPurchases(adminSid);
-    // await testSignOut(userSid);
-    //
-    // // Try entering home without signing in
-    // console.log(chalk.blue('\nTry entering home without signing in'));
-    // await testHome("");
-    // await testHomeWithoutCookies()
-    //
-    // // Try entering home and cart as admin
-    // console.log(chalk.blue('\nTry entering home and cart as admin'));
-    // adminSid = await testSignIn("admin@admin.com", "1234", false);
-    // await testHome(adminSid);
-    // productId = await testCartItems(adminSid);
-    // await testCartItemsUpdate(adminSid, productId);
-    // await testCartItems(adminSid);
-    // await testCheckout(adminSid,"Big Bird","1st Sesame street","Tel Aviv", "1234567");
-    // await testSignOut(adminSid);
-    //
-    // // Try entering admin page and admin purchases page as non-admin user
-    // console.log(chalk.blue('\nTry entering  admin page and admin purchases page as non-admin user'));
-    // userSid = await testSignIn("a@b.com", "1234", false);
-    // await testAdmin(userSid);
-    // await testAdminPurchases(userSid);
-    // await testAdminPurchasesUpdateStatus(userSid,"a@b.com", productId);
-    // await testSignOut(userSid);
-    //
-    // // Try  updating a non existing product's status in admin purchases
-    // console.log(chalk.blue('\nTry  updating a non existing product\'s status in admin purchases'));
-    // adminSid = await testSignIn("admin@admin.com", "1234", false);
-    // await testAdminPurchasesUpdateStatus(adminSid,"a@b.com", "non existing item name");
+
+    // Admin login and check admin page
+    console.log(chalk.blue('\nAdmin login and check admin page'));
+    let adminSid = await testSignIn("admin@admin.com", "1234", true);
+    await testAdmin(adminSid);
+
+    // Admin costumer purchases check and check complete order and sign out
+    console.log(chalk.blue('\nAdmin costumer purchases check and check complete order and sign out'));
+    await testAdminPurchases(adminSid);
+    await testAdminPurchasesUpdateStatus(adminSid,"a@b.com", productId);
+    await testAdminPurchases(adminSid);
+    await testSignOut(userSid);
+
+    // Try entering home without signing in
+    console.log(chalk.blue('\nTry entering home without signing in'));
+    await testHome("");
+    await testHomeWithoutCookies()
+
+    // Try entering home and cart as admin
+    console.log(chalk.blue('\nTry entering home and cart as admin'));
+    adminSid = await testSignIn("admin@admin.com", "1234", false);
+    await testHome(adminSid);
+    productId = await testCartItems(adminSid);
+    await testCartItemsUpdate(adminSid, productId);
+    await testCartItems(adminSid);
+    await testCheckout(adminSid,"Big Bird","1st Sesame street","Tel Aviv", "1234567");
+    await testSignOut(adminSid);
+
+    // Try entering admin page and admin purchases page as non-admin user
+    console.log(chalk.blue('\nTry entering  admin page and admin purchases page as non-admin user'));
+    userSid = await testSignIn("a@b.com", "1234", false);
+    await testAdmin(userSid);
+    await testAdminPurchases(userSid);
+    await testAdminPurchasesUpdateStatus(userSid,"a@b.com", productId);
+    await testSignOut(userSid);
+
+    // Try  updating a non existing product's status in admin purchases
+    console.log(chalk.blue('\nTry  updating a non existing product\'s status in admin purchases'));
+    adminSid = await testSignIn("admin@admin.com", "1234", false);
+    await testAdminPurchasesUpdateStatus(adminSid,"a@b.com", "non existing item name");
+
+
 }
 
 testAll()
 
-//checkout when cart is empty
 
-// note when there is no cookie header we get status 500
-//sign out after cookie is erased from db

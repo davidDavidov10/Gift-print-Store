@@ -11,10 +11,6 @@ async function placeorder(request,response){
                 let cartKeys = Object.keys(cart);
                 let info = request.body;
                 let shippingInfo = `Full Name: ${info.fullname},\nAddress: ${info.address} ${info.city},\nZip: ${info.zip} `
-                console.log("\nshipping info: " + shippingInfo)
-                console.log("reply: " + reply)
-                console.log("info: " + JSON.stringify(info))
-                // console.log("request: " + JSON.stringify(request))
                 // Go over all items in cart and add shipping info and status
                 for(let key in cartKeys){
                     let item = cart[cartKeys[key]];
