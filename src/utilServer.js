@@ -11,14 +11,19 @@ function signOut(request,response) {
 // Returns user email if user session is validated. Else throw error, user is not logged in
 function getUserFromSession(request){
     return new Promise((resolve, reject) =>{
-            // let sid = request.header('Cookie').replace(/.*sid=([^;]+).*/i,'$1');
-            let sid = request.header('Cookie').match(/sid=([^;]+)/i);
-            if(sid === null) reject("User is not logged in")
-            else sid = sid[1];
-            client.hget("sessions", sid,  (err, reply)=>{
-                if(reply !== null ) resolve(JSON.parse(reply).id);
-                else reject("User is not logged in");//
-            });
+        let sid;
+        try{
+           sid = request.header('Cookie').match(/sid=([^;]+)/i);
+        }catch(e){
+            // No cookie header
+            reject("User is not logged in");
+        }
+        if(sid === null) reject("User is not logged in") // There is a cookie header but no sid in it
+        else sid = sid[1];
+        client.hget("sessions", sid,  (err, reply)=>{
+            if(reply !== null ) resolve(JSON.parse(reply).id);
+            else reject("User is not logged in"); // Sid is not a valid session id
+        });
         }
     );
 }

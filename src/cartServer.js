@@ -21,7 +21,7 @@ async function getItems (request,response){
             });
         }
     }).catch((err)=> {
-        console.log(err)
+        console.log("Cart error: "+err)
         if(err === "User is not logged in")  response.status(401).json(err);
         else  response.status(500).json(err);
 

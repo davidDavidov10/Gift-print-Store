@@ -9,7 +9,6 @@ window.onload = async() => {
             let body = await res.json();
             let userProductInfo = [];
             let products = JSON.parse(body.data);
-            console.log("products " +products)
             let productKeys = Object.keys(products); // Array of prodImg number
             numOfItems = productKeys.length;
             if(numOfItems > 0) document.getElementById('check-out').disabled = false;
@@ -23,7 +22,7 @@ window.onload = async() => {
         }
     }catch (e) {
         // Send to error page
-       window.location = "../html/ErrorPage.html";
+        window.location = "../html/ErrorPage.html";
     }
 }
 
@@ -72,7 +71,7 @@ function loadItemsData(itemList) {
             `<div class="basket-product" id=${index} data-value ="${item.prodImg}" data-id="${item.type}">
                 <div class="item" >
                     <div class="product-image">
-                    <img src="../productImg/${item.prodImg}.jpeg" alt="../img/GiftPrint.png" class="product-frame">
+                    <img src="../productImg/${item.prodImg}.png" alt="Product Image"  class="product-frame">
                     </div>
                     <div class="product-details">
                         <p id ="type"><strong>${item.type}</strong></p>

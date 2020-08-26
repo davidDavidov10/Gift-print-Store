@@ -25,7 +25,7 @@ async function placeorder(request,response){
                     }
                     client.hset('purchases',email ,JSON.stringify(cart));
                 });
-                client.hdel('cart',email);
+                client.hset('cart',email,"{}");
                 let path = request.get('referer')
                 response.status(200).redirect(path.replace("CheckoutPage.html","HomePage.html"));
             }

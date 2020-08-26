@@ -48,7 +48,7 @@ function loadTableData(purchasesData) {
                         `<td id="${index}" class ="userTd" style="color:green">${item.status}</td>`
                 }else{
                     dataHtml +=`<td  class ="userTd">${imageToPrintHtml}</td>`+
-                        `<td class ="userTd"><a href="../productImg/${item.prodImg}.png" download ><img class="product-img" width="50" height="50" src="../productImg/${item.prodImg}.jpeg"></a></td>`+
+                        `<td class ="userTd"><a href="../productImg/${item.prodImg}.png" download ><img class="product-img" width="50" height="50" src="../productImg/${item.prodImg}.png"></a></td>`+
                         `<td id="${index}" class ="userTd" style="color:red">${item.status}</td>`
                 }
             dataHtml += `<td><button onclick="changeStatus('${item.userEmail}','${item.prodImg}','${index}')">Complete order</button></td>`+

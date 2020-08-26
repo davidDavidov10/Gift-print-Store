@@ -13,7 +13,8 @@ async function admin(request,response) {
                     client.hgetall("users", async function(err,reply){
                         let users = []
                         for(let user in reply){
-                            let details= await JSON.parse(reply[user]);
+                            let details = await JSON.parse(reply[user]);
+                            delete details["password"];
                             await new Promise((resolve1, reject1) => {
                                 client.hget("cart",user,async function(err, reply){
                                     resolve1({...details,"cart": JSON.parse(reply)});
