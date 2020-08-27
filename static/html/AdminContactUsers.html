@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel = "icon" href ="../img/GiftPrintSmall.png" type = "image/x-icon">
+        <script src="../js/adminContactUsers.js"></script>
+        <script src="../js/util.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="../css/NavBar.css">
+        <link rel="stylesheet" type="text/css" href="../css/contactUs.css">
+        <nav id="navBar"></nav>
+        <!--        <script>navBar(false)</script>-->
+
+        <title>Admin Contact User</title>
+    </head>
+<body>
+<div class ="contact-page">
+    <div class="chat-container" id="chat-container">
+        <div class="current-conversation">
+            <p id="current-name">Name</p>
+            <p id="current-email">1@2.com</p>
+        </div>
+        <div class="messages" id="messages">   </div>
+
+        <div class="msg-input">
+            <textarea id="user-msg"></textarea>
+            <button id="send-msg" onclick="sendMsg()">Send</button>
+        </div>
+    </div>
+    <div class="users-container" id="users-container">
+        <ul id="users-list"></ul>
+
+    </div>
+</div>
+
+
+</body>
+</html>

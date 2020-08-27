@@ -2,9 +2,11 @@ const client = require('./redisConnector');
 const util = require('./utilServer');
 
 async function storeMsg(request, response){
-   let email = await util.getUserFromSession(request);
+    let email = request.body.recipient;
+    console.log("email = " + email)
    let prevMsg = await client.hget("messages", email);
    let msg = {};
+   delete request.body.recipient;
    if (prevMsg === null){
        msg[0] = request.body
    }else{
@@ -15,20 +17,22 @@ async function storeMsg(request, response){
      let user = await  client.hget("users", email)
     user = JSON.parse(user);
    client.hset("lastResponse", email, JSON.stringify({fullName:user.firstName + " " + user.lastName,
-       email:user.email, lastResponse:"User"}))
+       email:user.email, lastResponse:"Admin"}))
     response.status(200).json()
 }
 
-async function loadMsg(request, response){
-    let email = await util.getUserFromSession(request);
-    let prevMsg = await client.hget("messages", email);
-    if (prevMsg === null){
+
+//Todo  change to work with user email from on click and not cookie
+async function loadUsers(request, response){
+    // let email = await util.getUserFromSession(request);
+    let users = await client.hgetall("lastResponse");
+    if (users === null){
         response.status(200).json({})
     }else {
-        response.status(200).json(JSON.parse(prevMsg))
+        response.status(200).json(users)
     }
 }
 
-module.exports = {storeMsg, loadMsg};
+module.exports = {storeMsg, loadUsers};
 
 

@@ -9,11 +9,11 @@ function sendMsg(){
         });
         // Create new msg
         let div = document.createElement('div');
-        div.className = "container";
+        div.className = "container viewer";
         let img = document.createElement('img');
         img.setAttribute('src',"../img/user-avatar.png")
         img.setAttribute('alt',"User")
-        img.className = "avatar";
+        img.className = "avatar right";
         let p = document.createElement('p');
         let txt = document.createTextNode(msg);
         p.appendChild(txt);
@@ -42,13 +42,13 @@ async function loadMsg(){
       for(let i = 0; i < numOfMsg; i++ ){
           let msgInfo = body[i];
           if(msgInfo.type === "User"){
-          htmlString += `<div class="container">
-                         <img src="../img/user-avatar.png" alt="User" class="avatar">
+          htmlString += `<div class="container viewer">
+                         <img src="../img/user-avatar.png" alt="User" class="avatar  right">
                   <p>${msgInfo.msg}</p>
               </div>`
           }else{
-              htmlString += `<div class="container darker">
-                     <img src="../img/GiftPrint.png" alt="Admin" class="avatar right">
+              htmlString += `<div class="container ">
+                     <img src="../img/GiftPrint.png" alt="Admin" class="avatar">
                   <p>${msgInfo.msg}</p>
               </div>`
 
@@ -56,32 +56,9 @@ async function loadMsg(){
       }
       document.getElementById('messages').innerHTML = htmlString;
 
-
-        // loadTableData(messages);
-        // collapsible();
-
-}catch(err){
-    // Send to error page
-        console.log("err")
-        console.error((err))
-    // window.location = "../html/ErrorPage.html";
-}
-}
-
-
-/*function loadTableData(userData) {
-
-    const tableBody = document.getElementById('tableData');
-    let dataHtml = '';
-    for(let user of userData) {
-        let cart = getItemsHtml("cart", user);
-        let purchases= getItemsHtml("purchases", user);
-        let loginActivity = createLoginActivity(user.loginActivity)
-        // let loginColor = user.loginActivity === "Hasn't logged in yet" ? 'style="color:red"': ""
-        dataHtml += `<tr class ="userTr"><td class ="userTd">${user.firstName}</td><td class ="userTd">${user.lastName}</td>`
-            +`<td class ="userTd"><a href="mailto:${user.email}">${user.email}</a></td><td class ="userTd">${cart}</td><td  class ="userTd">${purchases}</td>`
-            +`<td  class ="userTd" >${loginActivity}</td></tr>`;
+    }catch(err){
+        // Send to error page
+        window.location = "../html/ErrorPage.html";
     }
-    tableBody.innerHTML = dataHtml;
-}*/
+}
 

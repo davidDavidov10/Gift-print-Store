@@ -17,6 +17,7 @@ const design = require('./productDesignServer')
 const checkout = require('./checkoutServer')
 const home = require('./homeServer')
 const contactUs = require('./contactUsServer')
+const adminContactUser = require('./adminContactUserServer')
 
 // Project Constants
 
@@ -109,9 +110,18 @@ app.get('/api/home', (req,res) => home(req, res));
 // Admin -  update the status of a purchase from purchase table
 app.put('/api/admin/updateStatus', (req, res) => adminPurchases.updateStatus(req,res));
 
-
+// When a uses sends a msg to admin save it in db
 app.post('/api/contactUs/send',((req, res) => contactUs.storeMsg(req,res)))
+
+// Load users correspondence with admin
 app.get('/api/contactUs',((req, res) => contactUs.loadMsg(req,res)))
+
+// When a admin sends a msg to user save it in db
+app.post('/api/admin/contact/send',((req, res) => adminContactUser.storeMsg(req,res)))
+
+// Load users list to admin contact users page
+app.get('/api/admin/contact/users',((req, res) => adminContactUser.loadUsers(req,res)))
+
 // Make sure expired sessions are erased from server once a day
 util.cleanUpExpiredSessionsFromRedis()
 
