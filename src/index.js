@@ -16,6 +16,7 @@ const cart = require('./cartServer')
 const design = require('./productDesignServer')
 const checkout = require('./checkoutServer')
 const home = require('./homeServer')
+const contactUs = require('./contactUsServer')
 
 // Project Constants
 
@@ -48,8 +49,16 @@ const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use(cors({ origin: 'http://localhost:63342' , credentials :  true}));
+// const pathName = );
+
+// Todo: remove cors this is only for testing to open from webstorm, find better way?
+app.use(cors({ origin: 'http://localhost:9090' , credentials :  true}));
+
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, '../static')));
+
+
+
 
 
 const port = 8080;
@@ -101,33 +110,16 @@ app.get('/api/home', (req,res) => home(req, res));
 app.put('/api/admin/updateStatus', (req, res) => adminPurchases.updateStatus(req,res));
 
 
+app.post('/api/contactUs/send',((req, res) => contactUs.storeMsg(req,res)))
+app.get('/api/contactUs',((req, res) => contactUs.loadMsg(req,res)))
 // Make sure expired sessions are erased from server once a day
 util.cleanUpExpiredSessionsFromRedis()
 
 
+// Todo:   add pages: contact us for client and reply to users for admin
 // Todo:   Change redis client to async client
-// Todo:   Go over code: 1. async await where possible 2.try catch (check errors)
-// Todo:   Add readme files
+// Todo:   Go over code: 1. async await where possible 2.try catch (check errors) 3. make sure server never crushes 4. check name conventions
+// Todo:   Add readme files no need to add then to navbar
+// Todo:   add test using redis
 // Todo:   Check project package json for submit
-
-
-// Ask Ohad
-// Todo:   make sure there are at least 2-4 additional pages as required. are our pages enough
-// Todo:   defend against Dos attacks. What does this mean -
-// Answer: few requests in the same time attack (let's say 5 requests) do we need to do something for this seems to work?
-
-// Todo:   How should we test ?
-//  "Build test.js that test intelligently all the meaningful routes that your server
-//   supports. You only need to test the server-side routes."
-//   does it mean that we dont need to test the actions in the client side like create shirt design?
-
-// Todo:   Set the url ?
-// Todo:   Is it ok to use then, or do we always need async await
-// Todo:   Does the readMe html need to be accessible from the website (nav-bar) or just an html in the project
-
-
-
-// Todo: if there's time
-// send confirmation email or reset password
-// previous purchases
 

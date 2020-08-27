@@ -12,8 +12,8 @@ function signOut(request,response) {
 
 // Get user email from session id  in cookie
 // Returns user email if user session is validated. Else throw error, user is not logged in
-function getUserFromSession(request){
-    return new Promise((resolve, reject) =>{
+ function getUserFromSession(request){
+    return new Promise(async (resolve, reject) =>{
         let sid;
         try{
            sid = request.header('Cookie').match(/sid=([^;]+)/i);
@@ -23,13 +23,36 @@ function getUserFromSession(request){
         }
         if(sid === null) reject("User is not logged in") // There is a cookie header but no sid in it
         else sid = sid[1];
-        client.hget("sessions", sid,  (err, reply)=>{
-            if(reply !== null ) resolve(JSON.parse(reply).id);
-            else reject("User is not logged in"); // Sid is not a valid session id
-        });
+        let reply = await client.hget("sessions", sid)
+        if(reply !== null ) resolve(JSON.parse(reply).id);
+        else reject("User is not logged in"); // Sid is not a valid session id
+
         }
     );
 }
+
+
+/* Todo: remove this
+// Get user email from session id  in cookie
+// Returns user email if user session is validated. Else throw error, user is not logged in
+function getUserFromSession(request){
+    return new Promise((resolve, reject) =>{
+            let sid;
+            try{
+                sid = request.header('Cookie').match(/sid=([^;]+)/i);
+            }catch(e){
+                // No cookie header
+                reject("User is not logged in");
+            }
+            if(sid === null) reject("User is not logged in") // There is a cookie header but no sid in it
+            else sid = sid[1];
+            client.hget("sessions", sid,  (err, reply)=>{
+                if(reply !== null ) resolve(JSON.parse(reply).id);
+                else reject("User is not logged in"); // Sid is not a valid session id
+            });
+        }
+    );
+}*/
 
 async function validate(request, response){
     await getUserFromSession(request).then( async(email) =>{

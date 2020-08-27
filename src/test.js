@@ -89,7 +89,6 @@ async function testDesignSave(sid, productImg, type, color, size, amount, price)
 
     let response = await fetch("http://localhost:8080/api/design/save",{
         method: 'POST', credentials: "include",
-        // headers: {'Cookie': 'sid=' + sid,  referrer: "http://localhost:63342/final%20proj/static/html/products/ShirtDesign.html"},
         // Note: we used google as referrer because using localhost created an unsigned request and the redirection fails
         // if we don't specifically allow them in the editor
         headers: {'Cookie': 'sid=' + sid,  referrer: "https://www.google.com"},
