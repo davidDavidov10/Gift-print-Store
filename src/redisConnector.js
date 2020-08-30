@@ -49,21 +49,21 @@ const bcryptRounds = 10;
 const adminEmail = "admin@admin.com";
 const adminPassword = "1234";
 
-//Todo: make redis async
-/*const redisClient = redis.createClient();
-const client = asyncRedis(redisClient);*/
-
 client.on('connect', async() => {
     console.log("redis client connected")
     // Check if admin exists
-    let reply = client.hlen("admins")
-    let password = await bcrypt.hash(adminPassword, bcryptRounds).catch((err) => console.err(err));
-    if (reply - 0 === 0) {
-        client.hset("admins", adminEmail, JSON.stringify({
-            "firstName": "admin",
-            "lastName": "admin",
-            "password": password
-        }));
+    let reply = await client.hlen("admins")
+    try{
+        let password = await bcrypt.hash(adminPassword, bcryptRounds);
+        if (reply - 0 === 0) {
+            client.hset("admins", adminEmail, JSON.stringify({
+                "firstName": "admin",
+                "lastName": "admin",
+                "password": password
+            }));
+        }
+    }catch(err){
+        console.err(err);
     }
 });
 

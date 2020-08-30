@@ -27,7 +27,7 @@ window.onload = async() => {
 }
 
 
-window.onbeforeunload =   function(e) {
+window.onbeforeunload = function(e) {
     let productsAmount = {};
     for (let index = 0; index < numOfItems; index++) {
         let key = document.getElementById(index).getAttribute('data-value');
@@ -37,11 +37,11 @@ window.onbeforeunload =   function(e) {
         }
     }
     fetch(`http://localhost:8080/api/cart/items/update`, {
-        credentials: "include",
-        method: 'PUT',
-        body: JSON.stringify(productsAmount),
-        headers: {'Content-Type': 'application/json'}
-    }).catch();
+            credentials: "include",
+            method: 'PUT',
+            body: JSON.stringify(productsAmount),
+            headers: {'Content-Type': 'application/json'}
+        });
 }
 
 
@@ -49,9 +49,6 @@ function removeProduct(index){
     let productSubtotal = document.getElementById(`sub-total${index}`).innerText.replace("Subtotal: $","");
     let productToRemove = document.getElementById(index);
     productToRemove.style.display = 'none';
-  /*  let productAmount = document.getElementById(`amount${index}`);
-    productAmount.value = 0;
-    */
     localStorage[`amount${index}`] = 0;
 
     let basketTotal = document.getElementById('basket-total').innerText.slice(1);

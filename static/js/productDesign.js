@@ -1,5 +1,5 @@
 let canvas = new fabric.Canvas('product-canvas');
-canvasResize();
+// canvasResize();
 function updateProductImage(imageURL){
     fabric.Image.fromURL(imageURL, function(img) {
         img.scaleToHeight(150);
@@ -63,6 +63,42 @@ document.getElementById('product-custompicture').addEventListener("change", func
 }, false);
 
 
+/*
+async function doneEdit(){
+    try {
+        // Canvas
+        let productDiv = await new Promise((resolve, reject) => {
+            if (canvas.item(0) !== undefined) {
+                console.log("exists")
+                canvas.item(0).lockScalingX = canvas.item(0).lockScalingY = true;// Can't resize item
+                canvas.item(0).lockMovementX = canvas.item(0).lockMovementY = true;// Can't resize item
+                canvas.item(0).selectable = false; // Can't reselect item
+                canvas.item(0)['hasControls'] = false;
+                canvas.item(0)['hasBorders'] = false;
+                canvas.renderAll();
+            }
+            resolve(document.getElementById('product-div'));
+            // Page
+        });
+        let dataUrl = await domtoimage.toPng(productDiv);
+        document.getElementById('productWithImage').value = dataUrl
+        document.getElementById('addToCart').disabled = false;
+        document.getElementById('continueEdit').disabled = false;
+        document.getElementById('doneEdit').disabled = true;
+        document.getElementById('product-custompicture').className = "disable";
+        document.getElementById('product-amount').className = "disable";
+        document.getElementById('product-design').disabled = true;
+        let sizeSelect = document.getElementById('product-size');
+        if (sizeSelect) sizeSelect.className = "disable";
+        document.getElementsByName("productColor").forEach((element) => {
+            console.log(element.checked)
+            if (!element.checked) element.disabled = true;
+        })
+    }catch(error) {
+        console.error('oops, something went wrong!', error);
+    }
+}
+*/
 function doneEdit(){
     // Canvas
     new Promise((resolve,reject)=>{
@@ -94,9 +130,15 @@ function doneEdit(){
             })
         })
         .catch(function (error) {
-        console.error('oops, something went wrong!', error);
-    });
+            console.error('oops, something went wrong!', error);
+        });
 }
+
+
+
+
+
+
 
 function continueEdit(){
     if(canvas.item(0) !== undefined ) {
@@ -123,6 +165,7 @@ function continueEdit(){
 
  window.onload = async()=>{
      try{
+         canvasResize();
          let res = await fetch(`http://localhost:8080/api/design/validate`, {method:'GET', credentials: "include"});
          if(res.status === 401) window.location = "../../html/LoginPage.html"; // Not authenticated user
          else if(res.status === 500) throw Error("wrong response status: " + res.status) // Server error
@@ -137,10 +180,17 @@ function continueEdit(){
  });
 
 function canvasResize(){
+
     let imgWidth = document.getElementById('product-backgroundpicture').width;
     let imgHeight = document.getElementById('product-backgroundpicture').height;
     let ratio = document.getElementById('ratio').value;
+    console.log("height img = " + imgHeight)
+    console.log("width img  = " + imgWidth )
     ratio = JSON.parse(ratio);
+
+    console.log("height ratio  = " +  ratio.height)
+    console.log("height = " + imgHeight * ratio.height)
+    console.log("width = " + imgWidth * ratio.width)
     canvas.setHeight(imgHeight * ratio.height);
     canvas.setWidth(imgWidth * ratio.width);
 }

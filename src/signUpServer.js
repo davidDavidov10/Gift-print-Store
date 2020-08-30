@@ -9,27 +9,28 @@ async function signUp(request,response) {
     let email = String(body.email);
     let password = body.password;
 
-    // Hash password before saving to DB
-    password = await bcrypt.hash(password, bcryptRounds).catch((err) => console.err(err));
+    try{
+        // Hash password before saving to DB
+        password = await bcrypt.hash(password, bcryptRounds);
 
-    // Check user doesn't already exist for given email
-    let exists = await new Promise((resolve, reject) => {
-        client.hexists('users', email, (err, reply) => {
-            resolve(reply)
+        // Check user doesn't already exist for given email
+        let exists = await client.hexists('users', email);
 
-        });
-    });
-    // Save user to DB if doesn't already exists
-    if (!exists) {
-        let userDetails = `{"firstName": "${firstName}", "lastName": "${lastName}", "email": "${email}", "password": "${password}"}`;
-        client.hset('users', email, userDetails);
-        client.hset('loginActivity', email, JSON.stringify({"0": "Signed up: " + new Date().toLocaleString()}));
-        client.hset('cart', email, "{}");
-        response.status(200).json({"msg": "User signed in"})
-    } else {
-        // If user exists already send error
-        response.status(401).json({"err": "User exists for this email please sign in"})
+        // Save user to DB if doesn't already exists
+        if (!exists) {
+            let userDetails = `{"firstName": "${firstName}", "lastName": "${lastName}", "email": "${email}", "password": "${password}"}`;
+            await  client.hset('users', email, userDetails);
+            await client.hset('loginActivity', email, JSON.stringify({"0": "Signed up: " + new Date().toLocaleString()}));
+            await client.hset('cart', email, "{}");
+            return response.status(200).json({"msg": "User signed in"})
+        } else {
+            // If user exists already send error
+            return response.status(401).json({"err": "User exists for this email please sign in"})
+        }
+    }catch(err) {
+     console.err(err);
     }
+
 }
 
 module.exports = signUp;

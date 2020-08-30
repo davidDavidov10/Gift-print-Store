@@ -1,11 +1,11 @@
 const client = require('./redisConnector');
 
 
-function signOut(request,response) {
+async function signOut(request,response) {
     let cookie = request.header('Cookie')
     if(cookie){
         let sid = cookie.replace(/.*sid=([^;]+).*/i, '$1');
-        client.hdel("sessions", sid);
+        await client.hdel("sessions", sid);
     }
     response.status(200).send("Signed out");
 }
@@ -13,60 +13,37 @@ function signOut(request,response) {
 // Get user email from session id  in cookie
 // Returns user email if user session is validated. Else throw error, user is not logged in
  function getUserFromSession(request){
-    return new Promise(async (resolve, reject) =>{
+    return new Promise(async (resolve, reject) => {
         let sid;
-        try{
-           sid = request.header('Cookie').match(/sid=([^;]+)/i);
-        }catch(e){
+        try {
+            sid = request.header('Cookie').match(/sid=([^;]+)/i);
+            if (sid === null) reject("User is not logged in") // There is a cookie header but no sid in it
+            else {
+                sid = sid[1];
+                let reply = await client.hget("sessions", sid)
+                if (reply !== null) resolve(JSON.parse(reply).id);
+                else reject("User is not logged in"); // Sid is not a valid session id
+            }
+        } catch (e) {
             // No cookie header
             reject("User is not logged in");
         }
-        if(sid === null) reject("User is not logged in") // There is a cookie header but no sid in it
-        else sid = sid[1];
-        let reply = await client.hget("sessions", sid)
-        if(reply !== null ) resolve(JSON.parse(reply).id);
-        else reject("User is not logged in"); // Sid is not a valid session id
-
-        }
-    );
+    });
 }
 
-
-/* Todo: remove this
-// Get user email from session id  in cookie
-// Returns user email if user session is validated. Else throw error, user is not logged in
-function getUserFromSession(request){
-    return new Promise((resolve, reject) =>{
-            let sid;
-            try{
-                sid = request.header('Cookie').match(/sid=([^;]+)/i);
-            }catch(e){
-                // No cookie header
-                reject("User is not logged in");
-            }
-            if(sid === null) reject("User is not logged in") // There is a cookie header but no sid in it
-            else sid = sid[1];
-            client.hget("sessions", sid,  (err, reply)=>{
-                if(reply !== null ) resolve(JSON.parse(reply).id);
-                else reject("User is not logged in"); // Sid is not a valid session id
-            });
-        }
-    );
-}*/
-
 async function validate(request, response){
-    await getUserFromSession(request).then( async(email) =>{
-        let isAdmin = await new Promise((resolve, reject) => {
-            client.hget("admins", email,((err, reply) => {
-                resolve(reply !== null);
-            }));
-        });
-        if(isAdmin) response.status(200).json({"response" : "Admin Authenticated" });
+    try{
+        let email = await getUserFromSession(request);
+
+        let isAdmin = await client.hget("admins", email);
+
+        if(isAdmin !== null) response.status(200).json({"response" : "Admin Authenticated" });
         else response.status(200).json({"response" : "User Authenticated" });
-    }).catch((err)=>{
+
+    }catch(err){
         if(err === "User is not logged in") response.status(200).json({"response" :"Not Authenticated"});
         else  response.status(500).json(err);
-    });
+    }
 }
 
 

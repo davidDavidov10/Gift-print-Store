@@ -21,8 +21,5 @@
           if(isAdmin) window.location = "../html/AdminPage.html";
           else  window.location = "../html/HomePage.html";
       }
-
-
-
 }
 
