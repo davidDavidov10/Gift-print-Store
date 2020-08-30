@@ -122,6 +122,9 @@ app.post('/api/admin/contact/send',((req, res) => adminContactUser.storeMsg(req,
 // Load users list to admin contact users page
 app.get('/api/admin/contact/users',((req, res) => adminContactUser.loadUsers(req,res)))
 
+// Load user msg to admin contact users page after user is chosen
+app.get('/api/admin/contact/msg/:email',((req, res) => adminContactUser.loadMsg(req,res)))
+
 // Make sure expired sessions are erased from server once a day
 util.cleanUpExpiredSessionsFromRedis()
 
@@ -132,4 +135,5 @@ util.cleanUpExpiredSessionsFromRedis()
 // Todo:   Add readme files no need to add then to navbar
 // Todo:   add test using redis
 // Todo:   Check project package json for submit
+// Todo:   Check that user cant get into admin contact us and vise versa
 

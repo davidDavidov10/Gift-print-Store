@@ -35,9 +35,6 @@ async function loadMsg(){
       let res = await fetch(`http://localhost:8080/api/contactUs`, {credentials: "include", method:'GET'});
       let body = await res.json();
       let numOfMsg = Object.keys(body).length;
-      console.log("body: " +JSON.stringify(body))
-        console.log("keys: " +Object.keys(body))
-        console.log(numOfMsg)
       let htmlString = "";
       for(let i = 0; i < numOfMsg; i++ ){
           let msgInfo = body[i];

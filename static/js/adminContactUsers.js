@@ -42,9 +42,12 @@ async function loadUsers(){
         for(let i = 0; i < numOfUsers; i++ ){
             let user = JSON.parse(body[userEmails[i]]);
             if(user.lastResponse === "User"){
-                htmlString += `<li class="red-status" style="color:red">${user.fullName} ${user.email}</li>`
+                // Todo: make this a button, on click fetch get msgs with user
+                htmlString += `<li class="red-status" style="color:red">
+                <button onclick="loadUserMsg('${user.email}', '${user.fullName}')">${user.fullName} ${user.email}</button></li>`
             }else{
-                htmlString += `<li class="green-status" style="color:green">${user.fullName} ${user.email}</li>`
+                htmlString += `<li class="green-status" style="color:green">
+                <button onclick="loadUserMsg('${user.email}', '${user.fullName}')">${user.fullName} ${user.email}</button></li>`
             }
         }
         document.getElementById('users-list').innerHTML = htmlString;
@@ -57,3 +60,34 @@ async function loadUsers(){
 
 
 
+async function loadUserMsg(email, name){
+    try{
+        document.getElementById('current-email').innerHTML = email;
+        document.getElementById('current-name').innerHTML = name;
+
+        let res = await fetch(`http://localhost:8080/api/admin/contact/msg/${email}`, {credentials: "include", method:'GET'});
+        let body = await res.json();
+        let numOfMsg = Object.keys(body).length;
+        let htmlString = "";
+        for(let i = 0; i < numOfMsg; i++ ){
+            let msgInfo = body[i];
+            if(msgInfo.type === "User"){
+                htmlString += `<div class="container">
+                     <img src="../img/user-avatar.png" alt="User" class="avatar">
+              <p>${msgInfo.msg}</p>
+          </div>`
+            }else{
+                htmlString += `<div class="container viewer ">
+                 <img src="../img/GiftPrint.png" alt="Admin" class="avatar right">
+              <p>${msgInfo.msg}</p>
+          </div>`
+
+            }
+        }
+        document.getElementById('messages').innerHTML = htmlString;
+
+    }catch(err){
+        // Send to error page
+        window.location = "../html/ErrorPage.html";
+    }
+}

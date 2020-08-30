@@ -3,7 +3,6 @@ const util = require('./utilServer');
 
 async function storeMsg(request, response){
     let email = request.body.recipient;
-    console.log("email = " + email)
    let prevMsg = await client.hget("messages", email);
    let msg = {};
    delete request.body.recipient;
@@ -33,6 +32,18 @@ async function loadUsers(request, response){
     }
 }
 
-module.exports = {storeMsg, loadUsers};
+
+
+async function loadMsg(request, response){
+    let email = request.params.email;
+    let prevMsg = await client.hget("messages", email);
+    if (prevMsg === null){
+        response.status(200).json({})
+    }else {
+        response.status(200).json(JSON.parse(prevMsg))
+    }
+}
+
+module.exports = {storeMsg, loadUsers,loadMsg};
 
 
