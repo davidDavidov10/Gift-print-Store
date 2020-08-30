@@ -77,10 +77,12 @@ function searchAdminTable() {
     }
 }
 
-function changeStatus(email, itemName, index){
+async function changeStatus(email, itemName, index){
     document.getElementById(`${index}`).innerText = "Order Completed";
     document.getElementById(`${index}`).style.color = "green";
-    fetch(`http://localhost:8080/api/admin/updateStatus`, {method:'PUT', credentials: "include",
+    let res = fetch(`http://localhost:8080/api/admin/updateStatus`, {method:'PUT', credentials: "include",
         body:JSON.stringify({"email":email, "itemName":itemName }),headers: {'Content-Type': 'application/json'}
     });
+    if (res.status === 401) window.location = "../html/LoginPage.html"; //User not authenticated
+    else if (res.status === 500) window.location = "../html/ErrorPage.html"; // Server error
 }

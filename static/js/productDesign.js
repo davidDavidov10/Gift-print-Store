@@ -63,7 +63,6 @@ document.getElementById('product-custompicture').addEventListener("change", func
 }, false);
 
 
-/*
 async function doneEdit(){
     try {
         // Canvas
@@ -85,7 +84,7 @@ async function doneEdit(){
         document.getElementById('addToCart').disabled = false;
         document.getElementById('continueEdit').disabled = false;
         document.getElementById('doneEdit').disabled = true;
-        document.getElementById('product-custompicture').className = "disable";
+        document.getElementById('upload-img-div').className = "custom-file mb-3 disable";
         document.getElementById('product-amount').className = "disable";
         document.getElementById('product-design').disabled = true;
         let sizeSelect = document.getElementById('product-size');
@@ -98,46 +97,6 @@ async function doneEdit(){
         console.error('oops, something went wrong!', error);
     }
 }
-*/
-function doneEdit(){
-    // Canvas
-    new Promise((resolve,reject)=>{
-        if(canvas.item(0) !== undefined ){
-            console.log("exists")
-            canvas.item(0).lockScalingX = canvas.item(0).lockScalingY = true;// Can't resize item
-            canvas.item(0).lockMovementX = canvas.item(0).lockMovementY = true;// Can't resize item
-            canvas.item(0).selectable = false; // Can't reselect item
-            canvas.item(0)['hasControls'] = false;
-            canvas.item(0)['hasBorders'] = false;
-            canvas.renderAll();
-        }
-        resolve(document.getElementById('product-div'));
-        // Page
-    }).then(domtoimage.toPng)
-        .then(function (dataUrl) {
-            document.getElementById('productWithImage').value = dataUrl
-            document.getElementById('addToCart').disabled = false;
-            document.getElementById('continueEdit').disabled = false;
-            document.getElementById('doneEdit').disabled = true;
-            document.getElementById('product-custompicture').className = "disable";
-            document.getElementById('product-amount').className = "disable";
-            document.getElementById('product-design').disabled = true;
-            let sizeSelect = document.getElementById('product-size');
-            if(sizeSelect) sizeSelect.className = "disable";
-            document.getElementsByName("productColor").forEach((element) =>{
-                console.log(element.checked)
-                if(!element.checked) element.disabled = true;
-            })
-        })
-        .catch(function (error) {
-            console.error('oops, something went wrong!', error);
-        });
-}
-
-
-
-
-
 
 
 function continueEdit(){
@@ -152,7 +111,7 @@ function continueEdit(){
     document.getElementById('addToCart').disabled = true;
     document.getElementById('continueEdit').disabled = true;
     document.getElementById('doneEdit').disabled = false;
-    document.getElementById('product-custompicture').className = "";
+    document.getElementById('upload-img-div').className = "custom-file mb-3";
     document.getElementById('product-amount').className = "";
     document.getElementById('product-design').disabled = false;
     let sizeSelect = document.getElementById('product-size');

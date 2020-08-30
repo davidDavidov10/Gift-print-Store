@@ -252,7 +252,7 @@ img {
         transform: scale(1); } }
 
 
-.custom-file-input ,.custom-file-label, #product-design{
+.custom-file-input , #product-design{
     width:70%;
 
 }
@@ -267,4 +267,8 @@ img {
 }
 #product-design{
     margin-bottom: 10px;
+}
+
+.custom-file{
+    width: fit-content;
 }

@@ -4,6 +4,7 @@ const uuid = require('uuid');
 const fs = require('fs');
 const path = require('path');
 
+//todo: check why it takes so long for bigger files to save
 
 
 async function save(request,response){
