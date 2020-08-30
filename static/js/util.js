@@ -17,6 +17,7 @@
              `<ul class="nav-bar-ul">
                  <li class="nav-bar-li"><a class="a" href="AdminPage.html"><i class="fa fa-fw fa-user-tie"></i> Admin</a></li>
                  <li class="nav-bar-li"><a class="a" href="PurchasesAdmin.html"><i class="fa fa-fw fa-shopping-cart"></i> Costumer Purchases</a></li>
+                 <li class="nav-bar-li"><a class="a" href="AdminContactUsers.html"><i class="fas fa-comment-alt"></i> Contact Users</a></li>
                 <li class="nav-bar-li" style="float:right"><a class="a" onclick="logOut()"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
             </ul>`
      } else if(status.response === "User Authenticated"){
@@ -25,6 +26,7 @@
              `<ul class="nav-bar-ul">
                  <li class="nav-bar-li"><a class="a" href="${prefix}HomePage.html"><i class="fa fa-fw fa-home"></i> Home</a></li>
                  <li class="nav-bar-li"><a class="a" href="${prefix}ShoppingCartPage.html"><i class="fa fa-shopping-cart faspace"></i> Cart</a></li>
+                     <li class="nav-bar-li"><a class="a" href="ContactUs.html"><i class="fas fa-comment-alt"></i> Contact Us</a></li>
                  <li class="nav-bar-li" style="float:right"><a class="a" onclick="logOut()"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
             </ul>`
      }else if(status.response === "Not Authenticated") {

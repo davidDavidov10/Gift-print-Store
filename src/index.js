@@ -129,11 +129,12 @@ app.get('/api/admin/contact/msg/:email',((req, res) => adminContactUser.loadMsg(
 util.cleanUpExpiredSessionsFromRedis()
 
 
-// Todo:   add pages: contact us for client and reply to users for admin
-// Todo:   Change redis client to async client
-// Todo:   Go over code: 1. async await where possible 2.try catch (check errors) 3. make sure server never crushes 4. check name conventions
-// Todo:   Add readme files no need to add then to navbar
+
+// Todo:   Check that user cant get into admin contact us and vise versa
+// Todo:   Check image upload (size)
+// Todo:   Go over code:3. make sure server never crushes 4. check name conventions
+// Todo:   Add readme files no need to add them to navbar
 // Todo:   add test using redis
 // Todo:   Check project package json for submit
-// Todo:   Check that user cant get into admin contact us and vise versa
+
 
