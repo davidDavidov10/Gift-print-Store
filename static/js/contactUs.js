@@ -58,7 +58,7 @@ async function loadMsg(){
               </div>`
                }else{
                    htmlString += `<div class="container ">
-                     <img src="../img/GiftPrint.png" alt="Admin" class="avatar">
+                     <img src="../img/GiftPrintWBG.png" alt="Admin" class="avatar">
                   <p>${msgInfo.msg}</p>
               </div>`
 

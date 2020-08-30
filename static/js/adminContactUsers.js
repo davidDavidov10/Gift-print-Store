@@ -96,7 +96,7 @@ async function loadUserMsg(email, name){
           </div>`
                 }else{
                     htmlString += `<div class="container viewer ">
-                 <img src="../img/GiftPrint.png" alt="Admin" class="avatar right">
+                 <img src="../img/GiftPrintWBG.png" alt="Admin" class="avatar right">
               <p>${msgInfo.msg}</p>
           </div>`
 
