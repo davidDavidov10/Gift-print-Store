@@ -49,22 +49,18 @@ async function validate(request, response){
 
 // CleanUp redis sessions. Once a day go over sessions and delete all expired sessions from DB
 function cleanUpExpiredSessionsFromRedis(){
-    setInterval(()=>{
-        console.log("/n cleaning up redis sessions " + Date.now().toLocaleString() );
-        client.hgetall("sessions", ((err, reply) => {
-            let keys = Object.keys(reply);
-            for(let keyIndex in keys){
-                let key = keys[keyIndex];
-                // console.log(reply[key]);
-                let expiration = JSON.parse(reply[key]).expire;
-                if(expiration !== "session" && Date.now() > expiration ){
-                    // console.log("above session was deleted from DB");
-                    client.hdel("sessions", key);
-                }
+    setInterval(async()=>{
+        console.log("/n cleaning up redis sessions " + Date.now().toLocaleString());
+        let sessions = await client.hgetall("sessions");
+        let keys = Object.keys(sessions);
+        for(let keyIndex in keys){
+            let key = keys[keyIndex];
+            let expiration = JSON.parse(sessions[key]).expire;
+            if(expiration !== "session" && Date.now() > expiration ){
+                client.hdel("sessions", key);
             }
-        }))
-    }, 86400000);
-//24 hours = 86400000
+        }
+    }, 86400000); //24 hours = 86400000
 }
 
 module.exports = {signOut, getUserFromSession, validate, cleanUpExpiredSessionsFromRedis};

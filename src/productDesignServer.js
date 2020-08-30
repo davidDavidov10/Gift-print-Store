@@ -29,7 +29,7 @@ async function save(request,response){
 
         // Check if user is in db key img
         let reply = await client.hget("cart", email);
-        let item = { prodImg:prodImgID, imgToPrint:imgID , amount:amount, type:productType, price:price, color:color, size:size, }
+        let item = { prodImg:prodImgID, imgToPrint:imgID , amount:amount, type:productType, price:price, color:color, size:size, fileType:path.extname(file.path)}
         let cart = {};
         if (reply !== null) {
             // User is  in db, get existing cart

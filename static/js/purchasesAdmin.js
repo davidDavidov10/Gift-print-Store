@@ -35,7 +35,7 @@ function loadTableData(purchasesData) {
     tableBody.innerHTML = `<button onclick="changeStatus('sd', "dasd", 2 )">Complete order</button>`
     let dataHtml = '';
     for(let [index,item] of purchasesData.entries()) {
-        let imageToPrintHtml = item.imgToPrint === "No selected img" ? "No uploaded image" :`<a href="../productImg/${item.imgToPrint}.png" download>Image to print</a>`
+        let imageToPrintHtml = item.imgToPrint === "No selected img" ? "No uploaded image" :`<a href="../productImg/${item.imgToPrint}${item.fileType}" download>Image to print</a>`
         dataHtml += `<tr class ="userTr"><td class ="userTd"><a href="mailto:${item.email}">${item.userEmail}</a></td>`+
             `<td class ="userTd" style="white-space:pre-wrap">${item.shippingInfo.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</td>`+
             `<td class ="userTd">${item.type}</td><td class ="userTd">${item.color}</td>`+

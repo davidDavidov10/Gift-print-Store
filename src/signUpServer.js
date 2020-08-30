@@ -30,7 +30,6 @@ async function signUp(request,response) {
     }catch(err) {
      console.err(err);
     }
-
 }
 
 module.exports = signUp;
