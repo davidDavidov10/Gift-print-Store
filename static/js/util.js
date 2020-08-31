@@ -11,7 +11,8 @@
     // status = Logged In / Not Logged In / Admin
     let status = await fetch(`http://localhost:8080/api/validate`, {credentials: "include", method:'GET'})
      status =  await  status.json();
-     let navBarStr = `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">`;
+     let navBarStr = `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">`;
      if(status.response === "Admin Authenticated"){
          navBarStr +=
              `<ul class="nav-bar-ul">

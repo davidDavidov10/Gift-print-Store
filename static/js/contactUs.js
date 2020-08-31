@@ -92,4 +92,3 @@ function styleButton(textObj){
         button.disabled = false;
     }
 }
-windo.load

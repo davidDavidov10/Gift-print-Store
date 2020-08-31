@@ -26,5 +26,35 @@
     </div>
 </div>
 
+<div id="chatWindow" style="border: #0d0d0d 3px solid; height:100px"></div>
+<input type="text" id="msgBox">
+
 </body>
+<script>
+    let socket;
+    window.onload= function(){
+        socket = new WebSocket("ws://localhost:8080/api/contactUs/ws")
+        console.log("sending from ws://localhost:8080/api/contactUs/ws")
+        socket.onmessage = handleMessage;
+        document.getElementById("msgBox").onkeydown = handleKeyPress;
+    }
+
+    function handleMessage(msg){
+        let elem = document.createElement('div');
+        elem.innerHTML = msg.data
+        document.getElementById('chatWindow').appendChild(elem)
+    }
+    function handleKeyPress(e){
+        if(e.keyCode === 13){
+            let text = document.getElementById('msgBox').value;
+            document.getElementById('msgBox').value = "";
+            socket.send(text)
+            console.log("sending")
+        }
+    }
+    window.onbeforeunload = function(){
+        socket.close();
+    }
+
+</script>
 </html>

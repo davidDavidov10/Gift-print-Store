@@ -58,16 +58,32 @@ app.use(cors({ origin: 'http://localhost:9090' , credentials :  true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../static')));
 
+const expressWs = require('express-ws')(app);
 
 
 
 
-const port = 8080;
-app.listen(port,()=>{
-    console.log("server started on port: " + port);
+let clientList = [];
+app.ws('/api/contactUs/ws', function(ws, req) {
+    ws.on("connect", function (client){
+        clientList.push(client)
+       ws.on("message", function(msg){
+            for(let c of clientList){
+                c.send(msg)
+                console.log("in message")
+            }
+        });
+
+        ws.on("close", function(){
+            let index = clientList.indexOf(this)
+            if(index != -1){
+                clientList.splice(index,1)
+            }
+        });
+
+        client.send("Welcome!");
+    });
 });
-
-
 
 // Express handle routes
 
@@ -128,6 +144,11 @@ app.get('/api/admin/contact/msg/:email',((req, res) => adminContactUser.loadMsg(
 // Make sure expired sessions are erased from server once a day
 util.cleanUpExpiredSessionsFromRedis()
 
+
+const port = 8080;
+app.listen(port,()=>{
+    console.log("server started on port: " + port);
+});
 
 
 // Todo:   Check that user cant get into admin contact us and vise versa
