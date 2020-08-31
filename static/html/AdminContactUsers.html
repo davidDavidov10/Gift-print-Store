@@ -17,22 +17,35 @@
         <title>Admin Contact User</title>
     </head>
 <body>
-<div class ="contact-page">
-    <div class="chat-container" id="chat-container">
+<div class="page-container">
+<div class ="chat">
+    <div class=sidebar>
+        <div class="search">
+            <input type="text" placeholder="Ara..." name="">
+            <i class="fa fa-search"></i>
+        </div>
+        <div class="contacts" id="users-container">
+            <ul id="users-list"></ul>
+        </div>
+    </div>
+    <div  >
         <div class="current-conversation">
             <p id="current-name">Name</p>
             <p id="current-email">Email</p>
         </div>
-        <div class="messages" id="messages">   </div>
+        <div class="chat-container" id="chat-container">
 
-        <div class="msg-input">
-            <textarea id="user-msg"></textarea>
-            <button id="send-msg" onclick="sendMsg()">Send</button>
+            <div class="messages" id="messages">   </div>
+
+            <div class="msg-input">
+                <textarea id="user-msg"></textarea>
+                <button id="send-msg" onclick="sendMsg()">Send</button>
+            </div>
         </div>
     </div>
-    <div class="users-container" id="users-container">
-        <ul id="users-list"></ul>
-    </div>
+</div>
+
+
 </div>
 
 

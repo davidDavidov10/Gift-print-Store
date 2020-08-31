@@ -86,8 +86,6 @@ app.ws('/api/admin/contact/msg/ws', async function(ws, req) {
     adminWs = ws;
     ws.on("message", function(msg){
         let msgObj = JSON.parse(msg)
-        console.log("msg " + msg)
-        console.log("msg " +  JSON.parse(msg).email)
         let userClient = userListWs[msgObj.email];
         if(userClient) userClient.send(msgObj.msg);
     });

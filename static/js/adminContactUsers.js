@@ -14,16 +14,12 @@ async function sendMsg(){
                 socket.send(JSON.stringify({email:email,msg:msg}));
                 // Create new msg
                 let div = createMsgHtml(msg, true);
-
                 // Add new msg
                 document.getElementById('messages').appendChild(div)
-
                 // Reset input
                 document.getElementById("user-msg").value = "";
-
                 // Change status
                 document.getElementById(email).className = "green-status";
-
                 // Scroll down
                 let messages= document.getElementById('messages')
                 messages.scrollTop = messages.scrollHeight;
@@ -54,14 +50,20 @@ async function loadUsers(){
             for(let i = 0; i < numOfUsers; i++ ){
                 let user = JSON.parse(body[userEmails[i]]);
                 console.log(user.email)
-                if(user.lastResponse === "User"){
-                    // Todo: make this a button, on click fetch get msgs with user
-                    htmlString += `<li class="red-status"  id="${user.email}">
-                <button onclick="loadUserMsg('${user.email}', '${user.fullName}')">${user.fullName} ${user.email}</button></li>`
-                }else{
-                    htmlString += `<li class="green-status"  id="${user.email}">
-                <button onclick="loadUserMsg('${user.email}', '${user.fullName}')">${user.fullName} ${user.email}</button></li>`
-                }
+                let notification = user.lastResponse === "User" ? "!" : "";
+                // if(user.lastResponse === "User"){
+                //     // Todo: make this a button, on click fetch get msgs with user
+                    htmlString += `<li  id="${user.email}">
+                    <a  onclick="loadUserMsg('${user.email}', '${user.fullName}')"><img src="../img/user-avatar.png">
+                    <div class="contact">
+                    <div class="name">${user.fullName}</div>
+                    <div class="email"> ${user.email}</div>
+                    </div><div class="notification">${notification}</div>
+                    </div></a></li>`
+                // }else{
+                //     htmlString += `<li class="green-status"  id="${user.email}">
+                // <button onclick="loadUserMsg('${user.email}', '${user.fullName}')">${user.fullName} ${user.email}</button></li>`
+                // }
             }
             document.getElementById('users-list').innerHTML = htmlString;
 
@@ -118,6 +120,8 @@ async function loadUserMsg(email, name){
                 }
             }
             document.getElementById('messages').innerHTML = htmlString;
+            let messages= document.getElementById('messages')
+            messages.scrollTop = messages.scrollHeight;
         }
     }catch(err){
         // Send to error page
