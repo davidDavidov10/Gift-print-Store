@@ -1,3 +1,11 @@
+let socket;
+window.onload= function(){
+    socket = new WebSocket("ws://localhost:8080/api/contactUs/ws")
+    console.log("sending from ws://localhost:8080/api/contactUs/ws")
+    socket.onmessage = handleMessage;
+    document.getElementById("msgBox").onkeydown = handleKeyPress;
+}
+
 async function sendMsg(){
     let msg = document.getElementById("user-msg").value;
     if(msg !== "") {
@@ -11,18 +19,9 @@ async function sendMsg(){
             if (res.status === 401) window.location = "../html/LoginPage.html"; // Not authenticated user
             else if (res.status === 500) throw Error("wrong response status: " + res.status) // Server error
 
+            socket.send(msg)
             // Create new msg
-            let div = document.createElement('div');
-            div.className = "container viewer";
-            let img = document.createElement('img');
-            img.setAttribute('src', "../img/user-avatar.png")
-            img.setAttribute('alt', "User")
-            img.className = "avatar right";
-            let p = document.createElement('p');
-            let txt = document.createTextNode(msg);
-            p.appendChild(txt);
-            div.appendChild(img)
-            div.appendChild(p)
+            let div = createMsgHtml(msg ,true);
 
             // Add new msg
             document.getElementById('messages').appendChild(div)
@@ -81,6 +80,17 @@ window.onload =  (event) => {
    // Scroll Down in msgs
     let messages= document.getElementById('messages')
     messages.scrollTop = messages.scrollHeight;
+
+    // Web socket connect
+    socket = new WebSocket("ws://localhost:8080/api/contactUs/ws")
+    socket.onmessage = handleMessage;
+}
+
+function handleMessage(msg){
+    let div = createMsgHtml(msg.data, false);
+    document.getElementById('messages').appendChild(div)
+    let messages= document.getElementById('messages')
+    messages.scrollTop = messages.scrollHeight;
 }
 
 function styleButton(textObj){
@@ -91,4 +101,19 @@ function styleButton(textObj){
     }else{
         button.disabled = false;
     }
+}
+
+function createMsgHtml(msg ,isViewer){
+    let div = document.createElement('div');
+    div.className = isViewer ? "container viewer":  "container";
+    let img = document.createElement('img');
+    img.setAttribute('src', isViewer ? "../img/user-avatar.png" : "../img/GiftPrintWBG.png");
+    img.setAttribute('alt', "User")
+    img.className = isViewer ? "avatar right" : "avatar";
+    let p = document.createElement('p');
+    let txt = document.createTextNode(msg);
+    p.appendChild(txt);
+    div.appendChild(img)
+    div.appendChild(p)
+    return div;
 }

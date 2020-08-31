@@ -59,31 +59,44 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../static')));
 
 const expressWs = require('express-ws')(app);
+// let aWss = expressWs.getWss('/api/contactUs/ws');
 
+let userListWs = {};
+let adminWs;
 
-
-
-let clientList = [];
-app.ws('/api/contactUs/ws', function(ws, req) {
-    ws.on("connect", function (client){
-        clientList.push(client)
-       ws.on("message", function(msg){
-            for(let c of clientList){
-                c.send(msg)
-                console.log("in message")
-            }
-        });
-
-        ws.on("close", function(){
-            let index = clientList.indexOf(this)
-            if(index != -1){
-                clientList.splice(index,1)
-            }
-        });
-
-        client.send("Welcome!");
+// Send message from user to admin using webSocket
+app.ws('/api/contactUs/ws', async function(ws, req) {
+    console.log("User Connected to web socket")
+    let email = await util.getUserFromSession(req);
+    userListWs[email] = ws;
+    ws.on("message", function(msg){
+        if(adminWs){
+            adminWs.send(msg)
+        }
+    });
+    ws.on("close", function(){
+      delete userListWs[email];
     });
 });
+
+// Send message from admin to users using websocket
+app.ws('/api/admin/contact/msg/ws', async function(ws, req) {
+    console.log("Admin Connected to web socket")
+    let adminEmail = await util.getUserFromSession(req);
+    adminWs = ws;
+    ws.on("message", function(msg){
+        let msgObj = JSON.parse(msg)
+        console.log("msg " + msg)
+        console.log("msg " +  JSON.parse(msg).email)
+        let userClient = userListWs[msgObj.email];
+        if(userClient) userClient.send(msgObj.msg);
+    });
+
+    ws.on("close", function(){
+        adminWs = null;
+    });
+});
+
 
 // Express handle routes
 

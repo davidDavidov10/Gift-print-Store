@@ -11,18 +11,9 @@ async function sendMsg(){
             if (res.status === 401) window.location = "../html/LoginPage.html"; // Not authenticated user
             else if (res.status === 500) throw Error("wrong response status: " + res.status) // Server error
             else {
+                socket.send(JSON.stringify({email:email,msg:msg}));
                 // Create new msg
-                let div = document.createElement('div');
-                div.className = "container viewer";
-                let img = document.createElement('img');
-                img.setAttribute('src', "../img/GiftPrint.png")
-                img.setAttribute('alt', "User")
-                img.className = "avatar right";
-                let p = document.createElement('p');
-                let txt = document.createTextNode(msg);
-                p.appendChild(txt);
-                div.appendChild(img)
-                div.appendChild(p)
+                let div = createMsgHtml(msg, true);
 
                 // Add new msg
                 document.getElementById('messages').appendChild(div)
@@ -32,6 +23,10 @@ async function sendMsg(){
 
                 // Change status
                 document.getElementById(email).className = "green-status";
+
+                // Scroll down
+                let messages= document.getElementById('messages')
+                messages.scrollTop = messages.scrollHeight;
 
             }
         } catch (err) {
@@ -43,10 +38,12 @@ async function sendMsg(){
 }
 
 window.onload = loadUsers;
-
+let socket;
 async function loadUsers(){
     try{
+        console.log("load users")
         let res = await fetch(`http://localhost:8080/api/admin/contact/users`, {credentials: "include", method:'GET'});
+        console.log(res)
         if (res.status === 401) window.location = "../html/LoginPage.html"; // Not authenticated user
         else if (res.status === 500) throw Error("wrong response status: " + res.status) // Server error
         else{
@@ -56,6 +53,7 @@ async function loadUsers(){
             let htmlString = "";
             for(let i = 0; i < numOfUsers; i++ ){
                 let user = JSON.parse(body[userEmails[i]]);
+                console.log(user.email)
                 if(user.lastResponse === "User"){
                     // Todo: make this a button, on click fetch get msgs with user
                     htmlString += `<li class="red-status"  id="${user.email}">
@@ -66,6 +64,10 @@ async function loadUsers(){
                 }
             }
             document.getElementById('users-list').innerHTML = htmlString;
+
+            // Web socket
+            socket = new WebSocket(`ws://localhost:8080/api/admin/contact/msg/ws`)
+            socket.onmessage = handleMessage;
         }
 
     }catch(err){
@@ -73,6 +75,19 @@ async function loadUsers(){
     }
 }
 
+
+
+
+window.onbeforeunload = function(){
+    socket.close();
+}
+
+function handleMessage(msg){
+    let div = createMsgHtml(msg.data, false);
+    document.getElementById('messages').appendChild(div);
+    let messages= document.getElementById('messages')
+    messages.scrollTop = messages.scrollHeight;
+}
 
 
 async function loadUserMsg(email, name){
@@ -108,4 +123,18 @@ async function loadUserMsg(email, name){
         // Send to error page
         window.location = "../html/ErrorPage.html";
     }
+}
+function createMsgHtml(msg, isViewer){
+    let div = document.createElement('div');
+    div.className = isViewer ? "container viewer" :"container";
+    let img = document.createElement('img');
+    img.setAttribute('src', isViewer ? "../img/GiftPrint.png" :"../img/user-avatar.png")
+    img.setAttribute('alt', "User")
+    img.className = isViewer ? "avatar right" :"avatar";
+    let p = document.createElement('p');
+    let txt = document.createTextNode(msg);
+    p.appendChild(txt);
+    div.appendChild(img)
+    div.appendChild(p)
+    return div;
 }
