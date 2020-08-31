@@ -16,12 +16,13 @@
     <title>Contact Us</title>
 </head>
 <body>
+<h4 style="text-align: center">Please leave a message and we will answer as soon as possible</h4>
 <div class="chat-container" id="chat-container">
-    <div class="messages" id="messages">   </div>
+    <div class="messages" id="messages"> </div>
 
     <div class="msg-input">
-        <textarea id="user-msg"></textarea>
-        <button id="send-msg" onclick="sendMsg()">Send</button>
+        <textarea id="user-msg" oninput="styleButton(this)"></textarea>
+        <button id="send-msg" onclick="sendMsg()" disabled>Send</button>
     </div>
 </div>
 

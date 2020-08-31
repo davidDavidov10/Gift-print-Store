@@ -1,8 +1,7 @@
-
-
 async function sendMsg(){
     let msg = document.getElementById("user-msg").value;
     if(msg !== "") {
+        document.getElementById('send-msg').disabled = true;
         try {
             let res = await fetch(`http://localhost:8080/api/contactUs/send`, {
                 credentials: "include", method: 'POST',
@@ -31,6 +30,9 @@ async function sendMsg(){
             // Reset input
             document.getElementById("user-msg").value = "";
 
+            // Scroll down
+            let messages= document.getElementById('messages')
+            messages.scrollTop = messages.scrollHeight;
         } catch (err) {
             // Send to error page
             window.location = "../html/ErrorPage.html";
@@ -38,7 +40,8 @@ async function sendMsg(){
     }
 }
 
-window.onload = loadMsg;
+// window.onload = loadMsg
+window.addEventListener('DOMContentLoaded', loadMsg);
 
 async function loadMsg(){
     try{
@@ -64,7 +67,8 @@ async function loadMsg(){
 
                }
            }
-           document.getElementById('messages').innerHTML = htmlString;
+           let messages= document.getElementById('messages')
+           messages.innerHTML = htmlString;
        }
     }catch(err){
         // Send to error page
@@ -73,3 +77,19 @@ async function loadMsg(){
     }
 }
 
+window.onload =  (event) => {
+   // Scroll Down in msgs
+    let messages= document.getElementById('messages')
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function styleButton(textObj){
+    console.log("here")
+    let button = document.getElementById('send-msg');
+    if(textObj.value === "" ){
+        button.disabled = true;
+    }else{
+        button.disabled = false;
+    }
+}
+windo.load
