@@ -2,6 +2,7 @@ async function sendMsg(){
     let msg = document.getElementById("user-msg").value;
     let email = document.getElementById('current-email').innerText;
     if(msg !== "") {
+        document.getElementById('send-msg').disabled = true;
         try {
             let res = await fetch(`http://localhost:8080/api/admin/contact/send`, {
                 credentials: "include", method: 'POST',
@@ -11,6 +12,7 @@ async function sendMsg(){
             if (res.status === 401) window.location = "../html/LoginPage.html"; // Not authenticated user
             else if (res.status === 500) throw Error("wrong response status: " + res.status) // Server error
             else {
+                // Send message to server for user
                 socket.send(JSON.stringify({email:email,msg:msg}));
                 // Create new msg
                 let div = createMsgHtml(msg, true);
@@ -23,6 +25,8 @@ async function sendMsg(){
                 // Scroll down
                 let messages= document.getElementById('messages')
                 messages.scrollTop = messages.scrollHeight;
+                // Remove notification
+                document.getElementById(`notifications-${email}`).innerText = "";
 
             }
         } catch (err) {
@@ -49,21 +53,14 @@ async function loadUsers(){
             let htmlString = "";
             for(let i = 0; i < numOfUsers; i++ ){
                 let user = JSON.parse(body[userEmails[i]]);
-                console.log(user.email)
                 let notification = user.lastResponse === "User" ? "!" : "";
-                // if(user.lastResponse === "User"){
-                //     // Todo: make this a button, on click fetch get msgs with user
-                    htmlString += `<li  id="${user.email}">
-                    <a  onclick="loadUserMsg('${user.email}', '${user.fullName}')"><img src="../img/user-avatar.png">
-                    <div class="contact">
-                    <div class="name">${user.fullName}</div>
-                    <div class="email"> ${user.email}</div>
-                    </div><div class="notification">${notification}</div>
-                    </div></a></li>`
-                // }else{
-                //     htmlString += `<li class="green-status"  id="${user.email}">
-                // <button onclick="loadUserMsg('${user.email}', '${user.fullName}')">${user.fullName} ${user.email}</button></li>`
-                // }
+                htmlString += `<li  id="${user.email}">
+                <a  onclick="loadUserMsg('${user.email}', '${user.fullName}')"><img src="../img/user-avatar.png">
+                <div class="contact">
+                <div class="name">${user.fullName}</div>
+                <div class="email"> ${user.email}</div>
+                </div><div class="notification" id="notifications-${user.email}">${notification}</div>
+                </div></a></li>`
             }
             document.getElementById('users-list').innerHTML = htmlString;
 
@@ -84,11 +81,35 @@ window.onbeforeunload = function(){
     socket.close();
 }
 
+// Receive a msg from user to admin and add it to admin messages
 function handleMessage(msg){
-    let div = createMsgHtml(msg.data, false);
-    document.getElementById('messages').appendChild(div);
-    let messages= document.getElementById('messages')
-    messages.scrollTop = messages.scrollHeight;
+    let msgObj = JSON.parse(msg.data)
+    let destinationEmail = msgObj.email;
+    let currentEmail = document.getElementById('current-email').innerHTML;
+    // Check the admin is viewing the right message board before injecting to it
+    if( destinationEmail === currentEmail){
+        // Notify msg from user
+        document.getElementById(`notifications-${currentEmail}`).innerText = "!";
+        let div = createMsgHtml(msgObj.msg, false);
+        document.getElementById('messages').appendChild(div);
+        let messages= document.getElementById('messages')
+        messages.scrollTop = messages.scrollHeight;
+    }else{
+        //Check if the msg came from a new user
+        let isExistingUser = document.getElementById(destinationEmail);
+        if(!isExistingUser){
+            // Add user to user list
+            let htmlString = `<li id="${destinationEmail}">
+                <a  onclick="loadUserMsg('${destinationEmail}', '${msgObj.fullName}')"><img src="../img/user-avatar.png">
+                <div class="contact">
+                <div class="name">${msgObj.fullName}</div>
+                <div class="email"> ${destinationEmail}</div>
+                </div><div class="notification" id="notifications-${destinationEmail}">"!"</div>
+                </div></a></li>`
+            document.getElementById('users-list').innerHTML += htmlString;
+
+        }
+    }
 }
 
 
@@ -96,7 +117,7 @@ async function loadUserMsg(email, name){
     try{
         document.getElementById('current-email').innerHTML = email;
         document.getElementById('current-name').innerHTML = name;
-
+        document.getElementById('user-msg').disabled = false;
         let res = await fetch(`http://localhost:8080/api/admin/contact/msg/${email}`, {credentials: "include", method:'GET'});
         if (res.status === 401) window.location = "../html/LoginPage.html"; // Not authenticated user
         else if (res.status === 500) throw Error("wrong response status: " + res.status) // Server error
@@ -132,7 +153,7 @@ function createMsgHtml(msg, isViewer){
     let div = document.createElement('div');
     div.className = isViewer ? "container viewer" :"container";
     let img = document.createElement('img');
-    img.setAttribute('src', isViewer ? "../img/GiftPrint.png" :"../img/user-avatar.png")
+    img.setAttribute('src', isViewer ? "../img/GiftPrintWBG.png" :"../img/user-avatar.png")
     img.setAttribute('alt', "User")
     img.className = isViewer ? "avatar right" :"avatar";
     let p = document.createElement('p');
@@ -141,4 +162,14 @@ function createMsgHtml(msg, isViewer){
     div.appendChild(img)
     div.appendChild(p)
     return div;
+}
+
+function styleButton(textObj){
+    let currentEmail = document.getElementById('current-email').innerHTML;
+    let button = document.getElementById('send-msg');
+    if(textObj.value === "" || currentEmail === "Email" ){
+        button.disabled = true;
+    }else{
+        button.disabled = false;
+    }
 }

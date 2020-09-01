@@ -38,8 +38,8 @@
             <div class="messages" id="messages">   </div>
 
             <div class="msg-input">
-                <textarea id="user-msg"></textarea>
-                <button id="send-msg" onclick="sendMsg()">Send</button>
+                <textarea id="user-msg" oninput="styleButton(this)" disabled></textarea>
+                <button id="send-msg" onclick="sendMsg()" disabled>Send</button>
             </div>
         </div>
     </div>

@@ -58,42 +58,8 @@ app.use(cors({ origin: 'http://localhost:9090' , credentials :  true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../static')));
 
-const expressWs = require('express-ws')(app);
-// let aWss = expressWs.getWss('/api/contactUs/ws');
+require('express-ws')(app);
 
-let userListWs = {};
-let adminWs;
-
-// Send message from user to admin using webSocket
-app.ws('/api/contactUs/ws', async function(ws, req) {
-    console.log("User Connected to web socket")
-    let email = await util.getUserFromSession(req);
-    userListWs[email] = ws;
-    ws.on("message", function(msg){
-        if(adminWs){
-            adminWs.send(msg)
-        }
-    });
-    ws.on("close", function(){
-      delete userListWs[email];
-    });
-});
-
-// Send message from admin to users using websocket
-app.ws('/api/admin/contact/msg/ws', async function(ws, req) {
-    console.log("Admin Connected to web socket")
-    let adminEmail = await util.getUserFromSession(req);
-    adminWs = ws;
-    ws.on("message", function(msg){
-        let msgObj = JSON.parse(msg)
-        let userClient = userListWs[msgObj.email];
-        if(userClient) userClient.send(msgObj.msg);
-    });
-
-    ws.on("close", function(){
-        adminWs = null;
-    });
-});
 
 
 // Express handle routes
@@ -151,6 +117,12 @@ app.get('/api/admin/contact/users',((req, res) => adminContactUser.loadUsers(req
 
 // Load user msg to admin contact users page after user is chosen
 app.get('/api/admin/contact/msg/:email',((req, res) => adminContactUser.loadMsg(req,res)))
+
+// Send message from user to admin using webSocket
+app.ws('/api/contactUs/ws', (ws, req) => contactUs.userWebSocket(ws, req));
+
+// Send message from admin to users using websocket
+app.ws('/api/admin/contact/msg/ws',(ws, req) => adminContactUser.adminWebSockets(ws, req));
 
 // Make sure expired sessions are erased from server once a day
 util.cleanUpExpiredSessionsFromRedis()

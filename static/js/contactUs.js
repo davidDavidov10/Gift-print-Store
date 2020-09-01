@@ -94,7 +94,6 @@ function handleMessage(msg){
 }
 
 function styleButton(textObj){
-    console.log("here")
     let button = document.getElementById('send-msg');
     if(textObj.value === "" ){
         button.disabled = true;

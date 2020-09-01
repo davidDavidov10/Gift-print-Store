@@ -1,5 +1,6 @@
 const client = require('./redisConnector');
 const util = require('./utilServer');
+const serverResources = require('./serverResources');
 
 async function storeMsg(request, response) {
     try {
@@ -79,6 +80,23 @@ async function loadMsg(request, response){
     }
 }
 
-module.exports = {storeMsg, loadUsers,loadMsg};
+
+
+async function adminWebSockets(ws, req) {
+    console.log("Admin Connected to web socket")
+    let adminEmail = await util.getUserFromSession(req);
+    serverResources.adminWs = ws;
+    ws.on("message", function(msg){
+        let msgObj = JSON.parse(msg)
+        let userClient = serverResources.userListWs[msgObj.email];
+        if(userClient) userClient.send(msgObj.msg);
+    });
+
+    ws.on("close", function(){
+        serverResources.adminWs = null;
+    });
+}
+
+module.exports = {storeMsg, loadUsers,loadMsg, adminWebSockets};
 
 
