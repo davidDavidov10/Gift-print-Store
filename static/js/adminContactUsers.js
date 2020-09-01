@@ -41,9 +41,7 @@ window.onload = loadUsers;
 let socket;
 async function loadUsers(){
     try{
-        console.log("load users")
         let res = await fetch(`http://localhost:8080/api/admin/contact/users`, {credentials: "include", method:'GET'});
-        console.log(res)
         if (res.status === 401) window.location = "../html/LoginPage.html"; // Not authenticated user
         else if (res.status === 500) throw Error("wrong response status: " + res.status) // Server error
         else{
@@ -88,8 +86,7 @@ function handleMessage(msg){
     let currentEmail = document.getElementById('current-email').innerHTML;
     // Check the admin is viewing the right message board before injecting to it
     if( destinationEmail === currentEmail){
-        // Notify msg from user
-        document.getElementById(`notifications-${currentEmail}`).innerText = "!";
+        // If admin is looking at msgs from the user that sent this msg add it
         let div = createMsgHtml(msgObj.msg, false);
         document.getElementById('messages').appendChild(div);
         let messages= document.getElementById('messages')
@@ -110,6 +107,8 @@ function handleMessage(msg){
 
         }
     }
+    // Notify msg from user
+    document.getElementById(`notifications-${destinationEmail}`).innerText = "!";
 }
 
 
@@ -171,5 +170,22 @@ function styleButton(textObj){
         button.disabled = true;
     }else{
         button.disabled = false;
+    }
+}
+
+
+function searchUserContacts() {
+    let input, filter, list, i, txtValue;
+    list = document.getElementById("users-list").getElementsByTagName('li');
+    let numberOfItems = list.length;
+    input = document.getElementById("search-contacts");
+    filter = input.value.toLowerCase();
+    for (i = 0; i < numberOfItems; i++) {
+        txtValue = list[i].innerText;
+        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+            list[i].style.display = ""; // keep showing
+        } else {
+            list[i].style.display = "none"; // remove
+        }
     }
 }

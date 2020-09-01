@@ -21,14 +21,14 @@
 <div class ="chat">
     <div class=sidebar>
         <div class="search">
-            <input type="text" placeholder="Ara..." name="">
+            <input type="text" placeholder="Search..." name=""  id="search-contacts" oninput="searchUserContacts()">
             <i class="fa fa-search"></i>
         </div>
         <div class="contacts" id="users-container">
             <ul id="users-list"></ul>
         </div>
     </div>
-    <div  >
+    <div class="right-side" >
         <div class="current-conversation">
             <p id="current-name">Name</p>
             <p id="current-email">Email</p>
