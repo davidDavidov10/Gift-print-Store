@@ -10,20 +10,22 @@ async function storeMsg(request, response){
         if(isAdmin === null ){
             let prevMsg = await client.hget("messages", email);
             let msg = {};
-            if (prevMsg === null){
+            if (prevMsg === null && request.body.msg){
                 msg[0] = request.body
             }else{
                 msg = JSON.parse(prevMsg);
-                msg[Object.keys(msg).length] = request.body
+                if(request.body.msg){
+                    msg[Object.keys(msg).length] = request.body
+                }
             }
             client.hset("messages", email, JSON.stringify(msg))
             let user = await  client.hget("users", email)
             user = JSON.parse(user);
             client.hset("lastResponse", email, JSON.stringify({fullName:user.firstName + " " + user.lastName,
                 email:user.email, lastResponse:"User"}))
-            response.status(200).json();
+            response.status(200).json({msg: "msg stored"});
         }else{
-            response.status(401).json(); // User is admin, not allowed here
+            response.status(401).json({msg: "User is admin, cant send msg to admin"}); // User is admin, not allowed here
         }
     }catch(err){
         if(err === "User is not logged in")  response.status(401).json(err);
@@ -46,7 +48,7 @@ async function loadMsg(request, response){
                 response.status(200).json(JSON.parse(prevMsg))
             }
         }else{
-            response.status(401).json() // User is admin, not allowed here
+            response.status(401).json({msg: "User is admin"}) // User is admin, not allowed here
         }
     }catch (err) {
         if(err === "User is not logged in")  response.status(401).json(err);

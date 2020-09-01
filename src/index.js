@@ -134,11 +134,9 @@ app.listen(port,()=>{
 });
 
 
-// Todo:   Check that user cant get into admin contact us and vise versa
 // Todo:   Check image upload (size)
-// Todo:   Go over code:3. make sure server never crushes 4. check name conventions
+// Todo:   Go over code: 4. check name conventions
 // Todo:   Add readme files no need to add them to navbar
-// Todo:   add test using redis
 // Todo:   Check project package json for submit
 
 

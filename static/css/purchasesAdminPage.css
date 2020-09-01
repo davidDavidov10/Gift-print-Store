@@ -1,5 +1,4 @@
 body {
-    font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;
     color: #787D80;
     letter-spacing: .2px;
@@ -71,7 +70,7 @@ tr.table-header {
 .styled-select select {
     border: none;
     font-size: 14px;
-    font-family: 'Source Sans Pro', sans-serif;
+
     height: 29px;
     padding: 5px;
     width: 100%;

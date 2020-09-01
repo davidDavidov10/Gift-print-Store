@@ -24,9 +24,9 @@ async function storeMsg(request, response) {
                 fullName: user.firstName + " " + user.lastName,
                 email: user.email, lastResponse: "Admin"
             }));
-            response.status(200).json()
+            response.status(200).json({msg:"msg stored"})
         } else {
-            response.status(401).json()
+            response.status(401).json({msg: "User is not admin"})
         }
     } catch (err) {
         if (err === "User is not logged in") response.status(401).json(err);
@@ -35,7 +35,6 @@ async function storeMsg(request, response) {
 }
 
 
-//Todo  change to work with user email from on click and not cookie
 async function loadUsers(request, response){
     try {
         let adminEmail = await util.getUserFromSession(request);
@@ -49,7 +48,7 @@ async function loadUsers(request, response){
             }
 
         } else {
-        response.status(401).json()
+        response.status(401).json({msg: "User is not admin"})
         }
     }catch(err) {
         if (err === "User is not logged in") response.status(401).json(err);
@@ -72,7 +71,7 @@ async function loadMsg(request, response){
                 response.status(200).json(JSON.parse(prevMsg))
             }
         }else {
-            response.status(401).json()
+            response.status(401).json({msg:"User is not admin"})
         }
     }catch(err) {
         if (err === "User is not logged in") response.status(401).json(err);

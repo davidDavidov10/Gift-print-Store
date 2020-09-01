@@ -22,13 +22,13 @@ async function signUp(request,response) {
             await  client.hset('users', email, userDetails);
             await client.hset('loginActivity', email, JSON.stringify({"0": "Signed up: " + new Date().toLocaleString()}));
             await client.hset('cart', email, "{}");
-            return response.status(200).json({"msg": "User signed in"})
+            return response.status(200).json({"msg": "User signed up"})
         } else {
             // If user exists already send error
             return response.status(401).json({"err": "User exists for this email please sign in"})
         }
     }catch(err) {
-     console.err(err);
+     return response.status(500).json({"err":"Error in server"})
     }
 }
 

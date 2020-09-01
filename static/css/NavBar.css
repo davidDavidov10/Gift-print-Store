@@ -1,13 +1,15 @@
 body{
     margin-top: 6% ;
     background: url("https://i.imgur.com/uMtfBaA.png");
-    /*font-family: 'open sans';/*/
-font-family: 'Courgette', cursive;
+    font-family: 'Courgette', cursive;
 
 
 }
-
+button{
+    font-family: "Open Sans";
+}
 .nav-bar-ul {
+    font-size: 20px;
     position:fixed;
     width: 100%;
     top: 0px;

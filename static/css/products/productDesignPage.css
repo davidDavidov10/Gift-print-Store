@@ -90,7 +90,7 @@ span.button-span:hover {
 
 /*!*****************globals*************!*/
 body {
-    font-family: 'open sans';
+
     overflow-x: hidden;
     line-height: inherit;
 }
@@ -223,7 +223,7 @@ img {
     text-align: center;
     line-height: 2em; }
 .not-available:before {
-    font-family: fontawesome;
+
     content: "\f00d";
     color: #fff; }
 

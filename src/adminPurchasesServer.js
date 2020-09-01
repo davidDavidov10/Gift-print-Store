@@ -26,7 +26,6 @@ async function updateStatus(request, response){
     try{
         // Check that the user is admin
         let email = await util.getUserFromSession(request)
-
         let isAdmin = await client.hget("admins", email);
         if(isAdmin !== null){
             let purchases = await client.hget('purchases', request.body.email);
@@ -43,6 +42,8 @@ async function updateStatus(request, response){
                      })
                      response.status(200).json({msg: "Order is completed"});
                  }
+             }else{
+                 response.status(400).json({error: "Trying to access non existing purchases"});
              }
         }else{
             response.status(401).json({error: "User is not admin"});

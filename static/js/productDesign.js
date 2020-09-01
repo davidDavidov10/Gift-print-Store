@@ -90,7 +90,6 @@ async function doneEdit(){
         let sizeSelect = document.getElementById('product-size');
         if (sizeSelect) sizeSelect.className = "disable";
         document.getElementsByName("productColor").forEach((element) => {
-            console.log(element.checked)
             if (!element.checked) element.disabled = true;
         })
     }catch(error) {
@@ -143,13 +142,7 @@ function canvasResize(){
     let imgWidth = document.getElementById('product-backgroundpicture').width;
     let imgHeight = document.getElementById('product-backgroundpicture').height;
     let ratio = document.getElementById('ratio').value;
-    console.log("height img = " + imgHeight)
-    console.log("width img  = " + imgWidth )
     ratio = JSON.parse(ratio);
-
-    console.log("height ratio  = " +  ratio.height)
-    console.log("height = " + imgHeight * ratio.height)
-    console.log("width = " + imgWidth * ratio.width)
     canvas.setHeight(imgHeight * ratio.height);
     canvas.setWidth(imgWidth * ratio.width);
 }

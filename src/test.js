@@ -4,7 +4,6 @@ const  FormData = require('form-data');
 const chalk = require('chalk');
 
 
-
 async function testSignUp(email, pass, firstName, lastName) {
     console.log("\n #################### Test sign up #################");
     let requestOptions = {
@@ -77,7 +76,6 @@ async function testDesignValidate(sid) {
 
 
 async function testDesignSave(sid, productImg, type, color, size, amount, price) {
-    // Todo: how to send images
     console.log("\n #################### Test Design Save #################");
     let formData= new FormData();
     formData.append("productWithImage", productImg)
@@ -189,6 +187,56 @@ async function testAdminPurchasesUpdateStatus(sid, email, itemName) {
 }
 
 
+async function testContactUsSendMsg(sid, msg){
+    console.log("\n #################### Test User Contact Us Send Msg #################");
+     let response = await fetch(`http://localhost:8080/api/contactUs/send`, {
+        credentials: "include", method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Cookie': 'sid=' + sid},
+        body: JSON.stringify({"type": "User", "msg": msg})
+    });
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
+
+async function testContactUsLoadMsg(sid){
+    console.log("\n #################### Test User Contact Us Load Msg #################");
+    let response =  await fetch(`http://localhost:8080/api/contactUs`, {credentials: "include", headers: { 'Cookie': 'sid=' + sid} ,method:'GET'});
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
+
+async function testAdminContactUserSendMsg(sid, msg, email){
+    console.log("\n #################### Test Admin Contact User Send Msg #################");
+    let response = await fetch(`http://localhost:8080/api/admin/contact/send`, {
+        credentials: "include", method: 'POST',
+        headers: {'Content-Type': 'application/json','Cookie': 'sid=' + sid},
+        body: JSON.stringify({"type": "Admin", "msg": msg, "recipient": email})
+    });
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
+
+
+async function testAdminContactUserLoadMsg(sid, email){
+    console.log("\n #################### Test Admin Contact User Load Msg #################");
+    let response =  await fetch(`http://localhost:8080/api/admin/contact/msg/${email}`, {credentials: "include", method:'GET', headers: { 'Cookie': 'sid=' + sid}});
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
+
+async function testAdminContactUserLoadUsers(sid, email){
+    console.log("\n #################### Test Admin Contact User Load Users #################");
+    let response =  await fetch(`http://localhost:8080/api/admin/contact/users`, {credentials: "include", method:'GET', headers: { 'Cookie': 'sid=' + sid}});
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
+
+
 async function testHomeWithoutCookies() {
     console.log("\n #################### Test Home Without Cookies #################");
     let response = await fetch(`http://localhost:8080/api/home`, {
@@ -199,69 +247,206 @@ async function testHomeWithoutCookies() {
     console.log("response.json(): " + JSON.stringify(response))
 }
 
+
+// All requests with body test with no body, invalid input
+
+async function testDesignSaveInvalidInput(sid) {
+    console.log("\n #################### Test Design Save Invalid Input #################");
+    let formData= new FormData();
+    let response = await fetch("http://localhost:8080/api/design/save",{
+        method: 'POST', credentials: "include",
+        // Note: we used google as referrer because using localhost created an unsigned request and the redirection fails
+        // if we don't specifically allow them in the editor
+        headers: {'Cookie': 'sid=' + sid,  referrer: "https://www.google.com"},
+        body: formData
+    });
+    console.log("response status: " + response.status)
+}
+
+async function testCheckoutInvalidInput(sid) {
+    console.log("\n #################### Test Checkout invalid Input #################");
+    let urlencoded = new URLSearchParams();
+    let response = await fetch("http://localhost:8080/api/placeOrder", {
+        method: 'POST', credentials: "include",
+        headers: {'Cookie': 'sid=' + sid, referrer: "https://www.google.com", 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: urlencoded
+    });
+    console.log("response status: " + response.status);
+}
+
+
+async function testSignUpInvalidInput() {
+    console.log("\n #################### Test sign up Invalid Input#################");
+    let requestOptions = {
+        method: 'POST',
+        credentials: "include",
+        headers: {'Content-Type': 'application/json'}
+    };
+    let response = await fetch("http://localhost:8080/api/signUp", requestOptions)
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response : " + JSON.stringify(response))
+}
+
+async function testSignInInvalidInput() {
+    console.log("\n #################### Test sign In Invalid Input #################");
+    let requestOptions = {
+        method: 'POST',
+        credentials: "include",
+        headers: {'Content-Type': 'application/json'}
+    };
+    let response = await fetch("http://localhost:8080/api/signIn", requestOptions)
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
+
+async function testCartItemsUpdateInvalidInput(sid) {
+    console.log("\n #################### Test Cart Items Update Invalid Input #################");
+    let response = await  fetch(`http://localhost:8080/api/cart/items/update`, {
+        credentials: "include",
+        method: 'PUT',
+        headers: {'Cookie': 'sid=' + sid}
+    });
+    console.log("response status: " + response.status);
+}
+async function testAdminPurchasesUpdateStatusInvalidInput(sid) {
+    console.log("\n #################### Test Admin Purchases Update Status Invalid Input #################");
+    let response = await fetch(`http://localhost:8080/api/admin/updateStatus`, {method:'PUT', credentials: "include",
+        headers: {'Content-Type': 'application/json','Cookie': 'sid=' + sid} })
+    console.log("response status: " + response.status);
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
+
+
+async function testContactUsSendMsgInvalidInput(sid){
+    console.log("\n #################### Test User Contact Us Send Msg Invalid Input #################");
+    let response = await fetch(`http://localhost:8080/api/contactUs/send`, {
+        credentials: "include", method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Cookie': 'sid=' + sid}
+    });
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
+
+async function testAdminContactUserSendMsgIbvalidInput(sid){
+    console.log("\n #################### Test Admin Contact User Send Msg Invalid Input#################");
+    let response = await fetch(`http://localhost:8080/api/admin/contact/send`, {
+        credentials: "include", method: 'POST',
+        headers: {'Content-Type': 'application/json','Cookie': 'sid=' + sid}
+    });
+    console.log("response status: " + response.status)
+    response = await response.json();
+    console.log("response.json(): " + JSON.stringify(response))
+}
+
+
+
+
+
+
 async function testAll() {
 
    // User login and sign up
     console.log(chalk.blue('\nUser login and sign up'));
     await testSignUp("a@b.com", "1234", "Test", "Testenson");
-    let userSid = await testSignIn("a@b.com", "1234", false);
-    await testHome(userSid);
-    await testValidate(userSid);
+  let userSid = await testSignIn("a@b.com", "1234", false);
+   await testHome(userSid);
+   await testValidate(userSid);
 
-    // Create product and add to cart
-    console.log(chalk.blue('\nCreate product and add to cart'));
-    await testDesignValidate(userSid);
-    let image = await imageToBase64("../static/img/testImg.png");
-    await testDesignSave(userSid,"data:image/png;base64,"+image , "shirt","black","S","3","9.00");
+   // Create product and add to cart
+   console.log(chalk.blue('\nCreate product and add to cart'));
+   await testDesignValidate(userSid);
+   let image = await imageToBase64("../static/img/testImg.png");
+   await testDesignSave(userSid,"data:image/png;base64,"+image , "shirt","black","S","3","9.00");
 
 
-    // Check cart content and sign out from user
-    console.log(chalk.blue('\nCheck cart content and sign out from user'));
-    let productId = await testCartItems(userSid);
-    await testCartItemsUpdate(userSid, productId);
-    await testCartItems(userSid);
-    await testCheckout(userSid,"Big Bird","1st Sesame street","Tel Aviv", "1234567");
-    await testSignOut(userSid);
+   // Check cart content
+   console.log(chalk.blue('\nCheck cart content'));
+   let productId = await testCartItems(userSid);
+   await testCartItemsUpdate(userSid, productId);
+   await testCartItems(userSid);
+   await testCheckout(userSid,"Big Bird","1st Sesame street","Tel Aviv", "1234567");
 
-    // Admin login and check admin page
-    console.log(chalk.blue('\nAdmin login and check admin page'));
-    let adminSid = await testSignIn("admin@admin.com", "1234", true);
-    await testAdmin(adminSid);
+   // Check user contact us and sign out from user
+   console.log(chalk.blue('\nCheck user contact us and sign out from user'));
+   await testContactUsLoadMsg(userSid)
+   await testContactUsSendMsg(userSid, "hello world!")
+   await testContactUsLoadMsg(userSid)
+   await testSignOut(userSid);
 
-    // Admin costumer purchases check and check complete order and sign out
-    console.log(chalk.blue('\nAdmin costumer purchases check and check complete order and sign out'));
-    await testAdminPurchases(adminSid);
-    await testAdminPurchasesUpdateStatus(adminSid,"a@b.com", productId);
-    await testAdminPurchases(adminSid);
-    await testSignOut(userSid);
 
-    // Try entering home without signing in
-    console.log(chalk.blue('\nTry entering home without signing in'));
-    await testHome("");
-    await testHomeWithoutCookies()
+   // Admin login and check admin page
+   console.log(chalk.blue('\nAdmin login and check admin page'));
+   let adminSid = await testSignIn("admin@admin.com", "1234", true);
+   await testAdmin(adminSid);
 
-    // Try entering home and cart as admin
-    console.log(chalk.blue('\nTry entering home and cart as admin'));
-    adminSid = await testSignIn("admin@admin.com", "1234", false);
-    await testHome(adminSid);
-    productId = await testCartItems(adminSid);
-    await testCartItemsUpdate(adminSid, productId);
-    await testCartItems(adminSid);
-    await testCheckout(adminSid,"Big Bird","1st Sesame street","Tel Aviv", "1234567");
-    await testSignOut(adminSid);
+   // Check admin contact users
+   console.log(chalk.blue('\nCheck admin contact users'));
+   await testAdminContactUserLoadUsers(adminSid);
+   await testAdminContactUserLoadMsg(adminSid, "a@b.com");
+   await testAdminContactUserSendMsg(adminSid,"It was the best of times", "a@b.com")
+   await testAdminContactUserLoadMsg(adminSid, "a@b.com");
 
-    // Try entering admin page and admin purchases page as non-admin user
-    console.log(chalk.blue('\nTry entering  admin page and admin purchases page as non-admin user'));
+
+   // Admin costumer purchases and check complete order and sign out
+   console.log(chalk.blue('\nAdmin costumer purchases and check complete order and sign out'));
+   await testAdminPurchases(adminSid);
+   await testAdminPurchasesUpdateStatus(adminSid,"a@b.com", productId);
+   await testAdminPurchases(adminSid);
+   await testSignOut(userSid);
+
+   // Try entering home without signing in
+   console.log(chalk.blue('\nTry entering home without signing in'));
+   await testHome("");
+   await testHomeWithoutCookies()
+
+   // Try entering User pages as Admin
+   console.log(chalk.blue('\nTry entering User pages as Admin'));
+   adminSid = await testSignIn("admin@admin.com", "1234", false);
+   await testHome(adminSid);
+   await testDesignSave(adminSid,"data:image/png;base64,"+image , "shirt","black","M","1","9.00");
+   productId = await testCartItems(adminSid);
+   await testCartItemsUpdate(adminSid, productId);
+   await testCheckout(adminSid,"Big Bird","1st Sesame street","Tel Aviv", "1234567");
+   await testContactUsLoadMsg(adminSid)
+   await testContactUsSendMsg(adminSid, "I can't do this !!1")
+   await testSignOut(adminSid);
+
+   // Try entering admin pages as non-admin user
+   console.log(chalk.blue('\nTry entering admin pages as non-admin user'));
+   userSid = await testSignIn("a@b.com", "1234", false);
+   await testAdmin(userSid);
+   await testAdminPurchases(userSid);
+   await testAdminPurchasesUpdateStatus(userSid,"a@b.com", productId);
+   await testAdminContactUserLoadUsers(userSid);
+   await testAdminContactUserLoadMsg(userSid, "a@b.com");
+   await testAdminContactUserSendMsg(userSid,"It was the worst of times", "a@b.com")
+   await testSignOut(userSid);
+
+   // Try  updating a non existing product's status in admin purchases
+   console.log(chalk.blue('\nTry  updating a non existing product\'s status in admin purchases'));
+   adminSid = await testSignIn("admin@admin.com", "1234", false);
+   await testAdminPurchasesUpdateStatus(adminSid,"a@b.com", "non existing item name");
+
+
+    // Test invalid inputs
+    console.log(chalk.blue('\n------------Test invalid inputs ------------'));
     userSid = await testSignIn("a@b.com", "1234", false);
-    await testAdmin(userSid);
-    await testAdminPurchases(userSid);
-    await testAdminPurchasesUpdateStatus(userSid,"a@b.com", productId);
-    await testSignOut(userSid);
+    await testDesignSaveInvalidInput(userSid);
+    await testCheckoutInvalidInput(userSid)
+    await testSignUpInvalidInput();
+    await testSignInInvalidInput();
+    await testCartItemsUpdateInvalidInput(userSid);
+    await testContactUsSendMsgInvalidInput(userSid)
 
-    // Try  updating a non existing product's status in admin purchases
-    console.log(chalk.blue('\nTry  updating a non existing product\'s status in admin purchases'));
+    await testSignOut(userSid);
     adminSid = await testSignIn("admin@admin.com", "1234", false);
-    await testAdminPurchasesUpdateStatus(adminSid,"a@b.com", "non existing item name");
+    await testAdminPurchasesUpdateStatusInvalidInput(adminSid);
+    await testAdminContactUserSendMsgIbvalidInput(adminSid);
 
 
 }
