@@ -48,16 +48,9 @@ const upload = multer({
 
 const app = express();
 
-// app.use(bodyParser.urlencoded({extended: true}));
-// app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-app.use(bodyParser.json({limit: '10mb', extended: true}))
-app.use(bodyParser.urlencoded({limit: '10mb', extended: true}))
-
-// const pathName = );
-
-// Todo: remove cors this is only for testing to open from webstorm, find better way?
-app.use(cors({ origin: 'http://localhost:9090' , credentials :  true}));
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../static')));
@@ -139,7 +132,7 @@ app.listen(port,()=>{
 
 
 
-// Todo:   Go over code: 4. check name conventions
+
 // Todo:   Check project package json for submit
 
 

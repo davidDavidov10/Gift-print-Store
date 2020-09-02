@@ -60,21 +60,24 @@ async function loadMsg(request, response){
 
 // Send msg from user to admin
 async function userWebSocket (ws, req) {
-    let email = await util.getUserFromSession(req); // User email
-    serverResources.userListWs[email] = ws;
-    ws.on("message", async function(msg){
-        if(serverResources.adminWs){
-            let user = await client.hget("users", email);
-            if(user !== null){
-                user = JSON.parse(user);
-                let fullName = user.firstName + " " + user.lastName;
-                serverResources.adminWs.send(JSON.stringify({email:email, msg:msg, fullName:fullName}))
+    try {
+        let email = await util.getUserFromSession(req); // User email
+        serverResources.userListWs[email] = ws;
+        ws.on("message", async function(msg){
+            if(serverResources.adminWs){
+                let user = await client.hget("users", email);
+                if(user !== null){
+                    user = JSON.parse(user);
+                    let fullName = user.firstName + " " + user.lastName;
+                    serverResources.adminWs.send(JSON.stringify({email:email, msg:msg, fullName:fullName}))
+                }
             }
-        }
-    });
-    ws.on("close", function(){
-        delete serverResources.userListWs[email];
-    });
+        });
+        ws.on("close", function(){
+            delete serverResources.userListWs[email];
+        });
+    }catch (err) {
+    }
 }
 
 module.exports = {storeMsg, loadMsg, userWebSocket};
