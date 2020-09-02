@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@toomee/async-redis": "^0.1.2",
+   "@toomee/async-redis": "^0.1.2",
     "@types/express": "^4.17.7",
     "@types/redis": "^2.8.25",
     "async-redis": "^1.1.7",
