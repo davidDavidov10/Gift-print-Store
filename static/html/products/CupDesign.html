@@ -56,34 +56,34 @@
 
                     <!-- The Select that allows the user to change the amount of the product -->
                     <h5><b><label>Product Amount:</label></b>
-                    <input id="product-amount" value="1" type="number" min="1" max="100" name="productAmount" form="form">
+                    <input id="product-amount" value="1" type="number" min="1" max="100" name="productAmount" >
                     </h5>
 
                     <!-- The Select that allows the user to change the color of the product -->
                      <div id="color-selector">
                          <h5><label ><b>Product Color:</b></label></h5>
                         <label class="white-color">
-                            <input type="radio" name="productColor" value="white" form="form" class="color-buttons" checked >
+                            <input type="radio" name="productColor" value="white" class="color-buttons" checked >
                             <div class="button"><span class="button-span"></span></div>
                         </label>
                         <label class="black-color">
-                            <input type="radio" name="productColor" value="black" form="form" class="color-buttons">
+                            <input type="radio" name="productColor" value="black"  class="color-buttons">
                             <div class="button"><span class="button-span"></span></div>
                         </label>
                         <label class="red-color">
-                            <input type="radio" name="productColor" value="red" form="form" class="color-buttons">
+                            <input type="radio" name="productColor" value="red" class="color-buttons">
                             <div class="button"><span class="button-span"></span></div>
                         </label>
                         <label class="green-color">
-                            <input type="radio" name="productColor" value="green" form="form" class="color-buttons">
+                            <input type="radio" name="productColor" value="green" class="color-buttons">
                             <div class="button"><span class="button-span"></span></div>
                         </label>
                         <label class="yellow-color">
-                            <input type="radio" name="productColor" value="yellow" form="form" class="color-buttons">
+                            <input type="radio" name="productColor" value="yellow"  class="color-buttons">
                             <div class="button"><span class="button-span"></span></div>
                         </label>
                         <label class="blue-color">
-                            <input type="radio" name="productColor" value="blue" form="form" class="color-buttons">
+                            <input type="radio" name="productColor" value="blue" class="color-buttons">
                             <div class="button"><span class="button-span"></span></div>
                         </label>
                     </div>
@@ -95,7 +95,6 @@
                             <option value="../../img/GiftPrint.png">example</option>
                         </select>
 
-                        <form id="form" action="http://localhost:8080/api/design/save" method="post" enctype="multipart/form-data">
                             <!-- The Select that allows the user to change the image of the product -->
                             <div class="custom-file mb-3" id="upload-img-div">
                                 <label for="product-custompicture" class="custom-file-label">Upload your own design:</label>
@@ -105,13 +104,12 @@
                             <input type="hidden" name="productWithImage" id="productWithImage" value="">
                             <input type="hidden"  name="productType" id="productType" value="Cup">
                             <input type="hidden" name="price" id="price" value="7.50">
-                        </form>
 
                         <div class="action">
                             <button class="add-to-cart btn btn-default" id="doneEdit" onclick="doneEdit()">Done editing</button>
                             <button class="add-to-cart btn btn-default" id="continueEdit" onclick="continueEdit()" disabled>Continue editing</button>
                         </div>
-                    <button type="submit" form="form" class="add-to-cart btn  btn-default btn-block"   id="addToCart" disabled> Add to cart  <i class="fas fa-shopping-cart"> </i></button>
+                    <button type="button" onclick="sendProd()" class="add-to-cart btn  btn-default btn-block"   id="addToCart" disabled> Add to cart  <i class="fas fa-shopping-cart"> </i></button>
 
                 </div>
             </div>

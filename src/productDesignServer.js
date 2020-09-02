@@ -8,8 +8,12 @@ const path = require('path');
 
 
 async function save(request,response){
+    // console.log(request)
+    // console.log("1")
     try{
         let email = await util.getUserFromSession(request)
+        // console.log("2")
+
         let isAdmin = await client.hget("admins", email);
         if(isAdmin === null ) {
             let imgID = "No selected img"
@@ -52,20 +56,16 @@ async function save(request,response){
             // Add item to cart
             cart[prodImgID] = item;
             await client.hset('cart', email, JSON.stringify(cart));
-
-            response.status(200).redirect('back');
+            response.status(200).json({msg:"images saved"});
         }
         else{
-            let pathUrl = request.get('referer');
-            response.status(401).redirect(pathUrl.replace("products/" + path.basename(pathUrl),"LoginPage.html")); // User is admin, not allowed here
+            response.status(401).json({msg: "user unauthorized"}); // User is admin, not allowed here
         }
 
     }catch (err) {
         if(err === "User is not logged in")  response.status(401).json(err);
-
         else {
-            let pathUrl = request.get('referer');
-            response.status(500).redirect(pathUrl.replace("products/" + path.basename(pathUrl),"ErrorPage.html"));
+            response.status(500).json(err);
         }
     }
 }

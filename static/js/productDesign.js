@@ -146,3 +146,52 @@ function canvasResize(){
     canvas.setHeight(imgHeight * ratio.height);
     canvas.setWidth(imgWidth * ratio.width);
 }
+
+sendProd= async ()=>{
+    let productWithImage = document.getElementById('productWithImage').value;
+    let productCustompicture = document.getElementById("product-custompicture").files[0];
+    let productType = document.getElementById('productType').value;
+    let price  = document.getElementById('price').value;
+    let productSize = document.getElementById('product-size');
+    let productColor = getColor();
+    let productAmount = document.getElementById('product-amount').value;
+
+    let formData= new FormData();
+    formData.append("productWithImage", productWithImage)
+    formData.append("uploadedImg",productCustompicture)
+    formData.append("productType", productType)
+    formData.append("price",price)
+    if (productSize !== null){
+        formData.append("productSize", productSize.value)
+    }
+    formData.append( "productColor", productColor)
+    formData.append( "productAmount", productAmount)
+
+    // console.log("window.location.href: "+ window.location.href)
+    let response = await fetch("http://localhost:8080/api/design/save",{
+        method: 'POST',
+        credentials: "include",
+        body:formData,
+        referrer:  window.location.href
+    });
+    if (response.status === 200){
+        //ok
+        console.log("statis 200 from front")
+        location.reload();
+    }else if(response.status === 401){
+        //
+        window.location = "../../html/LoginPage.html"
+    }
+    else{
+        //error
+        window.location = "../../html/ErrorPage.html";
+    }
+}
+function getColor() {
+    let radioColors = document.getElementsByClassName('color-buttons');
+    for (let i = 0; i < radioColors.length; i++){
+        if (radioColors[i].checked){
+            return radioColors[i].value;
+        }
+    }
+}
