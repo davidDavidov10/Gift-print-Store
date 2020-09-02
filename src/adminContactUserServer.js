@@ -82,7 +82,6 @@ async function loadMsg(request, response){
 
 
 async function adminWebSockets(ws, req) {
-    console.log("Admin Connected to web socket")
     let adminEmail = await util.getUserFromSession(req);
     serverResources.adminWs = ws;
     ws.on("message", function(msg){

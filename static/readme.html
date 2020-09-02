@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Readme</title>
+
+</head>
+
+<style>
+    .collapsible {
+        background-color: #777;
+        color: white;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
+
+    .active, .collapsible:hover {
+        background-color: #555;
+    }
+
+    .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #f1f1f1;
+    }
+</style>
+</head>
+<body>
+
+<h2>Read Me</h2>
+
+<button type="button" class="collapsible">Show Dana Benbasat's Read Me</button>
+<div class="content">
+    <ol>
+        <li><b>Store Name:</b> Gift Print</li>
+        <li><b>We are selling:</b> Products with pictures printed on then designed by the costumer.<br>
+          The products we print on are : Shirt, Cup, Hat, Teddy Bear, Key Chain and Calender</li>
+        <li><b>Additional pages we added:</b> <ul>
+          <li><u>A product design page:</u> the user picks an image to upload, a color for the product and the amount of products to order (and size for shirt).<br>
+              The user decides how the image should be located and then finishes editing and adds the product to cart"</li>
+          <li><u>Admin purchases:</u> The admin can view all the items purchased by users.<br>
+              The admin can inspect new orders and get all the needed information to complete the order such as address image to print and information about the products.<br>
+              When the admin finishes an order they can mark the order as completed </li>
+          <li><u>Contact us page:</u> The user can send questions to th admin and receive answers from the admin, just like a chat. </li>
+          <li><u>Contact users page:</u> The admin receives questions from users. The admin can then choose which user's questions they want to answer.<br>
+              Then the admin can send answers to the user, just like a chat. </li>
+      </ul></li>
+        <li><b>The things that were hard to do:</b> Writing asynchronous code. Creating the product image with the users design and sending it to the server</li>
+        <li><b>My partner is:</b> David Davidov 205645419. We wrote the entire project together</li>
+      <li><b>Routes our app supports: </b> Our app runs on http://localhost:8080<br>
+        <u>Html routes</u>
+        <ul>
+            <li>/readme.html</li>
+            <li>/html/RegisterPage.html</li>
+            <li>/html/LoginPage.html</li>
+            <li>/html/HomePage.html</li>
+            <li>/html/ShoppingCartPage.html</li>
+            <li>/html/ContactUs.html</li>
+            <li>/html/CheckoutPage.html</li>
+            <li>/html/products/ShirtDesign.html</li>
+            <li>/html/products/CupDesign.html</li>
+            <li>/html/products/HatDesign.html</li>
+            <li>/html/products/KeychainDesign.html</li>
+            <li>/html/products/CalendarDesign.html</li>
+            <li>/html/products/TeddyBearDesign.html</li>
+            <li>/html/AdminPage.html</li>
+            <li>/html/PurchasesAdmin.html</li>
+            <li>/html/AdminContactUsers.html</li>
+            <li>/html/ErrorPage.html</li>
+        </ul>
+        <u>Server api routes</u>
+        <ul>
+            <li>/api/signUp</li>
+            <li>/api/signIn</li>
+            <li>/api/signOut</li>
+            <li>/api/admin</li>
+            <li>/api/admin/purchases</li>
+            <li>/api/cart/items</li>
+            <li>/api/cart/items/update</li>
+            <li>/api/design/save</li>
+            <li>/api/design/validate</li>
+            <li>/api/placeOrder</li>
+            <li>/api/validate</li>
+            <li>/api/home</li>
+            <li>/api/admin/updateStatus</li>
+            <li>/api/contactUs/send</li>
+            <li>/api/contactUs</li>
+            <li>/api/admin/contact/send</li>
+            <li>/api/admin/contact/users</li>
+            <li>/api/admin/contact/msg/:email</li>
+            <li>web sockets route : /api/contactUs/ws</li>
+            <li>web sockets route : /api/admin/contact/msg/ws</li>
+        </ul></li>
+
+        <li><b>We made our store secure by:</b> We checked the input from the user before using it to make sure the server doesnt crush.<br>
+        We also made sure the user only affected their own properties when saving data into the redis.</li>
+      <li><b>Did we implement the store using react?</b> No.</li>
+    </ol>
+</div>
+
+<button type="button" class="collapsible">Show David Davidov's Read Me</button>
+<div class="content">
+    <ol>
+        <li>Store name: Gift Print</li>
+        <li></li>
+        <li>We are selling styled/unstyled products such as shirt, cup, calendar, hat, key chain, teddy bear </li>
+        <li>
+            <p>additional page</p>
+            <ol>
+                <li>product design page - page that a customer can design his chosen product by choosing color, a picture that will be printed on the product etc.. </li>
+                <li>"PurchasesAdmin", additional screen for admin that organize the purchases of the users each purchase include:
+                    <ul>
+                        <li> the ability to send email to the user</li>
+                        <li> details about the customer </li>
+                        <li> details about the product </li>
+                        <li> the image that the customer picked </li>
+                        <li> the image of the product that the customer bought (with the image that he picked) </li>
+                        <li> ability to menage the status of the order ("Order Completed" , "Waiting to be processed") </li>
+                    </ul>
+                </li>
+                <li>"ContactUs" - the user can leave a massage to the admin, write the message and hit the send button </li>
+                <li>"AdminContactUsers" - admin can reply a massage to the user, pick the user, write the message and hit the send button </li>
+            </ol>
+        </li>
+        <li>What was hard to do:
+            <ul>
+                <li>creating the "designed product" and sending it to the back end</li>
+                <li>writing asynchronous code</li>
+            </ul>
+        </li>
+        <li>My partner: Dana Benbasat 315398735. We didnt split the work,we wrote all the code together</li>
+        <li>Routes our app supports:  Our app runs on http://localhost:8080<br>
+            <u>Html routes</u>
+            <ul>
+                <li>/readme.html</li>
+                <li>/html/RegisterPage.html</li>
+                <li>/html/LoginPage.html</li>
+                <li>/html/HomePage.html</li>
+                <li>/html/ShoppingCartPage.html</li>
+                <li>/html/ContactUs.html</li>
+                <li>/html/CheckoutPage.html</li>
+                <li>/html/products/ShirtDesign.html</li>
+                <li>/html/products/CupDesign.html</li>
+                <li>/html/products/HatDesign.html</li>
+                <li>/html/products/KeychainDesign.html</li>
+                <li>/html/products/CalendarDesign.html</li>
+                <li>/html/products/TeddyBearDesign.html</li>
+                <li>/html/AdminPage.html</li>
+                <li>/html/PurchasesAdmin.html</li>
+                <li>/html/AdminContactUsers.html</li>
+                <li>/html/ErrorPage.html</li>
+            </ul>
+            <u>Server api routes</u>
+            <ul>
+                <li>/api/signUp</li>
+                <li>/api/signIn</li>
+                <li>/api/signOut</li>
+                <li>/api/admin</li>
+                <li>/api/admin/purchases</li>
+                <li>/api/cart/items</li>
+                <li>/api/cart/items/update</li>
+                <li>/api/design/save</li>
+                <li>/api/design/validate</li>
+                <li>/api/placeOrder</li>
+                <li>/api/validate</li>
+                <li>/api/home</li>
+                <li>/api/admin/updateStatus</li>
+                <li>/api/contactUs/send</li>
+                <li>/api/contactUs</li>
+                <li>/api/admin/contact/send</li>
+                <li>/api/admin/contact/users</li>
+                <li>/api/admin/contact/msg/:email</li>
+                <li>web sockets route : /api/contactUs/ws</li>
+                <li>web sockets route : /api/admin/contact/msg/ws</li>
+            </ul></li>
+        <li>How did you make your store secure: Each time the user was asked to enter a particular input we checked if a correct input was entered.
+            We kept the user password in redis encrypted
+        </li>
+        <li>Did we implement the store using react: No.</li>
+    </ol>
+</div>
+
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>
+
+
+<body>
+</body>
+</html>

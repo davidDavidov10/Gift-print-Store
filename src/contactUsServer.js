@@ -60,7 +60,6 @@ async function loadMsg(request, response){
 
 // Send msg from user to admin
 async function userWebSocket (ws, req) {
-    console.log("User Connected to web socket")
     let email = await util.getUserFromSession(req); // User email
     serverResources.userListWs[email] = ws;
     ws.on("message", async function(msg){

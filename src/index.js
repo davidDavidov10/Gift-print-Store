@@ -138,7 +138,7 @@ app.listen(port,()=>{
 });
 
 
-// Todo:   Check image upload (size)
+
 // Todo:   Go over code: 4. check name conventions
 // Todo:   Add readme files no need to add them to navbar
 // Todo:   Check project package json for submit
