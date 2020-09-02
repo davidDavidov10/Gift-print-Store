@@ -1,7 +1,6 @@
 let socket;
 window.onload= function(){
     socket = new WebSocket("ws://localhost:8080/api/contactUs/ws")
-    console.log("sending from ws://localhost:8080/api/contactUs/ws")
     socket.onmessage = handleMessage;
     document.getElementById("msgBox").onkeydown = handleKeyPress;
 }
@@ -71,7 +70,6 @@ async function loadMsg(){
        }
     }catch(err){
         // Send to error page
-        console.log(err)
         window.location = "../html/ErrorPage.html";
     }
 }

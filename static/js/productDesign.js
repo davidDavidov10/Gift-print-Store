@@ -68,7 +68,6 @@ async function doneEdit(){
         // Canvas
         let productDiv = await new Promise((resolve, reject) => {
             if (canvas.item(0) !== undefined) {
-                console.log("exists")
                 canvas.item(0).lockScalingX = canvas.item(0).lockScalingY = true;// Can't resize item
                 canvas.item(0).lockMovementX = canvas.item(0).lockMovementY = true;// Can't resize item
                 canvas.item(0).selectable = false; // Can't reselect item
@@ -167,7 +166,6 @@ sendProd= async ()=>{
     formData.append( "productColor", productColor)
     formData.append( "productAmount", productAmount)
 
-    // console.log("window.location.href: "+ window.location.href)
     let response = await fetch("http://localhost:8080/api/design/save",{
         method: 'POST',
         credentials: "include",
@@ -176,7 +174,6 @@ sendProd= async ()=>{
     });
     if (response.status === 200){
         //ok
-        console.log("statis 200 from front")
         location.reload();
     }else if(response.status === 401){
         //

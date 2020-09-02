@@ -4,16 +4,9 @@ const uuid = require('uuid');
 const fs = require('fs');
 const path = require('path');
 
-//todo: check why it takes so long for bigger files to save
-
-
 async function save(request,response){
-    // console.log(request)
-    // console.log("1")
     try{
         let email = await util.getUserFromSession(request)
-        // console.log("2")
-
         let isAdmin = await client.hget("admins", email);
         if(isAdmin === null ) {
             let imgID = "No selected img"
